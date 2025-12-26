@@ -1,0 +1,10 @@
+{
+    "name": "com.arunoki.flow",
+    "version": "0.1.0",
+    "displayName": "Arunoki Flow",
+    "description": "Reusable module",
+    "unity": "6000.0",
+    "author": {
+        "name": "Artem Safronov"
+    }
+}
