@@ -4,4 +4,8 @@ namespace Arunoki.Flow
   {
     bool Set (TValue value);
   }
+
+  public interface IProperty<TValue, TEvent> : IProperty<TValue>, IReadable<TValue, TEvent> where TEvent : IEvent
+  {
+  }
 }

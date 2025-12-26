@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Utils
     private const BindingFlags PublicFlags =
       BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static;
 
-    private static readonly Type ChannelType = typeof(EventChannel);
+    private static readonly Type ChannelType = typeof(IEventChannel);
 
     public static void RegisterEvents (this EventChannelCollection eventCollection, IEventsContext context)
     {

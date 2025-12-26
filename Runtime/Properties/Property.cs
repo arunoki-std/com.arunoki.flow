@@ -2,7 +2,7 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public class Property<TEvent, TValue> : EventChannel, IProperty<TValue>
+  public class Property<TEvent, TValue> : EventChannel, IProperty<TValue, TEvent>
     where TEvent : IValueEvent<TValue>, new ()
   {
     public Property () : base (typeof(TEvent))

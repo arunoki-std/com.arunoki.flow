@@ -5,7 +5,7 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public class EventChannel
+  public class EventChannel : IEventChannel
   {
     private readonly Type eventType;
 

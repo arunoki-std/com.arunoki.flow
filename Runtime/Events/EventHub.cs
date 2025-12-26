@@ -36,9 +36,9 @@ namespace Arunoki.Flow
       switch (item)
       {
         case IEventsContext context:
-          var list = context.GetAllPropertiesWithNested<IEventsContext> ();
-          list.Insert (0, context);
-          BuildObject (list);
+          var contextsList = context.GetAllPropertiesWithNested<IEventsContext> ();
+          contextsList.Insert (0, context);
+          Build (contextsList);
           break;
 
         case Type staticType:
@@ -47,31 +47,30 @@ namespace Arunoki.Flow
 
           Events.Register (staticType);
           Events.Subscribe (staticType);
-          BuildObject (staticType.GetAllPropertiesWithNested<IEventsContext> ());
+          Build (staticType.GetAllPropertiesWithNested<IEventsContext> ());
           break;
 
         default:
-          BuildContexts (item);
+          BuildObject (item);
           break;
       }
     }
 
-    protected virtual void BuildObject (List<IEventsContext> contexts)
+    protected virtual void Build (List<IEventsContext> contexts)
     {
       contexts.ForEach (Events.Register);
-      contexts.ForEach (BuildContexts);
+      contexts.ForEach (BuildObject);
     }
 
-    protected virtual void BuildContexts (object obj)
+    protected virtual void BuildObject (object obj)
     {
-      ForEachGroup<IBuilder> (builder =>
-      {
-        if (builder.IsConsumable (obj))
-          builder.Build (obj);
-      });
-
       if (obj is IEventReceiver receiver)
         Events.Subscribe (receiver);
+
+      ForEachGroup<IBuilder> (builder =>
+      {
+        if (builder.IsConsumable (obj)) builder.Build (obj);
+      });
     }
 
     public override void Dispose ()
