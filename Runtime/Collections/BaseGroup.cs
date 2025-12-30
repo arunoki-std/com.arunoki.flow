@@ -1,7 +1,9 @@
+using Arunoki.Flow;
+
 using System;
 using System.Collections.Generic;
 
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Collections
 {
   public abstract class BaseGroup<TElement> : IGroup, IGroupHandler<TElement>, IDisposable
   {

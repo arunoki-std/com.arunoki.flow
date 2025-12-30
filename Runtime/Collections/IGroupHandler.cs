@@ -1,4 +1,4 @@
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Collections
 {
   public interface IGroupHandler<TElement>
   {

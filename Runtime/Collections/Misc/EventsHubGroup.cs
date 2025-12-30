@@ -1,7 +1,9 @@
+using Arunoki.Flow;
+
 using System;
 using System.Collections.Generic;
 
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Collections
 {
   public abstract class EventsHubGroup<TElement> : BaseGroup<TElement>, IEventsHubPart
   {

@@ -1,4 +1,4 @@
-using Arunoki.Flow.Collections;
+using Arunoki.Collections;
 
 using System;
 

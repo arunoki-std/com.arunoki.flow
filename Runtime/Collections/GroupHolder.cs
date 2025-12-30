@@ -3,7 +3,7 @@ using Arunoki.Flow.Utils;
 using System;
 using System.Collections.Generic;
 
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Collections
 {
   public class GroupHolder<TElement> : BaseGroup<TElement>
   {
