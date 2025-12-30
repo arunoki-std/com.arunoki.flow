@@ -9,7 +9,7 @@ namespace Arunoki.Flow.Misc
   {
     private readonly Dictionary<Type, EventChannel> eventsCache = new();
 
-    protected internal Group<EventChannel> EventsGroup = new();
+    protected internal Set<EventChannel> EventsGroup = new();
 
     public EventChannel this [Type eventType]
     {
@@ -59,7 +59,7 @@ namespace Arunoki.Flow.Misc
 
     public void Remove (Predicate<EventChannel> condition)
     {
-      EventsGroup.Select (condition, Remove);
+      EventsGroup.ForEach (condition, Remove);
     }
 
     public void RemoveBy (IEventsContext context)

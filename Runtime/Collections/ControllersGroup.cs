@@ -1,5 +1,5 @@
 using Arunoki.Collections;
-using Arunoki.Flow.Utils;
+using Arunoki.Collections.Utils;
 
 using System;
 using System.Linq;
@@ -19,16 +19,16 @@ namespace Arunoki.Flow.Misc
       Hub = hub;
     }
 
-    protected override void OnAdded (IEventReceiver element)
+    protected override void OnElementAdded (IEventReceiver element)
     {
-      base.OnAdded (element);
+      base.OnElementAdded (element);
 
       Hub.Events.Subscribe (element);
     }
 
-    protected override void OnRemoved (IEventReceiver element)
+    protected override void OnElementRemoved (IEventReceiver element)
     {
-      base.OnRemoved (element);
+      base.OnElementRemoved (element);
 
       Hub.Events.Unsubscribe (element);
 
@@ -66,7 +66,7 @@ namespace Arunoki.Flow.Misc
 
     public void Remove<T> () where T : IControllersContainer
     {
-      Remove (typeof(T));
+      Clear (typeof(T));
     }
 
     public void Remove (IController controller)

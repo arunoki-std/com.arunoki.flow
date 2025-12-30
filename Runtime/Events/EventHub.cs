@@ -1,6 +1,6 @@
 using Arunoki.Collections;
+using Arunoki.Collections.Utils;
 using Arunoki.Flow.Misc;
-using Arunoki.Flow.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace Arunoki.Flow
       AddGroupsFrom (this);
       AddGroupsFrom (Context);
 
-      ForEachGroup<IGroupHandler<IEventReceiver>> (handler => handler.TargetGroupHandler = this);
+      ForEachGroup<ISetHandler<IEventReceiver>> (handler => handler.TargetSetHandler = this);
       ForEachGroup<IEventsHubPart> (part => part.Init (this));
 
       Build (Context);
@@ -73,9 +73,9 @@ namespace Arunoki.Flow
       });
     }
 
-    public override void Dispose ()
+    public override void Clear ()
     {
-      base.Dispose ();
+      base.Clear ();
 
       Events.Dispose ();
     }

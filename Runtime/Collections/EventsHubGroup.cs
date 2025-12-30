@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Collections
 {
-  public abstract class EventsHubGroup<TElement> : BaseGroup<TElement>, IEventsHubPart
+  public abstract class EventsHubGroup<TElement> : BaseSet<TElement>, IEventsHubPart
   {
     public IEventsContext Context => Hub.Context;
 
@@ -18,7 +18,7 @@ namespace Arunoki.Collections
       Hub = hub;
     }
 
-    protected abstract BaseGroup<TElement> GetGroup ();
+    protected abstract BaseSet<TElement> GetGroup ();
 
     public override IEnumerable<T> GetAll<T> ()
     {
@@ -44,14 +44,14 @@ namespace Arunoki.Collections
         yield return element;
     }
 
-    public override void Select (Predicate<TElement> condition, Action<TElement> action)
+    public override void ForEach (Predicate<TElement> condition, Action<TElement> action)
     {
-      GetGroup ().Select (condition, action);
+      GetGroup ().ForEach (condition, action);
     }
 
-    public override void Select<T> (Predicate<T> condition, Action<T> action)
+    public override void ForEachOf<T> (Predicate<T> condition, Action<T> action)
     {
-      GetGroup ().Select (condition, action);
+      GetGroup ().ForEachOf (condition, action);
     }
 
     public override void ForEach (Action<TElement> action)
@@ -59,9 +59,9 @@ namespace Arunoki.Collections
       GetGroup ().ForEach (action);
     }
 
-    public override void Dispose ()
+    public override void Clear ()
     {
-      GetGroup ().Dispose ();
+      GetGroup ().Clear ();
     }
   }
 }

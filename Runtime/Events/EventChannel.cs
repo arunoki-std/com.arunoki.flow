@@ -9,7 +9,7 @@ namespace Arunoki.Flow
   {
     private readonly Type eventType;
 
-    protected internal Group<Callback> Callbacks = new();
+    protected internal Set<Callback> Callbacks = new();
 
     public EventChannel (Type eventType)
     {

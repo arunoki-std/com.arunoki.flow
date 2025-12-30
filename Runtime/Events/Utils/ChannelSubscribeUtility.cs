@@ -47,7 +47,7 @@ namespace Arunoki.Flow.Utils
     {
       collection.EventsGroup.ForEach (channel =>
       {
-        channel.Callbacks.Select (callback => callback.IsReceiver (receiver), channel.Unsubscribe);
+        channel.Callbacks.ForEach (callback => callback.IsReceiver (receiver), channel.Unsubscribe);
       });
     }
 

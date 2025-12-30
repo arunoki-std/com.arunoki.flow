@@ -1,5 +1,3 @@
-using System;
-
 namespace Arunoki.Flow
 {
   public interface IBuilder
@@ -7,7 +5,5 @@ namespace Arunoki.Flow
     void Build (object item);
 
     bool IsConsumable (object item);
-
-    bool IsConsumable (Type itemType);
   }
 }
