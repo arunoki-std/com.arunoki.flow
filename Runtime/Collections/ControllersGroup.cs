@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ControllersGroup : KeyTypeGroups<IEventReceiver>, IEventsHubPart, IBuilder
+  public class ControllersGroup : KeyTypeGroups<IEventsHandler>, IEventsHubPart, IBuilder
   {
     private static readonly Type BaseControllerType = typeof(IController);
 
@@ -19,14 +19,14 @@ namespace Arunoki.Flow.Misc
       Hub = hub;
     }
 
-    protected override void OnElementAdded (IEventReceiver element)
+    protected override void OnElementAdded (IEventsHandler element)
     {
       base.OnElementAdded (element);
 
       Hub.Events.Subscribe (element);
     }
 
-    protected override void OnElementRemoved (IEventReceiver element)
+    protected override void OnElementRemoved (IEventsHandler element)
     {
       base.OnElementRemoved (element);
 
@@ -54,7 +54,7 @@ namespace Arunoki.Flow.Misc
         Add (containerType,
           containerType
             .GetNestedTypes<IController> ()
-            .Select (receiverType => (IEventReceiver) Activator.CreateInstance (receiverType, eventsContext))
+            .Select (receiverType => (IEventsHandler) Activator.CreateInstance (receiverType, eventsContext))
             .ToArray ()
         );
       }
@@ -71,7 +71,7 @@ namespace Arunoki.Flow.Misc
 
     public void Remove (IController controller)
     {
-      Remove (controller as IEventReceiver);
+      Remove (controller as IEventsHandler);
     }
 
     public virtual void Build (object item)

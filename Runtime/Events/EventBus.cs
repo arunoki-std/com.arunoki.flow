@@ -7,30 +7,30 @@ namespace Arunoki.Flow
 {
   public class EventBus : IDisposable, IBuilder
   {
-    internal readonly EventChannelCollection EventChannels;
+    internal readonly EventChannelSet EventChannels;
 
-    public EventBus () : this (new EventChannelCollection ()) { }
+    public EventBus () : this (new EventChannelSet ()) { }
 
-    internal EventBus (EventChannelCollection collection)
+    internal EventBus (EventChannelSet set)
     {
-      EventChannels = collection ?? new EventChannelCollection ();
+      EventChannels = set ?? new EventChannelSet ();
     }
 
-    public void Subscribe (IEventReceiver eventReceiver)
+    public void Subscribe (IEventsHandler eventsHandler)
     {
-      EventChannels.Subscribe (eventReceiver, (target, methods)
-        => new Callback (target, methods));
+      EventChannels.Subscribe (eventsHandler, (target, methods)
+        => new EventsHandler (target, methods));
     }
 
-    public void Unsubscribe (IEventReceiver eventReceiver)
+    public void Unsubscribe (IEventsHandler eventsHandler)
     {
-      EventChannels.Unsubscribe (eventReceiver);
+      EventChannels.Unsubscribe (eventsHandler);
     }
 
     public void Subscribe (Type staticSubscriber)
     {
       EventChannels.Subscribe (staticSubscriber, (target, methods)
-        => new ProxyTypeCallback ((Type) target, methods));
+        => new ProxyTypeEventsHandler ((Type) target, methods));
     }
 
     public void Unsubscribe (Type staticSubscriber)
@@ -64,7 +64,7 @@ namespace Arunoki.Flow
 
     public void Clear (Type staticEventSource)
     {
-      EventChannels.Remove (eventChannel =>
+      EventChannels.RemoveWhere (eventChannel =>
         eventChannel.Context is ProxyTypeContext wrapper && wrapper.Type == staticEventSource);
     }
 
@@ -76,7 +76,7 @@ namespace Arunoki.Flow
     void IBuilder.Build (object item)
     {
       if (item is IEventsContext ec) Register (ec);
-      if (item is IEventReceiver er) Subscribe (er);
+      if (item is IEventsHandler er) Subscribe (er);
       if (item is Type t)
       {
         Register (t);

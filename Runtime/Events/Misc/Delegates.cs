@@ -1,4 +1,4 @@
 namespace Arunoki.Flow
 {
-  public delegate void EventReceiver<in TEvent> (TEvent evt) where TEvent : IEvent;
+  public delegate void EventReceiver<TEvent> (ref TEvent evt) where TEvent : IEvent;
 }

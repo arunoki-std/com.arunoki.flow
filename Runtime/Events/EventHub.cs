@@ -4,11 +4,10 @@ using Arunoki.Flow.Misc;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Arunoki.Flow
 {
-  public class EventHub : GroupHolder<IEventReceiver>, IBuilder
+  public class EventHub : GroupHolder<IEventsHandler>, IBuilder
   {
     public IEventsContext Context { get; private set; }
 
@@ -22,11 +21,11 @@ namespace Arunoki.Flow
 
       TrySetTargetHandler (Context);
 
-      AddGroupsFrom (this);
-      AddGroupsFrom (Context);
+      FindSetsAt (this);
+      FindSetsAt (Context);
 
-      ForEachGroup<ISetHandler<IEventReceiver>> (handler => handler.TargetSetHandler = this);
-      ForEachGroup<IEventsHubPart> (part => part.Init (this));
+      ForEachSet<ISetHandler<IEventsHandler>> (handler => handler.TargetSetHandler = this);
+      ForEachSet<IEventsHubPart> (part => part.Init (this));
 
       Build (Context);
     }
@@ -64,10 +63,10 @@ namespace Arunoki.Flow
 
     protected virtual void BuildObject (object obj)
     {
-      if (obj is IEventReceiver receiver)
+      if (obj is IEventsHandler receiver)
         Events.Subscribe (receiver);
 
-      ForEachGroup<IBuilder> (builder =>
+      ForEachSet<IBuilder> (builder =>
       {
         if (builder.IsConsumable (obj)) builder.Build (obj);
       });
@@ -82,7 +81,7 @@ namespace Arunoki.Flow
 
     public bool IsConsumable (object item)
     {
-      return item is IEventsContext || ForEachGroup<IBuilder> ().Any (builder => builder.IsConsumable (item));
+      return item is IEventsContext || ForAnySet<IBuilder> (builder => builder.IsConsumable (item));
     }
 
     public bool IsConsumable (Type staticType)

@@ -11,8 +11,8 @@ namespace Arunoki.Flow.Utils
   {
     private static readonly Type BaseEventType = typeof(IEvent);
 
-    public static void Subscribe (this EventChannelCollection collection, object receiver,
-      Func<object, MethodInfo [], Callback> createCallback)
+    public static void Subscribe (this EventChannelSet set, object receiver,
+      Func<object, MethodInfo [], EventsHandler> createCallback)
     {
       Type receiverType;
       BindingFlags bindingFlags;
@@ -29,7 +29,7 @@ namespace Arunoki.Flow.Utils
 
       foreach (var kvp in GetMethodsGroup (receiverType, bindingFlags))
       {
-        if (collection.TryGet (kvp.Item1, out var channel))
+        if (set.TryGet (kvp.Item1, out var channel))
         {
           channel.Subscribe (createCallback (receiver, kvp.Item2));
         }
@@ -43,12 +43,12 @@ namespace Arunoki.Flow.Utils
       }
     }
 
-    public static void Unsubscribe (this EventChannelCollection collection, object receiver)
+    public static void Unsubscribe (this EventChannelSet set, object receiver)
     {
-      collection.EventsGroup.ForEach (channel =>
-      {
-        channel.Callbacks.ForEach (callback => callback.IsReceiver (receiver), channel.Unsubscribe);
-      });
+      set.Set.ForEach (channel =>
+        channel.Handlers.Where (callback =>
+          callback.IsTarget (receiver), channel.Unsubscribe)
+      );
     }
 
     private static IEnumerable<(Type, MethodInfo [])> GetMethodsGroup (Type receiverType, BindingFlags bindingFlags)

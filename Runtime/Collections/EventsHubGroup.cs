@@ -1,7 +1,6 @@
 using Arunoki.Flow;
 
 using System;
-using System.Collections.Generic;
 
 namespace Arunoki.Collections
 {
@@ -20,38 +19,14 @@ namespace Arunoki.Collections
 
     protected abstract BaseSet<TElement> GetGroup ();
 
-    public override IEnumerable<T> GetAll<T> ()
+    public override void Where (Func<TElement, bool> condition, Action<TElement> action)
     {
-      foreach (var element in GetGroup ().GetAll<T> ())
-        yield return element;
+      GetGroup ().Where (condition, action);
     }
 
-    public override IEnumerable<TElement> GetAll ()
+    public override void Cast<T> (Func<T, bool> condition, Action<T> action)
     {
-      foreach (var element in GetGroup ().GetAll ())
-        yield return element;
-    }
-
-    public override IEnumerable<T> Where<T> (Predicate<T> condition)
-    {
-      foreach (var element in GetGroup ().Where (condition))
-        yield return element;
-    }
-
-    public override IEnumerable<TElement> Where (Predicate<TElement> condition)
-    {
-      foreach (var element in GetGroup ().Where (condition))
-        yield return element;
-    }
-
-    public override void ForEach (Predicate<TElement> condition, Action<TElement> action)
-    {
-      GetGroup ().ForEach (condition, action);
-    }
-
-    public override void ForEachOf<T> (Predicate<T> condition, Action<T> action)
-    {
-      GetGroup ().ForEachOf (condition, action);
+      GetGroup ().Cast (condition, action);
     }
 
     public override void ForEach (Action<TElement> action)

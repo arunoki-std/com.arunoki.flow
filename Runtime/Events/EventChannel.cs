@@ -9,7 +9,7 @@ namespace Arunoki.Flow
   {
     private readonly Type eventType;
 
-    protected internal Set<Callback> Callbacks = new();
+    protected internal Set<EventsHandler> Handlers = new();
 
     public EventChannel (Type eventType)
     {
@@ -18,24 +18,26 @@ namespace Arunoki.Flow
 
     public IEventsContext Context { get; private set; }
 
-    public void Subscribe (Callback callback)
+    public void Subscribe (EventsHandler eventsHandler)
     {
-      Callbacks.Add (callback);
+      Handlers.Add (eventsHandler);
     }
 
-    public void Unsubscribe (Callback callback)
+    public void Unsubscribe (EventsHandler eventsHandler)
     {
-      Callbacks.Remove (callback);
+      Handlers.Remove (eventsHandler);
     }
 
-    protected internal virtual void Call (object message)
+    protected internal virtual void Call (ref object evt)
     {
-      Callbacks.ForEach (callback => callback.OnCallback (message));
+      foreach (var handler in Handlers)
+        if (handler.IsActive ())
+          handler.OnCallback (ref evt);
     }
 
     public virtual void UnsubscribeAll ()
     {
-      Callbacks.ForEach (Unsubscribe);
+      Handlers.Clear ();
     }
 
     protected internal virtual void InitContext (IEventsContext context) => Context ??= context;

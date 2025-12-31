@@ -9,7 +9,7 @@ namespace Arunoki.Flow
     {
     }
 
-    public event EventReceiver<TEvent> OnEvent = delegate { };
+    public event EventReceiver<TEvent> OnEvent;
 
     public TValue Value { get; private set; }
 
@@ -40,17 +40,19 @@ namespace Arunoki.Flow
 
     protected void Call ()
     {
-      var evt = NewEvent ();
+      var evt = Activator.CreateInstance (GetEventType (), Context, Value, Previous);
+      base.Call (ref evt);
 
-      base.Call (evt);
-      OnEvent.Invoke (evt);
+      var domainEvent = (TEvent) evt;
+      OnEvent?.Invoke (ref domainEvent);
     }
 
-    protected internal sealed override void Call (object message)
+    protected internal sealed override void Call (ref object evt)
     {
-      base.Call (message);
+      base.Call (ref evt);
 
-      OnEvent.Invoke ((TEvent) message);
+      var domainEvent = (TEvent) evt;
+      OnEvent?.Invoke (ref domainEvent);
     }
 
     public virtual void Reset (TValue @default = default)
@@ -63,12 +65,8 @@ namespace Arunoki.Flow
     {
       base.UnsubscribeAll ();
 
+      OnEvent = null;
       Reset ();
-    }
-
-    protected virtual TEvent NewEvent ()
-    {
-      return (TEvent) Activator.CreateInstance (GetEventType (), Context, Value, Previous);
     }
   }
 }

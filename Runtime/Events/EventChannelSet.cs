@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Misc
 {
-  public class EventChannelCollection
+  public class EventChannelSet
   {
-    private readonly Dictionary<Type, EventChannel> eventsCache = new();
+    private readonly Dictionary<Type, EventChannel> typeSet = new();
 
-    protected internal Set<EventChannel> EventsGroup = new();
+    protected internal Set<EventChannel> Set = new();
 
     public EventChannel this [Type eventType]
     {
@@ -17,7 +17,7 @@ namespace Arunoki.Flow.Misc
       {
         try
         {
-          return eventsCache [eventType];
+          return typeSet [eventType];
         }
         catch (Exception e)
         {
@@ -30,8 +30,8 @@ namespace Arunoki.Flow.Misc
     {
       try
       {
-        eventsCache.Add (eventChannel.GetEventType (), eventChannel);
-        EventsGroup.Add (eventChannel);
+        typeSet.Add (eventChannel.GetEventType (), eventChannel);
+        Set.Add (eventChannel);
       }
       catch (Exception e)
       {
@@ -51,36 +51,44 @@ namespace Arunoki.Flow.Misc
 
     public void Remove (EventChannel eventChannel)
     {
-      EventsGroup.Remove (eventChannel);
+      Set.Remove (eventChannel);
+      typeSet.Remove (eventChannel.GetEventType ());
 
-      eventsCache.Remove (eventChannel.GetEventType ());
       eventChannel.UnsubscribeAll ();
     }
 
-    public void Remove (Predicate<EventChannel> condition)
+    public void RemoveWhere (Func<EventChannel, bool> condition)
     {
-      EventsGroup.ForEach (condition, Remove);
+      Set.Where (condition, Remove);
     }
 
     public void RemoveBy (IEventsContext context)
     {
-      Remove (channel => context.Equals (channel.Context));
+      RemoveWhere (channel => context.Equals (channel.Context));
     }
 
     public bool TryGet (Type eventType, out EventChannel eventChannel)
     {
-      return eventsCache.TryGetValue (eventType, out eventChannel);
+      return typeSet.TryGetValue (eventType, out eventChannel);
+    }
+
+    public virtual void Unsubscribe (IEventsHandler handler)
+    {
+      foreach (var eventChannel in Set)
+      foreach ((int index, EventsHandler callback) in eventChannel.Handlers.WithIndex ())
+        if (callback.IsTarget (handler))
+          eventChannel.Handlers.RemoveAt (index);
     }
 
     public virtual void UnsubscribeAll ()
     {
-      EventsGroup.ForEach (e => e.UnsubscribeAll ());
+      Set.ForEach (e => e.UnsubscribeAll ());
     }
 
     public virtual void Dispose ()
     {
-      EventsGroup.ForEach (Remove);
-      eventsCache.Clear ();
+      Set.ForEach (Remove);
+      typeSet.Clear ();
     }
   }
 }

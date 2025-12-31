@@ -2,14 +2,10 @@ using System;
 
 namespace Arunoki.Flow
 {
-  /// <summary>
   /// One type of event per data
-  /// </summary>
-  /// <typeparam name="TEvent"></typeparam>
-  /// <typeparam name="TData"></typeparam>
   public class EventChannel<TEvent, TData> : EventChannel where TEvent : IDataEvent<TData>, new ()
   {
-    public event EventReceiver<TEvent> OnEvent = delegate { };
+    public event EventReceiver<TEvent> OnEvent;
 
     public EventChannel () : base (typeof(TEvent))
     {
@@ -17,24 +13,32 @@ namespace Arunoki.Flow
 
     public void Send (TData data)
     {
-      var evt = (TEvent) Activator.CreateInstance (GetEventType (), Context, data);
+      var evt = Activator.CreateInstance (GetEventType (), Context, data);
+      base.Call (ref evt);
 
-      base.Call (evt);
-      OnEvent.Invoke (evt);
+      if (OnEvent != null)
+      {
+        var domainEvent = (TEvent) evt;
+        OnEvent (ref domainEvent);
+      }
     }
 
-    protected internal sealed override void Call (object message)
+    protected internal sealed override void Call (ref object evt)
     {
-      base.Call (message);
+      base.Call (ref evt);
 
-      OnEvent.Invoke ((TEvent) message);
+      if (OnEvent != null)
+      {
+        var domainEvent = (TEvent) evt;
+        OnEvent (ref domainEvent);
+      }
     }
 
     public override void UnsubscribeAll ()
     {
       base.UnsubscribeAll ();
 
-      OnEvent = delegate { };
+      OnEvent = null;
     }
   }
 }

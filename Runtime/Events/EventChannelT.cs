@@ -5,7 +5,7 @@ namespace Arunoki.Flow
   public class EventChannel<TEvent> : EventChannel
     where TEvent : IDomainEvent, new ()
   {
-    public event EventReceiver<TEvent> OnEvent = delegate { };
+    public event EventReceiver<TEvent> OnEvent;
 
     public EventChannel () : base (typeof(TEvent))
     {
@@ -15,22 +15,30 @@ namespace Arunoki.Flow
     {
       base.UnsubscribeAll ();
 
-      OnEvent = delegate { };
+      OnEvent = null;
     }
 
     public void Call ()
     {
-      var evt = (TEvent) Activator.CreateInstance (GetEventType (), Context);
+      var evt = Activator.CreateInstance (GetEventType (), Context);
+      base.Call (ref evt);
 
-      base.Call (evt);
-      OnEvent (evt);
+      if (OnEvent != null)
+      {
+        var domainEvent = (TEvent) evt;
+        OnEvent (ref domainEvent);
+      }
     }
 
-    protected internal sealed override void Call (object @event)
+    protected internal sealed override void Call (ref object evt)
     {
-      base.Call (@event);
+      base.Call (ref evt);
 
-      OnEvent ((TEvent) @event);
+      if (OnEvent != null)
+      {
+        var domainEvent = (TEvent) evt;
+        OnEvent (ref domainEvent);
+      }
     }
   }
 }

@@ -2,16 +2,16 @@ using Arunoki.Collections;
 
 namespace Arunoki.Flow.Misc
 {
-  public abstract class ReceiversGroup : EventsHubGroup<IEventReceiver>, IBuilder
+  public abstract class ReceiversGroup : EventsHubGroup<IEventsHandler>, IBuilder
   {
-    protected override void OnElementAdded (IEventReceiver element)
+    protected override void OnElementAdded (IEventsHandler element)
     {
       base.OnElementAdded (element);
 
       Hub.Events.Subscribe (element);
     }
 
-    protected override void OnElementRemoved (IEventReceiver element)
+    protected override void OnElementRemoved (IEventsHandler element)
     {
       base.OnElementRemoved (element);
 
