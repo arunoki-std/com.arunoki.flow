@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ControllersGroup : KeyTypeGroups<IEventsHandler>, IEventsHubPart, IBuilder
+  public class ControllersGroup : TypeSets<IEventsHandler>, IEventsHubPart, IBuilder
   {
     private static readonly Type BaseControllerType = typeof(IController);
 

@@ -7,13 +7,13 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public class EventHub : GroupHolder<IEventsHandler>, IBuilder
+  public class EventHub : GroupSet<IEventsHandler>, IBuilder
   {
     public IEventsContext Context { get; private set; }
 
     public EventBus Events { get; } = new();
 
-    public ControllersGroup Controllers { get; } = new();
+    public ControllersGroup Controller { get; } = new();
 
     public void Init (IEventsContext eventsContext)
     {
