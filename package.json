@@ -1,10 +1,21 @@
 {
-    "name": "com.arunoki.flow",
-    "version": "0.1.0",
-    "displayName": "Arunoki Flow",
-    "description": "Reusable module",
-    "unity": "6000.0",
-    "author": {
-        "name": "Artem Safronov"
-    }
+  "name": "com.arunoki.flow",
+  "version": "0.1.0",
+  "displayName": "Arunoki Flow",
+  "description": "Reusable package",
+  "documentationUrl": "https://github.com/arunoki-std/com.arunoki.flow",
+  "unity": "2021.3",
+  "author": {
+    "name": "Arunoki Studio",
+    "url": "https://www.arunoki.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arunoki-std/com.arunoki.flow.git"
+  },
+  "keywords": [
+    "arunoki",
+    "flow",
+    "events"
+  ]
 }
