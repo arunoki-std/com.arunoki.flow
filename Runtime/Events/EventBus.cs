@@ -77,7 +77,7 @@ namespace Arunoki.Flow
     {
       if (item is IEventsContext ec) Register (ec);
       if (item is IEventsHandler er) Subscribe (er);
-      if (item is Type t)
+      if (item is Type t && IsConsumable (t))
       {
         Register (t);
         Subscribe (t);

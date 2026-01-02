@@ -1,13 +1,9 @@
 using Arunoki.Collections;
-using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Misc;
-
-using System;
-using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public class EventHub : SetsCollection<IEventsHandler>, IBuilder
+  public partial class EventHub : SetsCollection<IEventsHandler>
   {
     public IEventsContext Context { get; private set; }
 
@@ -31,46 +27,11 @@ namespace Arunoki.Flow
       Build (Context);
     }
 
-    public void Build (object item)
+    protected override void OnElementAdded (IEventsHandler element)
     {
-      switch (item)
-      {
-        case IEventsContext context:
-          var contextsList = context.GetAllPropertiesWithNested<IEventsContext> ();
-          contextsList.Insert (0, context);
-          Build (contextsList);
-          break;
+      base.OnElementAdded (element);
 
-        case Type staticType:
-          if (Globals.IsDebug () && !IsConsumable (staticType))
-            throw new Exception ($"{staticType.Name} is not consumable. Type must be static.");
-
-          Events.Register (staticType);
-          Events.Subscribe (staticType);
-          Build (staticType.GetAllPropertiesWithNested<IEventsContext> ());
-          break;
-
-        default:
-          BuildObject (item);
-          break;
-      }
-    }
-
-    protected virtual void Build (List<IEventsContext> contexts)
-    {
-      contexts.ForEach (Events.Register);
-      contexts.ForEach (BuildObject);
-    }
-
-    protected virtual void BuildObject (object obj)
-    {
-      if (obj is IEventsHandler receiver)
-        Events.Subscribe (receiver);
-
-      ForEachSet<IBuilder> (builder =>
-      {
-        if (builder.IsConsumable (obj)) builder.Build (obj);
-      });
+      if (element is IEventsContextPart contextPart) contextPart.Context = Context;
     }
 
     public override void Clear ()
@@ -78,16 +39,6 @@ namespace Arunoki.Flow
       base.Clear ();
 
       Events.Dispose ();
-    }
-
-    public bool IsConsumable (object item)
-    {
-      return item is IEventsContext || ForAnySet<IBuilder> (builder => builder.IsConsumable (item));
-    }
-
-    public bool IsConsumable (Type staticType)
-    {
-      return staticType.IsAbstract && staticType.IsSealed;
     }
   }
 }

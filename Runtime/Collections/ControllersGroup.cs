@@ -2,65 +2,61 @@ using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 
 using System;
-using System.Linq;
 
 namespace Arunoki.Flow.Misc
 {
   public class ControllersGroup : SetsTypeCollection<IEventsHandler>, IEventsHubPart, IBuilder
   {
-    private static readonly Type BaseControllerType = typeof(IController);
-
-    public IEventsContext Context => Hub.Context;
-
+    public IEventsContext Context { get; private set; }
+    IEventsContext IEventsContextPart.Context { get => Context; set { Context = value; } }
     public EventHub Hub { get; private set; }
 
     public virtual void Init (EventHub hub)
     {
       Hub = hub;
+      Context = hub.Context;
     }
 
     protected override void OnElementAdded (IEventsHandler element)
     {
-      base.OnElementAdded (element);
-
+      if (element is IEventsContextPart contextPart) contextPart.Context = Context;
       Hub.Events.Subscribe (element);
+      base.OnElementAdded (element);
     }
 
     protected override void OnElementRemoved (IEventsHandler element)
     {
       base.OnElementRemoved (element);
-
       Hub.Events.Unsubscribe (element);
-
-      if (element is IDisposable disposable)
-        disposable.Dispose ();
+      if (element is IDisposable disposable) disposable.Dispose ();
     }
 
-    public virtual void Add<T> (IEventsContext context = null) where T : IControllersContainer
+    public virtual void Add<T> () where T : IControllersContainer
     {
-      Add (typeof(T), context ?? Context);
+      Add (typeof(T));
     }
 
-    public virtual void Add (IController controller, IEventsContext context = null)
+    public virtual void Add (IController controller)
     {
-      context ??= Context;
-      Add (context.GetType (), controller);
+      Add (Context.GetType (), controller);
     }
 
-    protected virtual void Add (Type containerType, IEventsContext eventsContext)
+    protected virtual void Add (Type containerType)
     {
-      try
+      var types = containerType.GetNestedTypes<IController> ();
+      var set = GetOrCreate (containerType);
+
+      for (var i = 0; i < types.Count; i++)
       {
-        Add (containerType,
-          containerType
-            .GetNestedTypes<IController> ()
-            .Select (receiverType => (IEventsHandler) Activator.CreateInstance (receiverType, eventsContext))
-            .ToArray ()
-        );
-      }
-      catch (MissingMethodException e)
-      {
-        UnityEngine.Debug.LogError (e);
+        try
+        {
+          var controller = (IController) Activator.CreateInstance (types [i]);
+          set.Add (controller);
+        }
+        catch (MissingMethodException)
+        {
+          throw new MissingConstructorException (types [i].Name);
+        }
       }
     }
 
@@ -78,17 +74,13 @@ namespace Arunoki.Flow.Misc
     {
       if (item is IControllersContainer)
       {
-        var context = item is IEventsContext c ? c : item is IEventsContextPart p ? p.Context : Context;
-        Add (item.GetType (), context);
+        Add (item.GetType ());
       }
       else if (item is IController controller)
       {
-        Add (controller, controller is IEventsContextPart p ? p.Context : Context);
+        Add (controller);
       }
     }
-
-    public virtual bool IsConsumable (Type itemType)
-      => (itemType == BaseControllerType || BaseControllerType.IsAssignableFrom (itemType) && !itemType.IsAbstract);
 
     public virtual bool IsConsumable (object item)
       => item is IController || item is IControllersContainer;
