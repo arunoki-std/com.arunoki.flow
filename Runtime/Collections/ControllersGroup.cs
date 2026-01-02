@@ -1,12 +1,12 @@
 using Arunoki.Collections;
-using Arunoki.Collections.Utils;
+using Arunoki.Collections.Utilities;
 
 using System;
 using System.Linq;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ControllersGroup : TypeSets<IEventsHandler>, IEventsHubPart, IBuilder
+  public class ControllersGroup : SetsTypeCollection<IEventsHandler>, IEventsHubPart, IBuilder
   {
     private static readonly Type BaseControllerType = typeof(IController);
 

@@ -1,5 +1,5 @@
 using Arunoki.Collections;
-using Arunoki.Collections.Utils;
+using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Misc;
 
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public class EventHub : GroupSet<IEventsHandler>, IBuilder
+  public class EventHub : SetsCollection<IEventsHandler>, IBuilder
   {
     public IEventsContext Context { get; private set; }
 
@@ -19,12 +19,13 @@ namespace Arunoki.Flow
     {
       Context = eventsContext;
 
-      TrySetTargetHandler (Context);
+      if (Context is IElementHandler<IEventsHandler> elementHandler)
+        InitElementHandler (elementHandler);
 
-      FindSetsAt (this);
-      FindSetsAt (Context);
+      AddSetsFrom (this);
+      AddSetsFrom (Context);
 
-      ForEachSet<ISetHandler<IEventsHandler>> (handler => handler.TargetSetHandler = this);
+      ForEachSet<IElementHandler<IEventsHandler>> (handler => handler.TargetHandler = this);
       ForEachSet<IEventsHubPart> (part => part.Init (this));
 
       Build (Context);

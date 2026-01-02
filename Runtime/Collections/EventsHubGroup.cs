@@ -4,8 +4,12 @@ using System;
 
 namespace Arunoki.Collections
 {
-  public abstract class EventsHubGroup<TElement> : BaseSet<TElement>, IEventsHubPart
+  public abstract class EventsHubGroup<TElement> : ElementHandler<TElement>, IEventsHubPart
   {
+    protected EventsHubGroup (IElementHandler<TElement> targetHandler = null) : base (targetHandler)
+    {
+    }
+
     public IEventsContext Context => Hub.Context;
 
     public EventHub Hub { get; private set; }
@@ -17,26 +21,26 @@ namespace Arunoki.Collections
       Hub = hub;
     }
 
-    protected abstract BaseSet<TElement> GetGroup ();
+    protected abstract ISet<TElement> GetSet ();
 
-    public override void Where (Func<TElement, bool> condition, Action<TElement> action)
+    public void Where (Func<TElement, bool> condition, Action<TElement> action)
     {
-      GetGroup ().Where (condition, action);
+      GetSet ().Where (condition, action);
     }
 
-    public override void Cast<T> (Func<T, bool> condition, Action<T> action)
+    public void Cast<T> (Func<T, bool> condition, Action<T> action)
     {
-      GetGroup ().Cast (condition, action);
+      GetSet ().Cast (condition, action);
     }
 
-    public override void ForEach (Action<TElement> action)
+    public void ForEach (Action<TElement> action)
     {
-      GetGroup ().ForEach (action);
+      GetSet ().ForEach (action);
     }
 
-    public override void Clear ()
+    public void Clear ()
     {
-      GetGroup ().Clear ();
+      GetSet ().Clear ();
     }
   }
 }
