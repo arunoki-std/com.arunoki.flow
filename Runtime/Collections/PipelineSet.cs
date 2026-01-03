@@ -15,46 +15,55 @@ namespace Arunoki.Flow.Misc
     }
 
     protected override ISet<IHandler> GetConcreteSet () => TypeSet;
-    
+
     protected override void OnElementAdded (IHandler element)
     {
-      if (element is IContextPart contextPart) contextPart.Set (Context);
-      Hub.Events.Subscribe (element);
       base.OnElementAdded (element);
+
+      Hub.Events.Subscribe (element);
     }
 
     protected override void OnElementRemoved (IHandler element)
     {
       base.OnElementRemoved (element);
+
       Hub.Events.Unsubscribe (element);
-      if (element is IDisposable disposable) disposable.Dispose ();
     }
 
     public virtual void Add<TPipeline> () where TPipeline : IPipeline
     {
-      Add (typeof(TPipeline));
+      Add (typeof(TPipeline), Context);
     }
 
-    public virtual void Add (IPipelineHandler handler)
+    public virtual void Add (IPipeline pipeline)
     {
-      TypeSet.Add (Context.GetType (), handler);
+      Add (pipeline.GetType (), pipeline is IContext context ? context : Context);
     }
 
-    protected virtual void Add (Type pipelineType)
+    public virtual void Add (IPipelineHandler handler, IContext context = null)
     {
-      var types = pipelineType.GetNestedTypes<IPipelineHandler> ();
+      context ??= Context;
+      if (handler is IContextPart contextPart) contextPart.Set (context);
+      TypeSet.GetOrCreate (context.GetType ()).Add (handler);
+    }
+
+    protected virtual void Add (Type pipelineType, IContext context = null)
+    {
+      context ??= Context;
+      var typeList = pipelineType.GetNestedTypes<IPipelineHandler> ();
       var set = TypeSet.GetOrCreate (pipelineType);
 
-      for (var i = 0; i < types.Count; i++)
+      for (var i = 0; i < typeList.Count; i++)
       {
         try
         {
-          var handler = (IPipelineHandler) Activator.CreateInstance (types [i]);
+          var handler = (IPipelineHandler) Activator.CreateInstance (typeList [i]);
+          if (set is IContextPart contextPart) contextPart.Set (context);
           set.Add (handler);
         }
         catch (MissingMethodException)
         {
-          throw new MissingConstructorException (types [i].Name);
+          throw new MissingConstructorException (typeList [i].Name);
         }
       }
     }
@@ -71,9 +80,9 @@ namespace Arunoki.Flow.Misc
 
     public override void Build (object element)
     {
-      if (element is IPipeline)
+      if (element is IPipeline pipeline)
       {
-        Add (element.GetType ());
+        Add (pipeline.GetType (), pipeline is IContext ctx ? ctx : Context);
       }
       else if (element is IPipelineHandler handler)
       {

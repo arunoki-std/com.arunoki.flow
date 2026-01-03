@@ -1,3 +1,5 @@
+using Arunoki.Flow.Utilities;
+
 namespace Arunoki.Flow
 {
   public class Uint<TEvent> : Property<TEvent, uint> where TEvent : IValueEvent<uint>, new ()
@@ -15,7 +17,7 @@ namespace Arunoki.Flow
 
     public static Uint<TEvent> operator + (Uint<TEvent> property, float b)
     {
-      property.Set (property.Value + Globals.ToUint (b));
+      property.Set (property.Value + Utils.ToUint (b));
       return property;
     }
 
@@ -33,7 +35,7 @@ namespace Arunoki.Flow
 
     public static Uint<TEvent> operator - (Uint<TEvent> property, float b)
     {
-      property.Set (property.Value - Globals.ToUint (b));
+      property.Set (property.Value - Utils.ToUint (b));
       return property;
     }
 

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Utilities
 {
-  internal static partial class Globals
+  internal static partial class Utils
   {
     public static int ToInt (float value) => Mathf.FloorToInt (value);
 

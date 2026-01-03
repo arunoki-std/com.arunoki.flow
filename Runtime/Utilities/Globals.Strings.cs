@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Utilities
 {
-  internal static partial class Globals
+  internal static partial class Utils
   {
     public static string JoinAsList (IEnumerable<object> items)
     {

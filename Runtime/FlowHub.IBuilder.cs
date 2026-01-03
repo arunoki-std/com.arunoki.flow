@@ -1,4 +1,5 @@
 using Arunoki.Collections.Utilities;
+using Arunoki.Flow.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Arunoki.Flow
           break;
 
         case Type staticType:
-          if (Globals.IsDebug () && !IsConsumable (staticType))
+          if (Utils.IsDebug () && !IsConsumable (staticType))
             throw new StaticManagerException (staticType);
 
           Events.Register (staticType);

@@ -1,3 +1,5 @@
+using Arunoki.Flow.Utilities;
+
 namespace Arunoki.Flow
 {
   public class Float<TEvent> : Property<TEvent, float> where TEvent : IValueEvent<float>, new ()
@@ -7,9 +9,9 @@ namespace Arunoki.Flow
     public void Multiply (float value) => Set (Value * value);
     public void Divide (float value) => Set (Value / value);
 
-    public static implicit operator int (Float<TEvent> a) => Globals.ToInt (a.Value);
+    public static implicit operator int (Float<TEvent> a) => Utils.ToInt (a.Value);
 
-    public static implicit operator uint (Float<TEvent> a) => Globals.ToUint (a.Value);
+    public static implicit operator uint (Float<TEvent> a) => Utils.ToUint (a.Value);
 
     public static implicit operator float (Float<TEvent> a) => a.Value;
 
