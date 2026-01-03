@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public partial class EventHub : IBuilder
+  public partial class FlowHub : IBuilder
   {
-    public void Build (object item)
+    public void Build (object element)
     {
-      switch (item)
+      switch (element)
       {
-        case IEventsContext context:
-          var contextsList = context.GetAllPropertiesWithNested<IEventsContext> ();
+        case IContext context:
+          var contextsList = context.GetAllPropertiesWithNested<IContext> ();
           contextsList.Insert (0, context);
           BuildNestedContexts (contextsList);
           break;
@@ -23,16 +23,16 @@ namespace Arunoki.Flow
 
           Events.Register (staticType);
           Events.Subscribe (staticType);
-          BuildNestedContexts (staticType.GetAllPropertiesWithNested<IEventsContext> ());
+          BuildNestedContexts (staticType.GetAllPropertiesWithNested<IContext> ());
           break;
 
         default:
-          BuildBySets (item);
+          BuildBySets (element);
           break;
       }
     }
 
-    protected virtual void BuildNestedContexts (List<IEventsContext> contexts)
+    protected virtual void BuildNestedContexts (List<IContext> contexts)
     {
       contexts.ForEach (Events.Register);
       contexts.ForEach (BuildBySets);
@@ -40,7 +40,7 @@ namespace Arunoki.Flow
 
     protected virtual void BuildBySets (object obj)
     {
-      if (obj is IEventsHandler eventsHandler) Events.Subscribe (eventsHandler);
+      if (obj is IHandler eventsHandler) Events.Subscribe (eventsHandler);
 
       ForEachSet<IBuilder> (builder =>
       {
@@ -48,9 +48,9 @@ namespace Arunoki.Flow
       });
     }
 
-    public bool IsConsumable (object item)
+    public bool IsConsumable (object element)
     {
-      return item is IEventsContext || ForAnySet<IBuilder> (builder => builder.IsConsumable (item));
+      return element is IContext || ForAnySet<IBuilder> (builder => builder.IsConsumable (element));
     }
 
     public bool IsConsumable (Type staticType)

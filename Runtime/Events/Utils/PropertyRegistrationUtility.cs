@@ -13,7 +13,7 @@ namespace Arunoki.Flow.Utils
 
     private static readonly Type ChannelType = typeof(IEventChannel);
 
-    public static void RegisterEvents (this EventChannelSet eventSet, IEventsContext context)
+    public static void RegisterEvents (this EventChannelSet eventSet, IContext context)
     {
       RegisterEvents (eventSet, context, context.GetType (), PublicFlags);
     }
@@ -22,17 +22,17 @@ namespace Arunoki.Flow.Utils
     {
       if (Globals.IsDebug () && !(staticType.IsSealed && staticType.IsAbstract))
       {
-        throw new ArgumentException (
-          $"{staticType} is not static class. Reactive properties would not be initialized.");
+        throw new StaticManagerException (staticType);
       }
 
       RegisterEvents (eventSet, new ProxyTypeContext (staticType), staticType, PublicFlags);
     }
 
-    private static void RegisterEvents (EventChannelSet eventSet, IEventsContext context,
+    private static void RegisterEvents (EventChannelSet eventSet, IContext context,
       Type contextType,
       BindingFlags bindingFlags)
     {
+      //TODO: LINQ remove
       var eventChannels = contextType
         .GetProperties (bindingFlags)
         .Where (p => ChannelType.IsAssignableFrom (p.PropertyType))

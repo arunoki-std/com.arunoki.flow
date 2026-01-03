@@ -16,7 +16,7 @@ namespace Arunoki.Flow
       this.eventType = eventType;
     }
 
-    public IEventsContext Context { get; private set; }
+    public IContext Context { get; private set; }
 
     public void Subscribe (EventsHandler eventsHandler)
     {
@@ -40,7 +40,7 @@ namespace Arunoki.Flow
       Handlers.Clear ();
     }
 
-    protected internal virtual void InitContext (IEventsContext context) => Context ??= context;
+    protected internal virtual void InitContext (IContext context) => Context ??= context;
 
     public Type GetEventType () => eventType;
   }

@@ -5,7 +5,7 @@ namespace Arunoki.Flow
     /// <summary>
     /// Context of the event.
     /// </summary>
-    IEventsContext Context { get; }
+    IContext Context { get; }
   }
 
   public interface IDomainEvent : IEvent

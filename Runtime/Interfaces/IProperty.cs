@@ -1,11 +1,11 @@
 namespace Arunoki.Flow
 {
-  public interface IProperty<TValue> : IReadable<TValue>
+  public interface IProperty<in TValue> : IEventChannel
   {
     bool Set (TValue value);
   }
 
-  public interface IProperty<TValue, TEvent> : IProperty<TValue>, IReadable<TValue, TEvent> where TEvent : IEvent
+  public interface IProperty<in TValue, TEvent> : IProperty<TValue>, IEventChannel<TEvent> where TEvent : IEvent
   {
   }
 }

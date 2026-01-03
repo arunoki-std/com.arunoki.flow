@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public interface IActiveEventHandler
+  public interface IActiveHandler : IHandler
   {
     bool IsHandlingEvents { get; set; }
 

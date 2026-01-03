@@ -30,14 +30,14 @@ namespace Arunoki.Flow.Misc
 
     public virtual bool IsTarget (object other)
     {
-      return other is IEventsHandler && Target == other;
+      return other is IHandler && Target == other;
     }
 
     public virtual object GetTargetInstance () => Target;
 
     public virtual bool IsActive ()
     {
-      return GetTargetInstance () is not IActiveEventHandler handler || handler.IsHandlingEvents;
+      return GetTargetInstance () is not IActiveHandler handler || handler.IsHandlingEvents;
     }
   }
 }

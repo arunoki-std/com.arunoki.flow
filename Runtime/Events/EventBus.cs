@@ -16,15 +16,15 @@ namespace Arunoki.Flow
       EventChannels = set ?? new EventChannelSet ();
     }
 
-    public void Subscribe (IEventsHandler eventsHandler)
+    public void Subscribe (IHandler handler)
     {
-      EventChannels.Subscribe (eventsHandler, (target, methods)
+      EventChannels.Subscribe (handler, (target, methods)
         => new EventsHandler (target, methods));
     }
 
-    public void Unsubscribe (IEventsHandler eventsHandler)
+    public void Unsubscribe (IHandler handler)
     {
-      EventChannels.Unsubscribe (eventsHandler);
+      EventChannels.Unsubscribe (handler);
     }
 
     public void Subscribe (Type staticSubscriber)
@@ -43,7 +43,7 @@ namespace Arunoki.Flow
       EventChannels.UnsubscribeAll ();
     }
 
-    public void Register (IEventsContext context)
+    public void Register (IContext context)
     {
       EventChannels.RegisterEvents (context);
     }
@@ -57,7 +57,7 @@ namespace Arunoki.Flow
       EventChannels.RegisterEvents (staticType);
     }
 
-    public void Clear (IEventsContext context)
+    public void Clear (IContext context)
     {
       EventChannels.RemoveBy (context);
     }
@@ -73,18 +73,18 @@ namespace Arunoki.Flow
       EventChannels.Dispose ();
     }
 
-    void IBuilder.Build (object item)
+    void IBuilder.Build (object element)
     {
-      if (item is IEventsContext ec) Register (ec);
-      if (item is IEventsHandler er) Subscribe (er);
-      if (item is Type t && IsConsumable (t))
+      if (element is IContext ec) Register (ec);
+      if (element is IHandler er) Subscribe (er);
+      if (element is Type t && IsConsumable (t))
       {
         Register (t);
         Subscribe (t);
       }
     }
 
-    public bool IsConsumable (object item) => item is IEventsContext;
+    public bool IsConsumable (object element) => element is IContext;
 
     public bool IsConsumable (Type itemType) => itemType.IsAbstract && itemType.IsSealed;
   }

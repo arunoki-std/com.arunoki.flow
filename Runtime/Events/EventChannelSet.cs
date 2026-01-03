@@ -62,7 +62,7 @@ namespace Arunoki.Flow.Misc
       Set.Where (condition, Remove);
     }
 
-    public void RemoveBy (IEventsContext context)
+    public void RemoveBy (IContext context)
     {
       RemoveWhere (channel => context.Equals (channel.Context));
     }
@@ -72,7 +72,7 @@ namespace Arunoki.Flow.Misc
       return typeSet.TryGetValue (eventType, out eventChannel);
     }
 
-    public virtual void Unsubscribe (IEventsHandler handler)
+    public virtual void Unsubscribe (IHandler handler)
     {
       foreach (var eventChannel in Set)
       foreach ((int index, EventsHandler callback) in eventChannel.Handlers.WithIndex ())

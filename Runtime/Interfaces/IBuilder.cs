@@ -2,8 +2,8 @@ namespace Arunoki.Flow
 {
   public interface IBuilder
   {
-    void Build (object item);
+    void Build (object element);
 
-    bool IsConsumable (object item);
+    bool IsConsumable (object element);
   }
 }

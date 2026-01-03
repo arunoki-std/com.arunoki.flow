@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public interface IEventsContext
+  public interface IContext
   {
   }
 }

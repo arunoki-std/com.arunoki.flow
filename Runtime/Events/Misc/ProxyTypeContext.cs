@@ -2,7 +2,7 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  internal readonly struct ProxyTypeContext : IEventsContext
+  internal readonly struct ProxyTypeContext : IContext
   {
     public readonly Type Type;
 
