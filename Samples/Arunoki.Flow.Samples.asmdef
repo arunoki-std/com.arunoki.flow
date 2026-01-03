@@ -1,0 +1,17 @@
+{
+    "name": "Arunoki.Flow.Samples",
+    "rootNamespace": "Arunoki.Flow.Samples",
+    "references": [
+        "GUID:d48e9fc57811c4ec6bf5b657e01d94d8",
+        "GUID:6a5bb96b8ca4d4602b202c6e0058e9e9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
