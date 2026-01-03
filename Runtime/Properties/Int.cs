@@ -2,6 +2,11 @@ namespace Arunoki.Flow
 {
   public class Int<TEvent> : Property<TEvent, int> where TEvent : IValueEvent<int>, new ()
   {
+    public void Add (int value) => Set (Value + value);
+    public void Subtract (int value) => Set (Value - value);
+    public void Multiply (int value) => Set (Value * value);
+    public void Divide (int value) => Set (Value / value);
+
     public static implicit operator int (Int<TEvent> a) => a.Value;
 
     public static implicit operator uint (Int<TEvent> a) => (uint) a.Value;

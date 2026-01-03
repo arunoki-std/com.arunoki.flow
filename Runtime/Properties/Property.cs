@@ -15,27 +15,34 @@ namespace Arunoki.Flow
 
     public TValue Previous { get; private set; }
 
-    public bool Set (TValue value)
+    public bool IsReadable { get; private set; }
+
+    public void Readable (bool readable) => IsReadable = readable;
+
+    public virtual TValue Set (TValue value)
     {
+      if (IsReadable) return Value;
       if (!Equals (value, Value))
       {
         Previous = Value;
         Value = value;
 
         Call ();
-
-        return true;
       }
 
-      return false;
+      return value;
     }
 
-    public void Force (TValue value)
+    public virtual TValue Force (TValue value)
     {
-      if (!Set (value))
+      if (!Equals (value, Value))
       {
-        Call ();
+        Previous = Value;
+        Value = value;
       }
+
+      Call ();
+      return value;
     }
 
     protected void Call ()
@@ -43,22 +50,29 @@ namespace Arunoki.Flow
       var evt = Activator.CreateInstance (GetEventType (), Context, Value, Previous);
       base.Call (ref evt);
 
-      var domainEvent = (TEvent) evt;
-      OnEvent?.Invoke (ref domainEvent);
+      if (OnEvent != null)
+      {
+        var domainEvent = (TEvent) evt;
+        OnEvent (ref domainEvent);
+      }
     }
 
     protected internal sealed override void Call (ref object evt)
     {
       base.Call (ref evt);
 
-      var domainEvent = (TEvent) evt;
-      OnEvent?.Invoke (ref domainEvent);
+      if (OnEvent != null)
+      {
+        var domainEvent = (TEvent) evt;
+        OnEvent (ref domainEvent);
+      }
     }
 
     public virtual void Reset (TValue @default = default)
     {
       Value = @default;
       Previous = @default;
+      Readable (false);
     }
 
     public override void UnsubscribeAll ()

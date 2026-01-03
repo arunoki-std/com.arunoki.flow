@@ -2,6 +2,11 @@ namespace Arunoki.Flow
 {
   public class Float<TEvent> : Property<TEvent, float> where TEvent : IValueEvent<float>, new ()
   {
+    public void Add (float value) => Set (Value + value);
+    public void Subtract (float value) => Set (Value - value);
+    public void Multiply (float value) => Set (Value * value);
+    public void Divide (float value) => Set (Value / value);
+
     public static implicit operator int (Float<TEvent> a) => Globals.ToInt (a.Value);
 
     public static implicit operator uint (Float<TEvent> a) => Globals.ToUint (a.Value);
