@@ -11,11 +11,6 @@ namespace Arunoki.Flow.Sample
     [Preserve]
     public class PowerHandler : BaseBatteryHandler<Battery>
     {
-      public PowerHandler ()
-      {
-        UnityEngine.Debug.Log (this);
-      }
-
       public void OnChanged (PowerEvent power)
       {
         if (Mathf.Approximately (power.Value, 1.0f))

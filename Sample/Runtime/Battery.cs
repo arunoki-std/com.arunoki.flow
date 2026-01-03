@@ -1,10 +1,15 @@
+using Arunoki.Collections;
+using Arunoki.Flow.Sample.Controllers;
 using Arunoki.Flow.Sample.Events;
+
+using System;
 
 namespace Arunoki.Flow.Sample
 {
-  public partial class Battery : IContext, IPipeline
+  public partial class Battery : IContext, IPipeline, IContainer<IHandler>, IDisposable
   {
     private readonly FlowHub hub = new();
+    private IContainer<IHandler> targetContainer;
 
     public Float<PowerEvent> Power { get; } = new();
     public Bool<ChargeStatusEvent> IsCharged { get; } = new();
@@ -13,6 +18,7 @@ namespace Arunoki.Flow.Sample
     public Battery ()
     {
       hub.Init (this);
+      hub.Pipeline.Add<BatteryPipeline> ();
     }
 
     private void Charged ()
@@ -29,6 +35,27 @@ namespace Arunoki.Flow.Sample
     {
       Power.Reset ();
       IsCharged.Reset ();
+    }
+
+    IContainer<IHandler> IContainer<IHandler>.TargetContainer
+    {
+      get => targetContainer;
+      set => targetContainer = value;
+    }
+
+    void IContainer<IHandler>.OnElementAdded (IHandler element)
+    {
+      UnityEngine.Debug.LogWarning ($"element added: {element}");
+    }
+
+    void IContainer<IHandler>.OnElementRemoved (IHandler element)
+    {
+      UnityEngine.Debug.LogWarning ($"element removed: {element}");
+    }
+
+    public void Dispose ()
+    {
+      hub.Clear ();
     }
   }
 }
