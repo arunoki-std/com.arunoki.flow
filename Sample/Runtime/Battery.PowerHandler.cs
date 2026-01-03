@@ -1,16 +1,21 @@
-using Arunoki.Flow.Samples.Controllers;
-using Arunoki.Flow.Samples.Events;
+using Arunoki.Flow.Sample.Controllers;
+using Arunoki.Flow.Sample.Events;
 
 using UnityEngine;
 using UnityEngine.Scripting;
 
-namespace Arunoki.Flow.Samples
+namespace Arunoki.Flow.Sample
 {
   public partial class Battery
   {
     [Preserve]
     public class PowerHandler : BaseBatteryHandler<Battery>
     {
+      public PowerHandler ()
+      {
+        UnityEngine.Debug.Log (this);
+      }
+
       public void OnChanged (PowerEvent power)
       {
         if (Mathf.Approximately (power.Value, 1.0f))

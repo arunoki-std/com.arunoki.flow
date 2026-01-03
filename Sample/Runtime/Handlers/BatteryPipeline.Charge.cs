@@ -1,8 +1,8 @@
-using Arunoki.Flow.Samples.Events;
+using Arunoki.Flow.Sample.Events;
 
 using UnityEngine.Scripting;
 
-namespace Arunoki.Flow.Samples.Controllers
+namespace Arunoki.Flow.Sample.Controllers
 {
   internal sealed partial class BatteryPipeline
   {

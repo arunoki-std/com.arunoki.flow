@@ -1,4 +1,4 @@
-namespace Arunoki.Flow.Samples.Events
+namespace Arunoki.Flow.Sample.Events
 {
   public struct PowerEvent : IValueEvent<float>
   {

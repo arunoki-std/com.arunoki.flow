@@ -1,6 +1,6 @@
-using Arunoki.Flow.Samples.Events;
+using Arunoki.Flow.Sample.Events;
 
-namespace Arunoki.Flow.Samples
+namespace Arunoki.Flow.Sample
 {
   public partial class Battery : IContext, IPipeline
   {
@@ -15,14 +15,6 @@ namespace Arunoki.Flow.Samples
       hub.Init (this);
     }
 
-    public void DoChargeTest ()
-    {
-      Power.Set (0.1f);
-      Power.Set (0.6f);
-      Power.Set (1.0f);
-      Power.Set (1.1f);
-    }
-
     private void Charged ()
     {
       IsCharged.Set (true);
@@ -31,6 +23,12 @@ namespace Arunoki.Flow.Samples
     private void NotCharged ()
     {
       IsCharged.Set (false);
+    }
+
+    public void Reset ()
+    {
+      Power.Reset ();
+      IsCharged.Reset ();
     }
   }
 }
