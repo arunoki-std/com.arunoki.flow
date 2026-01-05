@@ -9,9 +9,10 @@ namespace Arunoki.Flow
     {
     }
 
-    public override void UnsubscribeAll ()
+    /// Remove all subscribers
+    public override void Clear ()
     {
-      base.UnsubscribeAll ();
+      base.Clear ();
 
       OnEvent = null;
     }

@@ -21,7 +21,7 @@ namespace Arunoki.Flow
     {
       base.OnElementRemoved (eventChannel);
 
-      eventChannel.UnsubscribeAll ();
+      eventChannel.Clear ();
     }
 
     public void Subscribe (IHandler handler)
@@ -43,14 +43,14 @@ namespace Arunoki.Flow
     protected virtual void Unsubscribe (object handler)
     {
       foreach (var pair in Elements)
-      foreach ((int index, Callback callback) in pair.Element.Callbacks.WithIndex ())
+      foreach ((int index, Callback callback) in pair.Element.WithIndex ())
         if (callback.IsTarget (handler))
-          pair.Element.Callbacks.RemoveAt (index);
+          pair.Element.RemoveAt (index);
     }
 
     public virtual void UnsubscribeAll ()
     {
-      Elements.ForEach (pair => pair.Element.UnsubscribeAll ());
+      Elements.ForEach (pair => pair.Element.Clear ());
     }
   }
 }

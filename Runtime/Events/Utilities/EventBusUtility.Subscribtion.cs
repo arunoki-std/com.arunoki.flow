@@ -32,7 +32,7 @@ namespace Arunoki.Flow.Utilities
 
         if (events.TryGet (eventType, out var channel))
         {
-          channel.Subscribe (createCallback (receiver, methods));
+          channel.Add (createCallback (receiver, methods));
         }
         else if (Utils.IsWarningsEnabled ())
         {

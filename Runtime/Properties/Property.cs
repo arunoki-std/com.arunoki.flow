@@ -9,7 +9,7 @@ namespace Arunoki.Flow
 
     public bool IsReadable { get; private set; }
 
-    public void Readable (bool readable) => IsReadable = readable;
+    public void SetReadable (bool readable) => IsReadable = readable;
 
     public virtual TValue Set (TValue value)
     {
@@ -25,6 +25,7 @@ namespace Arunoki.Flow
       return value;
     }
 
+    /// Update values if needed and publish event anyway
     public virtual TValue Force (TValue value)
     {
       if (!Equals (value, Value))
@@ -37,16 +38,17 @@ namespace Arunoki.Flow
       return value;
     }
 
+    /// Set values to default.
     public virtual void Reset (TValue @default = default)
     {
       Value = @default;
       Previous = @default;
-      Readable (false);
     }
 
-    public override void UnsubscribeAll ()
+    /// Remove all subscribers.
+    public override void Clear ()
     {
-      base.UnsubscribeAll ();
+      base.Clear ();
 
       Reset ();
     }
