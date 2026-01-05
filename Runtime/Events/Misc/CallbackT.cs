@@ -5,16 +5,22 @@ namespace Arunoki.Flow.Misc
 {
   public class Callback<TEvent> : Callback where TEvent : struct, IEvent
   {
-    private readonly RefAction<object, TEvent> [] invokers;
+    private readonly RefActionEvent<TEvent> [] invokers;
 
     public Callback (object eventTarget, MethodInfo [] methods) : base (eventTarget)
     {
-      invokers = new RefAction<object, TEvent>[methods.Length];
+      invokers = new RefActionEvent<TEvent>[methods.Length];
+
       var i = 0;
+
       try
       {
         for (; i < methods.Length; i++)
-          invokers [i] = (RefAction<object, TEvent>) methods [i].CreateDelegate (typeof(RefAction<object, TEvent>));
+        {
+          invokers [i] = IsTargetStatic
+            ? (RefActionEvent<TEvent>) methods [i].CreateDelegate (typeof(RefActionEvent<TEvent>))
+            : (RefActionEvent<TEvent>) methods [i].CreateDelegate (typeof(RefActionEvent<TEvent>), eventTarget);
+        }
       }
       catch (ArgumentException)
       {
@@ -22,12 +28,11 @@ namespace Arunoki.Flow.Misc
       }
     }
 
+
     public void Publish (ref TEvent evt)
     {
-      var obj = GetTargetInstance ();
-
       for (var i = 0; i < invokers.Length; i++)
-        invokers [i] (obj, ref evt);
+        invokers [i] (ref evt);
     }
 
     public override void Dispose ()

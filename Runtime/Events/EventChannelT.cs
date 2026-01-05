@@ -7,7 +7,7 @@ namespace Arunoki.Flow
   public class EventChannel<TEvent> : EventChannel
     where TEvent : struct, IEvent
   {
-    public event RefAction<TEvent> OnEvent;
+    public event RefActionEvent<TEvent> OnEvent;
 
     public EventChannel () : base (typeof(TEvent))
     {
@@ -15,10 +15,6 @@ namespace Arunoki.Flow
 
     protected internal override void Subscribe (object target, MethodInfo [] methods)
     {
-      var e = $"{target}: ";
-      foreach (var m in methods) e += (m.Name + ",");
-      UnityEngine.Debug.Log ($"{GetType ().Name} ({typeof(TEvent)}) => {e}");
-
       Add (new Callback<TEvent> (target, methods));
     }
 

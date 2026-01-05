@@ -55,6 +55,10 @@ namespace Arunoki.Flow.Utilities
           continue;
 
         var eventType = parameters [0].ParameterType;
+        if (!eventType.IsByRef)
+          continue;
+
+        eventType = eventType.GetElementType ();
         if (!typeof(IEvent).IsAssignableFrom (eventType))
           continue;
 

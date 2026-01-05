@@ -18,6 +18,13 @@ namespace Arunoki.Flow
       this.eventType = eventType;
     }
 
+    protected override void OnElementRemoved (Callback element)
+    {
+      base.OnElementRemoved (element);
+
+      element.Dispose ();
+    }
+
     protected internal abstract void Subscribe (object target, MethodInfo [] methods);
 
     public Type GetEventType () => eventType;

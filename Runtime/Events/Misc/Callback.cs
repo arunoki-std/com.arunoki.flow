@@ -4,13 +4,13 @@ namespace Arunoki.Flow.Misc
 {
   public abstract class Callback
   {
-    private readonly bool isTargetStaticManager;
+    protected readonly bool IsTargetStatic;
     protected object EventTarget;
 
     protected Callback (object eventTarget)
     {
       EventTarget = eventTarget;
-      isTargetStaticManager = eventTarget is Type;
+      IsTargetStatic = eventTarget is Type;
     }
 
     public virtual void Dispose ()
@@ -24,7 +24,7 @@ namespace Arunoki.Flow.Misc
     }
 
     /// Subscriber instance (null if subscriber is static manager).
-    public virtual object GetTargetInstance () => isTargetStaticManager ? null : EventTarget;
+    public virtual object GetTargetInstance () => IsTargetStatic ? null : EventTarget;
 
     public virtual bool IsActive ()
     {
