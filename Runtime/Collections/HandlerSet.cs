@@ -28,6 +28,8 @@ namespace Arunoki.Flow.Misc
     public abstract void Produce (object element);
     public abstract bool IsConsumable (object element);
 
+    public int Count => GetConcreteSet ().Count;
+
     public void RemoveWhere (Func<IHandler, bool> condition)
       => GetConcreteSet ().RemoveWhere (condition);
 
@@ -42,6 +44,9 @@ namespace Arunoki.Flow.Misc
 
     public void Where (Func<IHandler, bool> condition, Action<IHandler> action)
       => GetConcreteSet ().Where (condition, action);
+
+    public bool Any (Func<IHandler, bool> condition)
+      => GetConcreteSet ().Any (condition);
 
     public virtual void Clear ()
     {

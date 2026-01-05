@@ -49,6 +49,7 @@ namespace Arunoki.Flow.Misc
 
     protected virtual void Add (Type pipelineType, IContext context = null)
     {
+      //TODO: Create pipeline from scratch
       context ??= Context;
       var typeList = pipelineType.GetNestedTypes<IPipelineHandler> ();
       var set = TypeSet.GetOrCreate (pipelineType);

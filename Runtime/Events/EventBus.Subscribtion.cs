@@ -1,9 +1,11 @@
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
 
+using Arunoki.Collections;
 using Arunoki.Flow.Misc;
 using Arunoki.Flow.Utilities;
 
 using System;
+using System.Linq;
 
 namespace Arunoki.Flow
 {

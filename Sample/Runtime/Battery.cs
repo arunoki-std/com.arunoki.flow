@@ -13,12 +13,17 @@ namespace Arunoki.Flow.Sample
 
     public Float<PowerEvent> Power { get; } = new();
     public Bool<ChargeStatusEvent> IsCharged { get; } = new();
-    public EventChannel<OverloadEvent> Overload { get; } = new();
+    public Channel<OverloadEvent> Overload { get; } = new();
 
     public Battery ()
     {
       hub.Init (this);
-      hub.Pipeline.Add<BatteryPipeline> ();
+      // hub.Pipeline.Add<BatteryPipeline> ();
+      var pipeline = new BatteryPipeline ();
+      hub.Pipeline.Add (pipeline);
+      hub.Pipeline.Add (pipeline);
+
+      // hub.Events.Subscribe (this);
     }
 
     private void Charged ()

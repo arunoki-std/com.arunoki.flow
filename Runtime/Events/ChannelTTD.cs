@@ -4,8 +4,8 @@ using System;
 
 namespace Arunoki.Flow
 {
-  /// One type of event per data
-  public class EventChannel<TEvent, TData> : EventChannel<TEvent>
+  /// One type of event per data.
+  public class Channel<TEvent, TData> : Channel<TEvent>
     where TEvent : struct, IDataEvent<TData>
     where TData : struct
   {
@@ -17,7 +17,7 @@ namespace Arunoki.Flow
       Publish (ref evt);
     }
 
-    [Obsolete ("Use Publish (ref TData) instead")]
+    [Obsolete ("Use Publish (ref TData) instead.")]
     public override void Publish ()
     {
       base.Publish ();

@@ -18,11 +18,11 @@ namespace Arunoki.Flow
       this.eventType = eventType;
     }
 
-    protected override void OnElementRemoved (Callback element)
+    protected override void OnElementRemoved (Callback callback)
     {
-      base.OnElementRemoved (element);
+      base.OnElementRemoved (callback);
 
-      element.Dispose ();
+      callback.Dispose ();
     }
 
     protected internal abstract void Subscribe (object target, MethodInfo [] methods);
@@ -37,7 +37,7 @@ namespace Arunoki.Flow
       {
         if (Context != null && context != null)
           throw new InvalidOperationException (
-            $"Trying to rewrite existing {nameof(Context)} '{Context}' by '{context}'.");
+            $"Trying to rewrite existing {nameof(Context)} '{Context}' by other '{context}'.");
       }
 
       Context = context;

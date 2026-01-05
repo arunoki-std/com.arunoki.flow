@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public class Property<TEvent, TValue> : EventChannel<TEvent>, IProperty<TValue, TEvent>
+  public class Property<TEvent, TValue> : Channel<TEvent>, IProperty<TValue, TEvent>
     where TEvent : struct, IValueEvent<TValue>
   {
     public TValue Value { get; private set; }

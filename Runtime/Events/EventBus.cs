@@ -6,17 +6,16 @@ using System;
 
 namespace Arunoki.Flow
 {
+  /// Represents Key (event) && Element (event channel) collection.
   public partial class EventBus : Set<Type, EventChannel>
   {
+    /// Register reactive properties.
     public void AddEventSource (IContext context)
     {
       this.GetReactiveProperties (context);
     }
 
-    /// <summary>
-    /// Register reactive properties
-    /// </summary>
-    /// <param name="staticType"></param>
+    /// Register reactive properties.
     public void AddEventSource (Type staticType)
     {
       this.GetReactiveProperties (staticType);

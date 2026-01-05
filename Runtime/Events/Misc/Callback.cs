@@ -18,6 +18,7 @@ namespace Arunoki.Flow.Misc
       EventTarget = null;
     }
 
+    /// Define whether is eventTarget is methods source. 
     public virtual bool IsConsumable (object eventTarget)
     {
       return EventTarget == eventTarget;
