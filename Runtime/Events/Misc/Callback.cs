@@ -20,7 +20,7 @@ namespace Arunoki.Flow.Misc
 
     public virtual bool IsConsumable (object eventTarget)
     {
-      return eventTarget is IHandler && EventTarget == eventTarget;
+      return EventTarget == eventTarget;
     }
 
     /// Subscriber instance (null if subscriber is static manager).
