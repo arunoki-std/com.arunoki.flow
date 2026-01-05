@@ -25,7 +25,7 @@ namespace Arunoki.Flow.Misc
     FlowHub IHubPart.Hub => Hub;
     void IHubPart.Init (FlowHub hub) => Init (hub);
 
-    public abstract void Build (object element);
+    public abstract void Produce (object element);
     public abstract bool IsConsumable (object element);
 
     public void RemoveWhere (Func<IHandler, bool> condition)

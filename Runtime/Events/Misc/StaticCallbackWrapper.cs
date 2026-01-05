@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Misc
 {
-  internal class ProxyTypeEventsHandler : EventsHandler
+  internal class StaticCallbackWrapper : Callback
   {
-    public ProxyTypeEventsHandler (Type type, MethodInfo [] methods)
+    public StaticCallbackWrapper (Type type, MethodInfo [] methods)
       : base (type, methods)
     {
     }

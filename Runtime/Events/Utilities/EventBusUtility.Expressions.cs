@@ -7,11 +7,8 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Utilities
 {
-  internal static partial class EventsReflectionUtility
+  internal static partial class EventBusUtility
   {
-    // 0 = unknown, 1 = supported, -1 = not supported
-    private static int _expressionState;
-
     private static readonly Dictionary<(Type, BindingFlags), ChannelAccessors> Cache = new();
 
     public static ChannelAccessors GetOrCreateEventChannelAccessors (Type sourceType, BindingFlags bindingFlags)
@@ -86,41 +83,13 @@ namespace Arunoki.Flow.Utilities
       return getters;
     }
 
-    private static void ProbeExpressionCompile ()
-    {
-      // проверяем именно паттерн "object -> (DeclaringType) -> property"
-      var src = Expression.Parameter (typeof(object), "src");
-      var cast = Expression.Convert (src, typeof(ExpressionProbeSource));
-      var prop = Expression.Property (cast, nameof(ExpressionProbeSource.Channel));
-      var toBase = Expression.Convert (prop, typeof(EventChannel));
-      Expression.Lambda<Func<object, EventChannel>> (toBase, src).Compile ();
-    }
-
-    public static bool IsExpressionSupported ()
-    {
-      if (_expressionState != 0) return _expressionState > 0;
-
-      try
-      {
-        ProbeExpressionCompile ();
-        _expressionState = 1;
-      }
-      catch (PlatformNotSupportedException) { _expressionState = -1; }
-      catch (NotSupportedException) { _expressionState = -1; }
-      catch (InvalidOperationException) { _expressionState = -1; }
-
-      return _expressionState > 0;
-    }
-
-    private sealed class ExpressionProbeSource
-    {
-      public EventChannel Channel => null!;
-    }
-
     internal sealed class ChannelAccessors
     {
-      public Func<object, EventChannel> []? Getters; // быстрый путь
-      public PropertyInfo [] Props = Array.Empty<PropertyInfo> (); // fallback
+      /// Fast way
+      public Func<object, EventChannel> []? Getters;
+
+      /// Fallback
+      public PropertyInfo [] Props = Array.Empty<PropertyInfo> ();
     }
   }
 }

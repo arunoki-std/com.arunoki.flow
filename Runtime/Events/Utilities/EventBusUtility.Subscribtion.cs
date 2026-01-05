@@ -6,10 +6,10 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Utilities
 {
-  internal static class ChannelSubscribeUtility
+  internal static partial class EventBusUtility
   {
-    public static void Subscribe (this EventChannelSet set, object receiver,
-      Func<object, MethodInfo [], EventsHandler> createCallback)
+    public static void Subscribe (this EventBus events, object receiver,
+      Func<object, MethodInfo [], Callback> createCallback)
     {
       Type receiverType;
       BindingFlags bindingFlags;
@@ -30,7 +30,7 @@ namespace Arunoki.Flow.Utilities
       {
         (Type eventType, MethodInfo [] methods) = groups [i];
 
-        if (set.TryGet (eventType, out var channel))
+        if (events.TryGet (eventType, out var channel))
         {
           channel.Subscribe (createCallback (receiver, methods));
         }

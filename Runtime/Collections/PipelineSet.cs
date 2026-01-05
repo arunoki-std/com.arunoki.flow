@@ -78,7 +78,7 @@ namespace Arunoki.Flow.Misc
       TypeSet.Remove (handler);
     }
 
-    public override void Build (object element)
+    public override void Produce (object element)
     {
       if (element is IPipeline pipeline)
       {

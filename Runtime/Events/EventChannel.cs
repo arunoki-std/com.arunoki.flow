@@ -5,32 +5,30 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public abstract class EventChannel : IEventChannel
+  public abstract class EventChannel : ContextPart, IEventChannel
   {
     private readonly Type eventType;
 
-    protected internal Set<EventsHandler> Handlers { get; } = new Set<EventsHandler> ();
+    protected internal Set<Callback> Callbacks { get; } = new();
 
     protected EventChannel (Type eventType)
     {
       this.eventType = eventType;
     }
 
-    public IContext Context { get; private set; }
-
-    public void Subscribe (EventsHandler eventsHandler)
+    public void Subscribe (Callback callback)
     {
-      Handlers.Add (eventsHandler);
+      Callbacks.Add (callback);
     }
 
-    public void Unsubscribe (EventsHandler eventsHandler)
+    public void Unsubscribe (Callback callback)
     {
-      Handlers.Remove (eventsHandler);
+      Callbacks.Remove (callback);
     }
 
     protected virtual void Publish<TE> (ref TE evt) where TE : struct, IEvent
     {
-      foreach (var handler in Handlers)
+      foreach (var handler in Callbacks)
         if (handler.IsActive ())
           handler.Publish (ref evt);
     }
@@ -38,17 +36,15 @@ namespace Arunoki.Flow
     [Obsolete ("use Publish() instead", true)]
     protected internal virtual void Call (ref object evt)
     {
-      foreach (var handler in Handlers)
+      foreach (var handler in Callbacks)
         if (handler.IsActive ())
           handler.OnCallback (ref evt);
     }
 
     public virtual void UnsubscribeAll ()
     {
-      Handlers.Clear ();
+      Callbacks.Clear ();
     }
-
-    protected internal virtual void InitContext (IContext context) => Context ??= context;
 
     public Type GetEventType () => eventType;
   }

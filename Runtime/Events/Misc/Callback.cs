@@ -3,11 +3,11 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Misc
 {
-  public class EventsHandler
+  public class Callback
   {
     protected MethodInfo [] Methods;
 
-    public EventsHandler (object target, MethodInfo [] methods)
+    public Callback (object target, MethodInfo [] methods)
     {
       Target = target;
       Methods = methods;

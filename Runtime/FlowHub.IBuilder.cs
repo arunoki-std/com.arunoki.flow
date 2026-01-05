@@ -8,7 +8,7 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : IBuilder
   {
-    public void Build (object element)
+    public void Produce (object element)
     {
       switch (element)
       {
@@ -22,7 +22,7 @@ namespace Arunoki.Flow
           if (Utils.IsDebug () && !IsConsumable (staticType))
             throw new StaticManagerException (staticType);
 
-          Events.Register (staticType);
+          Events.AddEventSource (staticType);
           Events.Subscribe (staticType);
           BuildNestedContexts (staticType.GetAllPropertiesWithNested<IContext> ());
           break;
@@ -35,7 +35,7 @@ namespace Arunoki.Flow
 
     protected virtual void BuildNestedContexts (List<IContext> contexts)
     {
-      contexts.ForEach (Events.Register);
+      contexts.ForEach (Events.AddEventSource);
       contexts.ForEach (BuildBySets);
     }
 
@@ -45,7 +45,7 @@ namespace Arunoki.Flow
 
       ForEachSet<IBuilder> (builder =>
       {
-        if (builder.IsConsumable (obj)) builder.Build (obj);
+        if (builder.IsConsumable (obj)) builder.Produce (obj);
       });
     }
 

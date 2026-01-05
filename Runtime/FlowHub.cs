@@ -25,7 +25,7 @@ namespace Arunoki.Flow
       ForEachSet<IContextPart> (part => part.Set (Context));
       ForEachSet<IHubPart> (part => part.Init (this));
 
-      Build (Context);
+      Produce (Context);
     }
 
     protected override void OnElementAdded (IHandler element)
@@ -49,7 +49,7 @@ namespace Arunoki.Flow
     {
       base.Clear ();
 
-      Events.Dispose ();
+      Events.Clear ();
     }
   }
 }

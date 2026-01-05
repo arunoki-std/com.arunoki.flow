@@ -5,29 +5,29 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Utilities
 {
-  internal static partial class EventsReflectionUtility
+  internal static partial class EventBusUtility
   {
-    public static void RegisterEvents (this EventChannelSet eventSet, IContext context)
-      => eventSet.RegisterEvents (context, context);
+    public static void GetReactiveProperties (this EventBus events, IContext context)
+      => events.GetReactiveProperties (context, context);
 
-    public static void RegisterEvents (this EventChannelSet eventSet, IContext context, object sourceObject)
+    public static void GetReactiveProperties (this EventBus events, IContext context, object sourceObject)
     {
       const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
 
-      RegisterEvents (eventSet, context, context.GetType (), sourceObject, flags);
+      GetReactiveProperties (events, context, context.GetType (), sourceObject, flags);
     }
 
-    public static void RegisterEvents (this EventChannelSet eventSet, Type staticType)
+    public static void GetReactiveProperties (this EventBus events, Type staticType)
     {
       if (Utils.IsDebug () && !(staticType.IsSealed && staticType.IsAbstract))
         throw new StaticManagerException (staticType);
 
       const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
-      RegisterEvents (eventSet, new ProxyTypeContext (staticType), staticType, null, flags);
+      GetReactiveProperties (events, new StaticContextWrapper (staticType), staticType, null, flags);
     }
 
-    private static void RegisterEvents (EventChannelSet eventSet, IContext context, Type sourceType,
+    private static void GetReactiveProperties (EventBus events, IContext context, Type sourceType,
       object sourceObject, BindingFlags bindingFlags)
     {
       var entry = GetOrCreateEventChannelAccessors (sourceType, bindingFlags);
@@ -40,8 +40,8 @@ namespace Arunoki.Flow.Utilities
           var channel = getters [i] (sourceObject); // для static sourceObject игнорируется
           if (channel == null) continue;
 
-          eventSet.Add (channel);
-          channel.InitContext (context);
+          events.Add (channel);
+          (channel as IContextPart).Set (context);
         }
 
         return;
@@ -54,8 +54,8 @@ namespace Arunoki.Flow.Utilities
         if (props [i].GetValue (sourceObject) is not EventChannel channel)
           continue;
 
-        eventSet.Add (channel);
-        channel.InitContext (context);
+        events.Add (channel);
+        (channel as IContextPart).Set (context);
       }
     }
 
