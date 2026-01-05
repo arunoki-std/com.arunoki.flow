@@ -1,45 +1,30 @@
 using System;
-using System.Reflection;
 
 namespace Arunoki.Flow.Misc
 {
-  public class Callback
+  public abstract class Callback
   {
-    protected MethodInfo [] Methods;
+    private readonly bool isTargetStaticManager;
+    protected object EventTarget;
 
-    public Callback (object target, MethodInfo [] methods)
+    protected Callback (object eventTarget)
     {
-      Target = target;
-      Methods = methods;
+      EventTarget = eventTarget;
+      isTargetStaticManager = eventTarget is Type;
     }
 
-    public object Target { get; private set; }
-
-    public virtual void Publish<TE> (ref TE evt) where TE : struct, IEvent
+    public virtual void Dispose ()
     {
+      EventTarget = null;
     }
 
-    [Obsolete ("use Publish() instead")]
-    public void OnCallback (ref object message)
+    public virtual bool IsConsumable (object eventTarget)
     {
-      var target = GetTargetInstance ();
-
-      for (var i = 0; i < Methods.Length; i++)
-        Methods [i].Invoke (target, new [] { message });
+      return eventTarget is IHandler && EventTarget == eventTarget;
     }
 
-    public void Dispose ()
-    {
-      Methods = null;
-      Target = null;
-    }
-
-    public virtual bool IsTarget (object other)
-    {
-      return other is IHandler && Target == other;
-    }
-
-    public virtual object GetTargetInstance () => Target;
+    /// Subscriber instance (null if subscriber is static manager).
+    public virtual object GetTargetInstance () => isTargetStaticManager ? null : EventTarget;
 
     public virtual bool IsActive ()
     {

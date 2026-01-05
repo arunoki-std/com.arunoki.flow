@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Sample
     [Preserve]
     public class PowerHandler : BaseBatteryHandler<Battery>
     {
-      public void OnChanged (PowerEvent power)
+      public void OnChanged (ref PowerEvent power)
       {
         if (Mathf.Approximately (power.Value, 1.0f))
           Battery.Charged ();

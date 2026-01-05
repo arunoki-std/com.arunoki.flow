@@ -3,6 +3,7 @@ using Arunoki.Flow.Misc;
 using Arunoki.Flow.Utilities;
 
 using System;
+using System.Reflection;
 
 namespace Arunoki.Flow
 {
@@ -17,12 +18,7 @@ namespace Arunoki.Flow
       this.eventType = eventType;
     }
 
-    protected virtual void Publish<TE> (ref TE evt) where TE : struct, IEvent
-    {
-      foreach (var handler in Elements)
-        if (handler.IsActive ())
-          handler.Publish (ref evt);
-    }
+    protected internal abstract void Subscribe (object target, MethodInfo [] methods);
 
     public Type GetEventType () => eventType;
 

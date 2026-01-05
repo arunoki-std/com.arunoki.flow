@@ -9,7 +9,7 @@ namespace Arunoki.Flow.Sample.Controllers
     [Preserve]
     internal sealed class Overload : BaseBatteryHandler<Battery>
     {
-      public void OnEvent (OverloadEvent evt)
+      public void OnEvent (ref OverloadEvent evt)
       {
         UnityEngine.Debug.Log ($"{nameof(Overload)}");
       }

@@ -1,9 +1,9 @@
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
+
 using Arunoki.Flow.Misc;
 using Arunoki.Flow.Utilities;
 
 using System;
-
-#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
 
 namespace Arunoki.Flow
 {
@@ -26,14 +26,12 @@ namespace Arunoki.Flow
 
     public void Subscribe (IHandler handler)
     {
-      this.Subscribe (handler, (target, methods)
-        => new Callback (target, methods));
+      EventBusUtility.Subscribe (this, handler);
     }
 
     public void Subscribe (Type staticHandler)
     {
-      this.Subscribe (staticHandler, (target, methods)
-        => new StaticCallbackWrapper ((Type) target, methods));
+      EventBusUtility.Subscribe (this, staticHandler);
     }
 
     public void Unsubscribe (Type staticHandler) => Unsubscribe (staticHandler as object);
@@ -44,7 +42,7 @@ namespace Arunoki.Flow
     {
       foreach (var pair in Elements)
       foreach ((int index, Callback callback) in pair.Element.WithIndex ())
-        if (callback.IsTarget (handler))
+        if (callback.IsConsumable (handler))
           pair.Element.RemoveAt (index);
     }
 

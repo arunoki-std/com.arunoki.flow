@@ -9,12 +9,12 @@ namespace Arunoki.Flow.Sample.Controllers
     [Preserve]
     internal sealed class Charge : BaseBatteryHandler<Battery>
     {
-      public void OnProgress (PowerEvent evt)
+      public void OnProgress (ref PowerEvent evt)
       {
         UnityEngine.Debug.Log ($"{nameof(Charge)} progress : {evt.Value}");
       }
 
-      public void OnCharged (ChargeStatusEvent evt)
+      public void OnCharged (ref ChargeStatusEvent evt)
       {
         UnityEngine.Debug.Log ($"{nameof(Charge)} status: {evt.Value}");
       }
