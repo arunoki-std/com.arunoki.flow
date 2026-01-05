@@ -1,4 +1,4 @@
-namespace Arunoki.Flow.Sample.Controllers
+namespace Arunoki.Flow.Sample.Handlers
 {
   public abstract class BaseBatteryHandler<TContext> : IPipelineHandler, IContextPart where TContext : Battery
   {
