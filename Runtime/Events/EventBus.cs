@@ -7,45 +7,47 @@ namespace Arunoki.Flow
 {
   public class EventBus : IDisposable, IBuilder
   {
-    internal readonly EventChannelSet EventChannels;
+    internal readonly EventChannelSet Channels;
 
     public EventBus () : this (new EventChannelSet ()) { }
 
     internal EventBus (EventChannelSet set)
     {
-      EventChannels = set ?? new EventChannelSet ();
+      Channels = set ?? new EventChannelSet ();
     }
 
     public void Subscribe (IHandler handler)
     {
-      EventChannels.Subscribe (handler, (target, methods)
+      Channels.Subscribe (handler, (target, methods)
         => new EventsHandler (target, methods));
     }
 
     public void Unsubscribe (IHandler handler)
     {
-      EventChannels.Unsubscribe (handler);
+      Channels.Unsubscribe (handler);
     }
 
     public void Subscribe (Type staticSubscriber)
     {
-      EventChannels.Subscribe (staticSubscriber, (target, methods)
+      Channels.Subscribe (staticSubscriber, (target, methods)
         => new ProxyTypeEventsHandler ((Type) target, methods));
     }
 
     public void Unsubscribe (Type staticSubscriber)
     {
-      EventChannels.Unsubscribe (staticSubscriber);
+      foreach (var channel in Channels)
+      foreach (var handler in channel.Handlers.Where (eventsHandler => eventsHandler.IsTarget (staticSubscriber)))
+        channel.Unsubscribe (handler);
     }
 
     public void UnsubscribeAll ()
     {
-      EventChannels.UnsubscribeAll ();
+      Channels.UnsubscribeAll ();
     }
 
     public void Register (IContext context)
     {
-      EventChannels.RegisterEvents (context);
+      Channels.RegisterEvents (context);
     }
 
     /// <summary>
@@ -54,23 +56,23 @@ namespace Arunoki.Flow
     /// <param name="staticType"></param>
     public void Register (Type staticType)
     {
-      EventChannels.RegisterEvents (staticType);
+      Channels.RegisterEvents (staticType);
     }
 
     public void Clear (IContext context)
     {
-      EventChannels.RemoveBy (context);
+      Channels.RemoveBy (context);
     }
 
     public void Clear (Type staticEventSource)
     {
-      EventChannels.RemoveWhere (eventChannel =>
+      Channels.RemoveWhere (eventChannel =>
         eventChannel.Context is ProxyTypeContext wrapper && wrapper.Type == staticEventSource);
     }
 
     public virtual void Dispose ()
     {
-      EventChannels.Dispose ();
+      Channels.Clear ();
     }
 
     void IBuilder.Build (object element)
@@ -86,6 +88,6 @@ namespace Arunoki.Flow
 
     public bool IsConsumable (object element) => element is IContext;
 
-    public bool IsConsumable (Type itemType) => itemType.IsAbstract && itemType.IsSealed;
+    public static bool IsConsumable (Type itemType) => itemType.IsAbstract && itemType.IsSealed;
   }
 }

@@ -2,15 +2,8 @@ namespace Arunoki.Flow.Sample.Events
 {
   public struct ChargeStatusEvent : IValueEvent<bool>
   {
-    public ChargeStatusEvent (IContext context, bool value, bool previous)
-    {
-      Context = context;
-      Value = value;
-      Previous = previous;
-    }
-
-    public IContext Context { get; }
-    public bool Value { get; }
-    public bool Previous { get; }
+    public IContext Context { get; set; }
+    public bool Value { get; set; }
+    public bool Previous { get; set; }
   }
 }

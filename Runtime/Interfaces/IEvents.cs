@@ -5,23 +5,23 @@ namespace Arunoki.Flow
     /// <summary>
     /// Context of the event.
     /// </summary>
-    IContext Context { get; }
+    IContext Context { get; set; }
   }
 
   public interface IDomainEvent : IEvent
   {
-    bool GetMessage (out string message);
+    string Message { get; set; }
   }
 
-  public interface IValueEvent<out T> : IEvent
+  public interface IValueEvent<T> : IEvent
   {
-    T Value { get; }
+    T Value { get; set; }
 
-    T Previous { get; }
+    T Previous { get; set; }
   }
 
-  public interface IDataEvent<out T> : IEvent
+  public interface IDataEvent<T> : IEvent
   {
-    T Data { get; }
+    T Data { get; set; }
   }
 }

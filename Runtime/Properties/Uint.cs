@@ -2,7 +2,7 @@ using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow
 {
-  public class Uint<TEvent> : Property<TEvent, uint> where TEvent : IValueEvent<uint>, new ()
+  public class Uint<TEvent> : Property<TEvent, uint> where TEvent : struct, IValueEvent<uint>
   {
     public void Add (uint value) => Set (Value + value);
     public void Subtract (uint value) => Set (Value - value);

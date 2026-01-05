@@ -1,9 +1,7 @@
-using System;
-
 namespace Arunoki.Flow
 {
   public class EventChannel<TEvent> : EventChannel
-    where TEvent : IDomainEvent, new ()
+    where TEvent : struct, IEvent
   {
     public event EventReceiver<TEvent> OnEvent;
 
@@ -18,27 +16,20 @@ namespace Arunoki.Flow
       OnEvent = null;
     }
 
-    public void Call ()
+    public void Publish ()
     {
-      var evt = Activator.CreateInstance (GetEventType (), Context);
-      base.Call (ref evt);
+      var evt = GetEventInstance ();
+      base.Publish (ref evt);
 
       if (OnEvent != null)
       {
-        var domainEvent = (TEvent) evt;
-        OnEvent (ref domainEvent);
+        OnEvent (ref evt);
       }
     }
 
-    protected internal sealed override void Call (ref object evt)
+    protected virtual TEvent GetEventInstance ()
     {
-      base.Call (ref evt);
-
-      if (OnEvent != null)
-      {
-        var domainEvent = (TEvent) evt;
-        OnEvent (ref domainEvent);
-      }
+      return new TEvent { Context = this.Context };
     }
   }
 }

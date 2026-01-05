@@ -80,13 +80,6 @@ namespace Arunoki.Flow.Utilities
       return result;
     }
 
-    public static void Unsubscribe (this EventChannelSet eventSet, object receiver)
-    {
-      foreach (var eventChannel in eventSet.Set)
-      foreach (var eventHandler in eventChannel.Handlers.Where (handler => handler.IsTarget (receiver)))
-        eventChannel.Unsubscribe (eventHandler);
-    }
-
     #region Obsolete
 
     // public static void Subscribe (this EventChannelSet set, object receiver, Func<object, MethodInfo [], EventsHandler> createCallback)

@@ -5,13 +5,13 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public class EventChannel : IEventChannel
+  public abstract class EventChannel : IEventChannel
   {
     private readonly Type eventType;
 
-    protected internal Set<EventsHandler> Handlers = new();
+    protected internal Set<EventsHandler> Handlers { get; } = new Set<EventsHandler> ();
 
-    public EventChannel (Type eventType)
+    protected EventChannel (Type eventType)
     {
       this.eventType = eventType;
     }
@@ -28,6 +28,14 @@ namespace Arunoki.Flow
       Handlers.Remove (eventsHandler);
     }
 
+    protected virtual void Publish<TE> (ref TE evt) where TE : struct, IEvent
+    {
+      foreach (var handler in Handlers)
+        if (handler.IsActive ())
+          handler.Publish (ref evt);
+    }
+
+    [Obsolete ("use Publish() instead", true)]
     protected internal virtual void Call (ref object evt)
     {
       foreach (var handler in Handlers)

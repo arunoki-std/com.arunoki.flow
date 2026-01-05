@@ -1,16 +1,8 @@
-using System;
-
 namespace Arunoki.Flow
 {
-  public class Property<TEvent, TValue> : EventChannel, IProperty<TValue, TEvent>
-    where TEvent : IValueEvent<TValue>, new ()
+  public class Property<TEvent, TValue> : EventChannel<TEvent>, IProperty<TValue, TEvent>
+    where TEvent : struct, IValueEvent<TValue>
   {
-    public Property () : base (typeof(TEvent))
-    {
-    }
-
-    public event EventReceiver<TEvent> OnEvent;
-
     public TValue Value { get; private set; }
 
     public TValue Previous { get; private set; }
@@ -27,7 +19,7 @@ namespace Arunoki.Flow
         Previous = Value;
         Value = value;
 
-        Call ();
+        Publish ();
       }
 
       return value;
@@ -41,31 +33,8 @@ namespace Arunoki.Flow
         Value = value;
       }
 
-      Call ();
+      Publish ();
       return value;
-    }
-
-    protected void Call ()
-    {
-      var evt = Activator.CreateInstance (GetEventType (), Context, Value, Previous);
-      base.Call (ref evt);
-
-      if (OnEvent != null)
-      {
-        var domainEvent = (TEvent) evt;
-        OnEvent (ref domainEvent);
-      }
-    }
-
-    protected internal sealed override void Call (ref object evt)
-    {
-      base.Call (ref evt);
-
-      if (OnEvent != null)
-      {
-        var domainEvent = (TEvent) evt;
-        OnEvent (ref domainEvent);
-      }
     }
 
     public virtual void Reset (TValue @default = default)
@@ -79,8 +48,12 @@ namespace Arunoki.Flow
     {
       base.UnsubscribeAll ();
 
-      OnEvent = null;
       Reset ();
+    }
+
+    protected override TEvent GetEventInstance ()
+    {
+      return new TEvent { Context = this.Context, Value = this.Value, Previous = this.Previous };
     }
   }
 }
