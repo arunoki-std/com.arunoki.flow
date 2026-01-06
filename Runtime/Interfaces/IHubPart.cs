@@ -4,6 +4,6 @@ namespace Arunoki.Flow
   {
     FlowHub Hub { get; }
 
-    void Init (FlowHub hub);
+    void Set (FlowHub hub);
   }
 }

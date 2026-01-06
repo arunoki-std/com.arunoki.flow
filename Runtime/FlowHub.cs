@@ -23,7 +23,7 @@ namespace Arunoki.Flow
       AddSetsFrom (Context);
 
       ForEachSet<IContextPart> (part => part.Set (Context));
-      ForEachSet<IHubPart> (part => part.Init (this));
+      ForEachSet<IHubPart> (part => part.Set (this));
 
       Produce (Context);
     }
@@ -35,7 +35,7 @@ namespace Arunoki.Flow
       if (element is IContextPart part && part.Get () == null)
         part.Set (Context);
 
-      if (element is IHubPart hubPart && hubPart.Hub == null) hubPart.Init (this);
+      if (element is IHubPart hubPart && hubPart.Hub == null) hubPart.Set (this);
     }
 
     protected override void OnElementRemoved (IHandler element)

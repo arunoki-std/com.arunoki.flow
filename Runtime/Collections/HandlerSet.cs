@@ -23,7 +23,7 @@ namespace Arunoki.Flow.Misc
     void IContextPart.Set (IContext context) => Context = context;
 
     FlowHub IHubPart.Hub => Hub;
-    void IHubPart.Init (FlowHub hub) => Init (hub);
+    void IHubPart.Set (FlowHub hub) => Init (hub);
 
     public abstract void Produce (object element);
     public abstract bool IsConsumable (object element);
