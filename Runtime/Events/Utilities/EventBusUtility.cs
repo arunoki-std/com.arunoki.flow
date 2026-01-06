@@ -27,32 +27,50 @@ namespace Arunoki.Flow.Utilities
       GetReactiveProperties (events, new StaticContextWrapper (staticType), staticType, null, flags);
     }
 
+    /// properties from static class won't be cached.
     private static void GetReactiveProperties (EventBus events, IContext context, Type sourceType,
       object sourceObject, BindingFlags bindingFlags)
     {
-      var entry = GetOrCreateEventChannelAccessors (sourceType, bindingFlags);
-
-      var getters = entry.Getters;
-      if (getters != null)
+      var saveEntry = sourceObject != null;
+      if (saveEntry)
       {
-        for (int i = 0; i < getters.Length; i++)
+        var entry = GetOrCreateEventChannelAccessors (sourceType, bindingFlags);
+
+        if (entry.Getters != null)
         {
-          var channel = getters [i] (sourceObject); // для static sourceObject игнорируется
-          if (channel == null) continue;
-
-          events.Add (channel);
-          (channel as IContextPart).Set (context);
+          FromGetters (entry, context, sourceObject, events);
         }
-
-        return;
+        else
+        {
+          FromProps (entry.Props, context, sourceObject, events);
+        }
       }
+      else
+      {
+        FromProps (GetEventChannelProperties (sourceType, bindingFlags), context, null, events);
+      }
+    }
 
+    private static void FromProps (PropertyInfo [] props, IContext context, object sourceObject, EventBus events)
+    {
       // fallback (универсально: static игнорирует object)
-      var props = entry.Props;
       for (int i = 0; i < props.Length; i++)
       {
         if (props [i].GetValue (sourceObject) is not EventChannel channel)
           continue;
+
+        events.Add (channel);
+        (channel as IContextPart).Set (context);
+      }
+    }
+
+    private static void FromGetters (ChannelAccessors entry, IContext context, object sourceObject, EventBus events)
+    {
+      var getters = entry.Getters;
+      for (int i = 0; i < getters.Length; i++)
+      {
+        var channel = getters [i] (sourceObject); // для static sourceObject игнорируется
+        if (channel == null) continue;
 
         events.Add (channel);
         (channel as IContextPart).Set (context);

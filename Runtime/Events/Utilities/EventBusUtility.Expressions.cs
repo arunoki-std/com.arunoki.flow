@@ -18,7 +18,6 @@ namespace Arunoki.Flow.Utilities
         return entry;
 
       entry = new ChannelAccessors { Props = GetEventChannelProperties (sourceType, bindingFlags), Getters = null };
-
       if (entry.Props.Length != 0 && IsExpressionSupported ())
       {
         try

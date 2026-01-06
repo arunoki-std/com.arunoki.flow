@@ -7,15 +7,18 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : SetsCollection<IHandler>
   {
-    public IContext Context { get; private set; }
+    public IContext Context { get; }
 
     public EventBus Events { get; } = new();
 
     public PipelineSet Pipeline { get; } = new();
 
+    public ContextSet AllContexts { get; }
+
     public FlowHub (IContext context)
     {
       Context = context;
+      AllContexts = new ContextSet (this, Context);
 
       if (Context is IContainer<IHandler> c) SetTargetContainer (c);
 
@@ -24,8 +27,6 @@ namespace Arunoki.Flow
 
       ForEachSet<IContextPart> (part => part.Set (Context));
       ForEachSet<IHubPart> (part => part.Set (this));
-
-      Produce (Context);
     }
 
     protected override void OnElementAdded (IHandler element)
@@ -50,6 +51,7 @@ namespace Arunoki.Flow
       base.Clear ();
 
       Events.Clear ();
+      AllContexts.Clear ();
     }
   }
 }
