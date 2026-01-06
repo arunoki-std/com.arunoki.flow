@@ -13,7 +13,7 @@ namespace Arunoki.Flow
 
     public PipelineSet Pipeline { get; } = new();
 
-    public void Init (IContext context)
+    public FlowHub (IContext context)
     {
       Context = context;
 
@@ -32,10 +32,8 @@ namespace Arunoki.Flow
     {
       base.OnElementAdded (element);
 
-      if (element is IContextPart part && part.Get () == null)
-        part.Set (Context);
-
-      if (element is IHubPart hubPart && hubPart.Hub == null) hubPart.Set (this);
+      if (element is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (Context);
+      if (element is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (this);
     }
 
     protected override void OnElementRemoved (IHandler element)
@@ -43,6 +41,8 @@ namespace Arunoki.Flow
       base.OnElementRemoved (element);
 
       if (element is IDisposable disposable) disposable.Dispose ();
+      if (element is IContextPart ctxPart) ctxPart.Set (null);
+      if (element is IHubPart hubPart) hubPart.Set (null);
     }
 
     public override void Clear ()

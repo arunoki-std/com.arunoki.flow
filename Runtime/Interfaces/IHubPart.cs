@@ -1,8 +1,8 @@
 namespace Arunoki.Flow
 {
-  public interface IHubPart : IContextPart
+  public interface IHubPart
   {
-    FlowHub Hub { get; }
+    FlowHub Get ();
 
     void Set (FlowHub hub);
   }

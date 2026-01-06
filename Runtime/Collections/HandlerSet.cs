@@ -4,7 +4,7 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  public abstract class HandlerSet : Container<IHandler>, ISet<IHandler>, IHubPart, IBuilder
+  public abstract class HandlerSet : Container<IHandler>, ISet<IHandler>, IContextPart, IHubPart, IBuilder
   {
     protected HandlerSet (IContainer<IHandler> targetContainer = null) : base (targetContainer)
     {
@@ -14,16 +14,11 @@ namespace Arunoki.Flow.Misc
     public IContext Context { get; private set; }
     protected abstract ISet<IHandler> GetConcreteSet ();
 
-    protected virtual void Init (FlowHub hub)
-    {
-      Hub = hub;
-    }
-
     IContext IContextPart.Get () => Context;
-    void IContextPart.Set (IContext context) => Context = context;
+    void IContextPart.Set (IContext value) => Context = value;
 
-    FlowHub IHubPart.Hub => Hub;
-    void IHubPart.Set (FlowHub hub) => Init (hub);
+    FlowHub IHubPart.Get () => Hub;
+    void IHubPart.Set (FlowHub value) => Hub = value;
 
     public abstract void Produce (object element);
     public abstract bool IsConsumable (object element);
@@ -48,6 +43,7 @@ namespace Arunoki.Flow.Misc
     public bool Any (Func<IHandler, bool> condition)
       => GetConcreteSet ().Any (condition);
 
+    /// Clear all elements.
     public virtual void Clear ()
     {
       GetConcreteSet ().Clear ();

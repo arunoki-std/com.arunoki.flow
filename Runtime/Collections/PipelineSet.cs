@@ -19,22 +19,24 @@ namespace Arunoki.Flow.Misc
 
     public override void Produce (object element)
     {
-      if (element is IPipeline pipeline)
+      switch (element)
       {
-        Produce (pipeline);
-      }
-      else if (element is IPipelineHandler handler)
-      {
-        Produce (handler);
+        case IPipeline pipeline:
+          Produce (pipeline);
+          break;
+
+        case IPipelineHandler handler:
+          Produce (handler);
+          break;
       }
     }
 
-    public virtual void Produce<TPipeline> () where TPipeline : IPipeline, new ()
+    public void Produce<TPipeline> () where TPipeline : IPipeline, new ()
     {
       Produce (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
     }
 
-    public virtual void Produce (IPipeline pipeline)
+    public void Produce (IPipeline pipeline)
     {
       if (Utils.IsDebug ())
       {
@@ -45,9 +47,7 @@ namespace Arunoki.Flow.Misc
       }
 
       Pipelines.Add (pipeline);
-
-      if (pipeline is IContextPart part) part.Set (Context);
-      if (pipeline is IHubPart hubPart) hubPart.Set (Hub);
+      OnPipelineAdded (pipeline);
 
       var context = pipeline is IContext ctx ? ctx : Context;
       var pipelineType = pipeline.GetType ();
@@ -58,7 +58,7 @@ namespace Arunoki.Flow.Misc
         ProduceHandler (handler, pipelineType, context);
     }
 
-    public virtual void Produce (IPipelineHandler handler)
+    public void Produce (IPipelineHandler handler)
     {
       var ctx = handler is IContext selfContext ? selfContext : Context;
       var ppl = handler is IPipeline selfPipeline ? selfPipeline : null;
@@ -77,12 +77,30 @@ namespace Arunoki.Flow.Misc
       Handlers.Clear (pipelineType);
 
       var index = Pipelines.FindIndex (pipeline => pipeline.GetType () == pipelineType);
-      if (index > -1) Pipelines.RemoveAt (index);
+      if (index > -1)
+      {
+        var pipeline = Pipelines [index];
+        Pipelines.RemoveAt (index);
+        OnPipelineRemoved (pipeline);
+      }
     }
 
     public void Remove (IPipelineHandler handler)
     {
       Handlers.Remove (handler);
+    }
+
+    /// Clear all pipelines and handlers.
+    public override void Clear ()
+    {
+      base.Clear ();
+
+      for (var index = Pipelines.Count - 1; index >= 0; index--)
+      {
+        var pipeline = Pipelines [index];
+        Pipelines.RemoveAt (index);
+        OnPipelineRemoved (pipeline);
+      }
     }
 
     protected virtual void ProduceHandler (IPipelineHandler handler, Type pipelineType, IContext context)
@@ -122,6 +140,7 @@ namespace Arunoki.Flow.Misc
       set.Add (handler);
     }
 
+    /// To override.
     protected override void OnElementAdded (IHandler element)
     {
       base.OnElementAdded (element);
@@ -129,11 +148,26 @@ namespace Arunoki.Flow.Misc
       Hub.Events.Subscribe (element);
     }
 
+    /// To override.
     protected override void OnElementRemoved (IHandler element)
     {
       base.OnElementRemoved (element);
 
       Hub.Events.Unsubscribe (element);
+    }
+
+    /// To override.
+    protected virtual void OnPipelineAdded (IPipeline pipeline)
+    {
+      if (pipeline is IContextPart part) part.Set (Context);
+      if (pipeline is IHubPart hubPart) hubPart.Set (Hub);
+    }
+
+    /// To override.
+    protected virtual void OnPipelineRemoved (IPipeline pipeline)
+    {
+      if (pipeline is IContextPart part) part.Set (null);
+      if (pipeline is IHubPart hubPart) hubPart.Set (null);
     }
 
     protected override Collections.ISet<IHandler> GetConcreteSet () => Handlers;
