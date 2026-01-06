@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Sample
 {
   public partial class Battery : IContext, IPipeline, IContainer<IHandler>, IDisposable
   {
-    private readonly FlowHub hub = new();
+    private readonly FlowHub hub;
     private IContainer<IHandler> targetContainer;
 
     public Float<PowerEvent> Power { get; } = new();
@@ -17,13 +17,9 @@ namespace Arunoki.Flow.Sample
 
     public Battery ()
     {
-      hub.Init (this);
-      // hub.Pipeline.Add<BatteryPipeline> ();
-      var pipeline = new BatteryPipeline ();
-      hub.Pipeline.Add (pipeline);
-      hub.Pipeline.Add (pipeline);
-
-      // hub.Events.Subscribe (this);
+      hub = new(this);
+      hub.Pipeline.Produce<BatteryPipeline> ();
+      hub.Build ();
     }
 
     private void Charged ()
