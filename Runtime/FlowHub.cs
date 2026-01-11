@@ -13,6 +13,8 @@ namespace Arunoki.Flow
 
     public PipelineSet Pipeline { get; } = new();
 
+    public PureHandlers Handlers { get; } = new();
+
     public ContextSet AllContexts { get; }
 
     public FlowHub (IContext context)

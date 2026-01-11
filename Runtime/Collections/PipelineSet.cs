@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Misc
 {
+  /// Обрабатывает объекты <see cref="IPipeline"/>, <see cref="IPipelineHandler"/>.
   public class PipelineSet : HandlerSet
   {
     protected readonly SetsTypeCollection<IHandler> Handlers;
@@ -17,7 +18,7 @@ namespace Arunoki.Flow.Misc
       Handlers = new(this);
     }
 
-    public override void Produce (object element)
+    protected override void Produce (object element)
     {
       switch (element)
       {

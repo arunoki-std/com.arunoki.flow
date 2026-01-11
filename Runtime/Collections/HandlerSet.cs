@@ -20,7 +20,8 @@ namespace Arunoki.Flow.Misc
     FlowHub IHubPart.Get () => Hub;
     void IHubPart.Set (FlowHub value) => Hub = value;
 
-    public abstract void Produce (object element);
+    void IBuilder.Produce (object element) => Produce (element);
+    protected abstract void Produce (object element);
     public abstract bool IsConsumable (object element);
 
     public int Count => GetConcreteSet ().Count;

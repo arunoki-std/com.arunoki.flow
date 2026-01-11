@@ -11,7 +11,7 @@ namespace Arunoki.Flow
     }
 
     /// Rebuild all contexts.
-    public void Build ()
+    public virtual void Build ()
     {
       AllContexts.ForEach (Produce);
     }
