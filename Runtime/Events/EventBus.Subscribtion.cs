@@ -1,11 +1,10 @@
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
 
-using Arunoki.Collections;
 using Arunoki.Flow.Misc;
 using Arunoki.Flow.Utilities;
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
@@ -26,9 +25,9 @@ namespace Arunoki.Flow
       eventChannel.Clear ();
     }
 
-    public void Subscribe (IHandler handler)
+    public List<Callback> Subscribe (IHandler handler)
     {
-      EventBusUtility.Subscribe (this, handler);
+      return EventBusUtility.Subscribe (this, handler);
     }
 
     public void Subscribe (Type staticHandler)

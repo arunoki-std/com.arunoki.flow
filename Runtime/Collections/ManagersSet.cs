@@ -5,7 +5,7 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ManagersSet : Set<Type>, IBuilder
+  public class ManagersSet : SetsTypeCollection<IContext>, IBuilder
   {
     protected readonly FlowHub Hub;
 
@@ -28,30 +28,35 @@ namespace Arunoki.Flow.Misc
       if (!IsTypeStatic (manager))
         throw new StaticManagerException (manager);
 
-      Add (manager);
+      Add (manager, manager.GetAllPropertiesWithNested<IContext> ().ToArray ());
     }
 
-    protected override void OnElementAdded (Type manager)
+    protected override void OnKeyAdded (Type manager)
     {
-      base.OnElementAdded (manager);
+      base.OnKeyAdded (manager);
 
-      // 1. add reactive properties
       Hub.Events.AddEventSource (manager);
-
-      // 2. add contexts
-      var contextList = manager.GetAllPropertiesWithNested<IContext> ();
-      if (contextList.Count > 0)
-      {
-        Hub.AllContexts.Add (manager, contextList.ToArray ());
-      }
     }
 
-    protected override void OnElementRemoved (Type manager)
+    protected override void OnKeyRemoved (Type manager)
     {
-      base.OnElementRemoved (manager);
+      base.OnKeyRemoved (manager);
 
       Hub.Events.RemoveEvents (manager);
-      Hub.AllContexts.Clear (manager);
+    }
+
+    protected override void OnElementAdded (IContext context)
+    {
+      base.OnElementAdded (context);
+
+      Hub.AllContexts.Add (context);
+    }
+
+    protected override void OnElementRemoved (IContext element)
+    {
+      base.OnElementRemoved (element);
+
+      Hub.AllContexts.Remove (element);
     }
 
     public bool IsConsumable (object element)

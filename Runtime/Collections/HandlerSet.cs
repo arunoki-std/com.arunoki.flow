@@ -4,11 +4,15 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  public abstract class HandlerSet : Container<IHandler>, ISet<IHandler>, IContextPart, IHubPart, IBuilder
+  public abstract class HandlerSet : Container<IHandler>, ISet<IHandler>, IContextPart, IHubPart, IBuilder, IService
   {
+    private SubscriptionService subscriber;
+
     protected HandlerSet (IContainer<IHandler> targetContainer = null) : base (targetContainer)
     {
     }
+
+    protected SubscriptionService Subscriber => subscriber ??= new SubscriptionService (Hub.Events);
 
     public FlowHub Hub { get; private set; }
     public IContext Context { get; private set; }
@@ -49,5 +53,11 @@ namespace Arunoki.Flow.Misc
     {
       GetConcreteSet ().Clear ();
     }
+
+    public bool IsActive => subscriber != null && subscriber.IsActive;
+
+    public virtual void Activate () => Subscriber.Activate ();
+
+    public virtual void Deactivate () => Subscriber.Deactivate ();
   }
 }

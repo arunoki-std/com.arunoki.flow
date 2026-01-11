@@ -3,7 +3,7 @@ using Arunoki.Collections.Utilities;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ContextSet : SetsTypeCollection<IContext>, IBuilder
+  public partial class ContextSet : Set<IContext>, IBuilder
   {
     protected readonly FlowHub Hub;
 
@@ -23,10 +23,8 @@ namespace Arunoki.Flow.Misc
 
     public void Produce (IContext context)
     {
-      var contextType = context.GetType ();
-
-      Add (contextType, context);
-      Add (contextType, context.GetAllPropertiesWithNested<IContext> ().ToArray ());
+      Add (context);
+      AddRange (context.GetAllPropertiesWithNested<IContext> ().ToArray ());
     }
 
     protected override void OnElementAdded (IContext context)

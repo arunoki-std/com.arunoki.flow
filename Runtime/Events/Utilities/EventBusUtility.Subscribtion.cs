@@ -1,3 +1,5 @@
+using Arunoki.Flow.Misc;
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -6,7 +8,7 @@ namespace Arunoki.Flow.Utilities
 {
   internal static partial class EventBusUtility
   {
-    public static void Subscribe (EventBus events, object receiver)
+    public static List<Callback> Subscribe (EventBus events, object receiver)
     {
       Type receiverType;
       BindingFlags bindingFlags;
@@ -22,6 +24,7 @@ namespace Arunoki.Flow.Utilities
       }
 
       var groups = GetMethodsGroup (receiverType, bindingFlags);
+      var callbacks = new List<Callback> (groups.Length * 8);
 
       for (int i = 0; i < groups.Length; i++)
       {
@@ -29,7 +32,7 @@ namespace Arunoki.Flow.Utilities
 
         if (events.TryGet (eventType, out var channel))
         {
-          channel.Subscribe (receiver, methods);
+          callbacks.Add (channel.Subscribe (receiver, methods));
         }
         else if (Utils.IsWarningsEnabled ())
         {
@@ -39,6 +42,8 @@ namespace Arunoki.Flow.Utilities
           );
         }
       }
+
+      return callbacks;
     }
 
     private static (Type Type, MethodInfo [] Methods) [] GetMethodsGroup (Type handlerType, BindingFlags bindingFlags)

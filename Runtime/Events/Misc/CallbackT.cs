@@ -7,7 +7,7 @@ namespace Arunoki.Flow.Misc
   {
     private readonly RefActionEvent<TEvent> [] invokers;
 
-    public Callback (object eventTarget, MethodInfo [] methods) : base (eventTarget)
+    public Callback (object eventTarget, Type eventType, MethodInfo [] methods) : base (eventTarget, eventType)
     {
       invokers = new RefActionEvent<TEvent>[methods.Length];
 

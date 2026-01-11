@@ -146,7 +146,7 @@ namespace Arunoki.Flow.Misc
     {
       base.OnElementAdded (element);
 
-      Hub.Events.Subscribe (element);
+      Subscriber.Subscribe (element);
     }
 
     /// To override.
@@ -154,7 +154,7 @@ namespace Arunoki.Flow.Misc
     {
       base.OnElementRemoved (element);
 
-      Hub.Events.Unsubscribe (element);
+      Subscriber.Unsubscribe (element);
     }
 
     /// To override.

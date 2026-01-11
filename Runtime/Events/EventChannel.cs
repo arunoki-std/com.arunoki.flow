@@ -25,7 +25,7 @@ namespace Arunoki.Flow
       callback.Dispose ();
     }
 
-    protected internal abstract void Subscribe (object target, MethodInfo [] methods);
+    protected internal abstract Callback Subscribe (object target, MethodInfo [] methods);
 
     public Type GetEventType () => eventType;
 

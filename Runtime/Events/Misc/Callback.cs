@@ -4,11 +4,13 @@ namespace Arunoki.Flow.Misc
 {
   public abstract class Callback
   {
+    public Type EventType { get; }
     protected readonly bool IsTargetStatic;
     protected object EventTarget;
 
-    protected Callback (object eventTarget)
+    protected Callback (object eventTarget, Type eventType)
     {
+      EventType = eventType;
       EventTarget = eventTarget;
       IsTargetStatic = eventTarget is Type;
     }
