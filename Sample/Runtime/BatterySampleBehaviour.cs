@@ -17,17 +17,20 @@ namespace Arunoki.Flow.Sample
     private void OnEnable ()
     {
       battery.Reset ();
+      battery.Hub.Activate ();
     }
 
     private void OnDisable ()
     {
-      battery.Dispose ();
+      battery.Hub.Deactivate ();
+      battery.Power.Set (0.333333333f);
+      UnityEngine.Debug.LogWarning ("DEACTIVATED");
     }
 
     private void Update ()
     {
-      battery.Power.Set (Mathf.Min (battery.Power.Value + chargeValue, 1.1f));
-      battery.Power.Set (Mathf.Max (battery.Power.Value - dischargeValue, 0.0f));
+      battery.Power.Set (Mathf.Min (battery.Power.Value + (chargeValue * Random.Range (0.5f, 1.0f)), 1.1f));
+
       if (battery.IsCharged) this.enabled = false;
     }
   }

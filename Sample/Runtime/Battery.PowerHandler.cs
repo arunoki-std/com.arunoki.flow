@@ -9,7 +9,7 @@ namespace Arunoki.Flow.Sample
   public partial class Battery
   {
     [Preserve]
-    public class PowerHandler : BaseBatteryHandler<Battery>
+    public class PowerHandler : BatteryHandler
     {
       public void OnChanged (ref PowerEvent power)
       {
@@ -18,7 +18,11 @@ namespace Arunoki.Flow.Sample
 
         else if (power.Value < 0.99f) Battery.NotCharged ();
 
-        else if (power.Value > 1.0f) Battery.Overload.Publish ();
+        else if (power.Value > 1.0f)
+        {
+          Battery.Overload.Publish ();
+          Battery.Charged ();
+        }
       }
     }
   }

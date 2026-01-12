@@ -7,7 +7,7 @@ namespace Arunoki.Flow.Sample.Handlers
   internal sealed partial class BatteryPipeline
   {
     [Preserve]
-    internal sealed class Overload : BaseBatteryHandler<Battery>
+    internal sealed class Overload : BatteryHandler
     {
       public void OnEvent (ref OverloadEvent evt)
       {

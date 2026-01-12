@@ -1,10 +1,10 @@
 namespace Arunoki.Flow.Sample.Handlers
 {
-  public abstract class BaseBatteryHandler<TContext> : IPipelineHandler, IContextPart where TContext : Battery
+  public abstract class BatteryHandler : IPipelineHandler, IContextPart
   {
-    protected TContext Battery;
+    protected Battery Battery;
 
     IContext IContextPart.Get () => Battery;
-    void IContextPart.Set (IContext context) => Battery = (TContext) context;
+    void IContextPart.Set (IContext context) => Battery = (Battery) context;
   }
 }
