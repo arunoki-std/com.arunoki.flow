@@ -3,7 +3,7 @@ using Arunoki.Collections.Utilities;
 
 namespace Arunoki.Flow.Misc
 {
-  public partial class ContextSet : CollectionService<IContext>
+  public partial class ContextSet : BaseHubCollection<IContext>
   {
     private readonly Set<IContext> set;
 
@@ -21,7 +21,12 @@ namespace Arunoki.Flow.Misc
       Produce (context);
     }
 
-    protected override ISet<IContext> GetSet () => set;
+    protected override void OnInitialized ()
+    {
+      base.OnInitialized ();
+
+      ForEach (context => Hub.Produce (context));
+    }
 
     protected override void Produce (object element)
     {
@@ -52,6 +57,8 @@ namespace Arunoki.Flow.Misc
 
       Hub.Events.RemoveEvents (context);
     }
+
+    protected override ISet<IContext> GetSet () => set;
 
     public override bool IsConsumable (object element)
       => element is IContext;

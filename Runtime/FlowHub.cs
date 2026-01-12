@@ -31,7 +31,7 @@ namespace Arunoki.Flow
 
     public PipelineSet Pipeline { get; } = new();
 
-    public PureHandlers Handlers { get; } = new();
+    public HandlerSet Handlers { get; } = new();
 
     protected override void OnElementAdded (IHandler element)
     {

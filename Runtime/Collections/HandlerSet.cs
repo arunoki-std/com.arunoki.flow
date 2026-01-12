@@ -1,38 +1,20 @@
+using Arunoki.Collections;
+
 namespace Arunoki.Flow.Misc
 {
-  public abstract class HandlerSet : CollectionService<IHandler>
+  public class HandlerSet : BaseHandlerSet
   {
-    private SubscriptionService subscriber;
+    protected Set<IHandler> Handlers = new();
 
-    protected virtual SubscriptionService GetSubscriber ()
-      => subscriber ??= new SubscriptionService (Hub.Events);
+    protected override ISet<IHandler> GetSet () => Handlers;
 
-    protected override void OnElementAdded (IHandler element)
-    {
-      base.OnElementAdded (element);
+    protected sealed override void Produce (object element)
+      => Produce (element as IHandler);
 
-      GetSubscriber ().Subscribe (element);
-    }
+    public virtual void Produce (IHandler handler)
+      => Handlers.Add (handler);
 
-    protected override void OnElementRemoved (IHandler element)
-    {
-      base.OnElementRemoved (element);
-
-      GetSubscriber ().Unsubscribe (element);
-    }
-
-    protected override void OnActivate ()
-    {
-      base.OnActivate ();
-
-      GetSubscriber ().Activate ();
-    }
-
-    protected override void OnDeactivate ()
-    {
-      base.OnDeactivate ();
-
-      GetSubscriber ().Deactivate ();
-    }
+    public override bool IsConsumable (object element)
+      => element is IHandler;
   }
 }

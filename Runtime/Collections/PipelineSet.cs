@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Arunoki.Flow.Misc
 {
   /// Обрабатывает объекты <see cref="IPipeline"/>, <see cref="IPipelineHandler"/>.
-  public class PipelineSet : HandlerSet
+  public class PipelineSet : BaseHandlerSet
   {
     protected readonly SetsTypeCollection<IHandler> Handlers;
     protected readonly List<IPipeline> Pipelines = new(4);

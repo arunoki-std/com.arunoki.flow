@@ -9,8 +9,9 @@ namespace Arunoki.Flow.Misc
       Events = events;
     }
 
-
     protected EventBus Events { get; }
+
+    public bool IsActive { get; private set; }
 
     public virtual void Subscribe (IHandler handler)
     {
@@ -34,8 +35,6 @@ namespace Arunoki.Flow.Misc
     {
       Events [callback.EventType].Remove (callback);
     }
-
-    public bool IsActive { get; private set; }
 
     public void Activate ()
     {
