@@ -1,29 +1,19 @@
-using Arunoki.Collections;
-using Arunoki.Collections.Utilities;
-
 namespace Arunoki.Flow.Misc
 {
-  public partial class ContextSet : IService
+  public partial class ContextSet
   {
-    private bool isInitialized;
-    private SubscriptionService subscriber;
-
-    protected SubscriptionService Subscriber => subscriber ??= new SubscriptionService (Hub.Events, false);
-
-    public bool IsActive => subscriber != null && subscriber.IsActive;
-
-    public void Activate ()
+    protected override void OnInitialized ()
     {
-      if (!isInitialized)
-      {
-        isInitialized = true;
+      base.OnInitialized ();
 
-        Cast<IHandler> (handler => Subscriber.Subscribe (handler));
-      }
-
-      Subscriber.Activate ();
+      ForEach (context => Hub.Produce (context));
     }
 
-    public void Deactivate () => Subscriber.Deactivate ();
+    protected override void OnActivate ()
+    {
+      base.OnActivate ();
+
+      // ForEach (context => Hub.Produce (context));
+    }
   }
 }

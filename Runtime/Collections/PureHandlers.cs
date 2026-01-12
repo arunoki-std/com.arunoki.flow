@@ -6,26 +6,13 @@ namespace Arunoki.Flow.Misc
   {
     protected Set<IHandler> Handlers = new();
 
-    protected override ISet<IHandler> GetConcreteSet () => Handlers;
+    protected override ISet<IHandler> GetSet () => Handlers;
 
-    protected override void Produce (object element)
-    {
-      Handlers.Add (element as IHandler);
-    }
+    protected sealed override void Produce (object element)
+      => Produce (element as IHandler);
 
-    protected override void OnElementAdded (IHandler element)
-    {
-      base.OnElementAdded (element);
-
-      Hub.Events.Subscribe (element);
-    }
-
-    protected override void OnElementRemoved (IHandler element)
-    {
-      base.OnElementRemoved (element);
-
-      Hub.Events.Unsubscribe (element);
-    }
+    public virtual void Produce (IHandler handler)
+      => Handlers.Add (handler);
 
     public override bool IsConsumable (object element)
       => element is IHandler;

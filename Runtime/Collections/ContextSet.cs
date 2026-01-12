@@ -3,28 +3,40 @@ using Arunoki.Collections.Utilities;
 
 namespace Arunoki.Flow.Misc
 {
-  public partial class ContextSet : Set<IContext>, IBuilder
+  public partial class ContextSet : CollectionService<IContext>
   {
-    protected readonly FlowHub Hub;
+    private readonly Set<IContext> set;
 
-    protected ContextSet (FlowHub hub) => Hub = hub;
-
-    public ContextSet (FlowHub hub, IContext context) : this (hub) => Produce (context);
-
-    void IBuilder.Produce (object element)
+    protected ContextSet (FlowHub hub)
     {
-      switch (element)
-      {
-        case IContext ctx:
-          Produce (ctx);
-          break;
-      }
+      set = new Set<IContext> (this);
+
+      (this as IHubPart).Set (hub);
+    }
+
+    public ContextSet (FlowHub hub, IContext context) : this (hub)
+    {
+      (this as IContextPart).Set (context);
+
+      Produce (context);
+    }
+
+    protected override ISet<IContext> GetSet () => set;
+
+    protected override void Produce (object element)
+    {
+      Produce (element as IContext);
     }
 
     public void Produce (IContext context)
     {
-      Add (context);
-      AddRange (context.GetAllPropertiesWithNested<IContext> ().ToArray ());
+      set.Add (context);
+      set.AddRange (context.GetAllPropertiesWithNested<IContext> ().ToArray ());
+    }
+
+    public void Remove (IContext context)
+    {
+      set.Remove (context);
     }
 
     protected override void OnElementAdded (IContext context)
@@ -41,7 +53,7 @@ namespace Arunoki.Flow.Misc
       Hub.Events.RemoveEvents (context);
     }
 
-    public bool IsConsumable (object element)
+    public override bool IsConsumable (object element)
       => element is IContext;
   }
 }

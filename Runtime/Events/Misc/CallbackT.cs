@@ -28,19 +28,10 @@ namespace Arunoki.Flow.Misc
       }
     }
 
-
     public void Publish (ref TEvent evt)
     {
       for (var i = 0; i < invokers.Length; i++)
         invokers [i] (ref evt);
-    }
-
-    public override void Dispose ()
-    {
-      base.Dispose ();
-
-      for (var i = 0; i < invokers.Length; i++)
-        invokers [i] = null;
     }
   }
 }

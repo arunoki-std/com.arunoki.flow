@@ -7,36 +7,38 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : SetsCollection<IHandler>
   {
-    public IContext Context { get; }
+    public FlowHub (IContext entityContext)
+    {
+      EntityContext = entityContext;
+      Contexts = new ContextSet (this, EntityContext);
+
+      if (EntityContext is IContainer<IHandler> c) SetTargetContainer (c);
+
+      AddSetsFrom (this);
+      AddSetsFrom (EntityContext);
+
+      ForEachSet<IHubPart> (part => part.Set (this));
+      ForEachSet<IContextPart> (part => part.Set (EntityContext));
+
+      Contexts.Initialize ();
+    }
+
+    protected IContext EntityContext { get; }
 
     public EventBus Events { get; } = new();
+
+    public ContextSet Contexts { get; }
 
     public PipelineSet Pipeline { get; } = new();
 
     public PureHandlers Handlers { get; } = new();
 
-    public ContextSet AllContexts { get; }
-
-    public FlowHub (IContext context)
-    {
-      Context = context;
-      AllContexts = new ContextSet (this, Context);
-
-      if (Context is IContainer<IHandler> c) SetTargetContainer (c);
-
-      AddSetsFrom (this);
-      AddSetsFrom (Context);
-
-      ForEachSet<IContextPart> (part => part.Set (Context));
-      ForEachSet<IHubPart> (part => part.Set (this));
-    }
-
     protected override void OnElementAdded (IHandler element)
     {
       base.OnElementAdded (element);
 
-      if (element is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (Context);
       if (element is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (this);
+      if (element is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (EntityContext);
     }
 
     protected override void OnElementRemoved (IHandler element)
@@ -48,12 +50,13 @@ namespace Arunoki.Flow
       if (element is IHubPart hubPart) hubPart.Set (null);
     }
 
+    /// Dispose all elements.
     public override void Clear ()
     {
       base.Clear ();
 
       Events.Clear ();
-      AllContexts.Clear ();
+      Contexts.Clear ();
     }
   }
 }

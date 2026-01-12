@@ -1,5 +1,6 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
+using Arunoki.Flow.Utilities;
 
 using System;
 
@@ -25,7 +26,7 @@ namespace Arunoki.Flow.Misc
 
     public void Produce (Type manager)
     {
-      if (!IsTypeStatic (manager))
+      if (Utils.IsDebug () && !IsTypeStatic (manager))
         throw new StaticManagerException (manager);
 
       Add (manager, manager.GetAllPropertiesWithNested<IContext> ().ToArray ());
@@ -49,14 +50,14 @@ namespace Arunoki.Flow.Misc
     {
       base.OnElementAdded (context);
 
-      Hub.AllContexts.Add (context);
+      Hub.Contexts.Produce (context);
     }
 
     protected override void OnElementRemoved (IContext element)
     {
       base.OnElementRemoved (element);
 
-      Hub.AllContexts.Remove (element);
+      Hub.Contexts.Remove (element);
     }
 
     public bool IsConsumable (object element)

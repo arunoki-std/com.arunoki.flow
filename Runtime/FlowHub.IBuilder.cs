@@ -10,15 +10,7 @@ namespace Arunoki.Flow
       });
     }
 
-    /// Rebuild all contexts.
-    public virtual void Build ()
-    {
-      AllContexts.ForEach (Produce);
-    }
-
     public bool IsConsumable (object element)
-    {
-      return ForAnySet<IBuilder> (builder => builder.IsConsumable (element));
-    }
+      => ForAnySet<IBuilder> (builder => builder.IsConsumable (element));
   }
 }

@@ -4,10 +4,9 @@ namespace Arunoki.Flow.Misc
 {
   public class SubscriptionService : Set<Callback>, IService
   {
-    public SubscriptionService (EventBus events, bool activeSelf = true)
+    public SubscriptionService (EventBus events)
     {
       Events = events;
-      IsActive = activeSelf;
     }
 
 

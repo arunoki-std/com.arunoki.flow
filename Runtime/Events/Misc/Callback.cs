@@ -6,18 +6,13 @@ namespace Arunoki.Flow.Misc
   {
     public Type EventType { get; }
     protected readonly bool IsTargetStatic;
-    protected object EventTarget;
+    protected readonly object EventTarget;
 
     protected Callback (object eventTarget, Type eventType)
     {
       EventType = eventType;
       EventTarget = eventTarget;
       IsTargetStatic = eventTarget is Type;
-    }
-
-    public virtual void Dispose ()
-    {
-      EventTarget = null;
     }
 
     /// Define whether is eventTarget is methods source. 

@@ -137,31 +137,14 @@ namespace Arunoki.Flow.Misc
           throw new MultiplePipelineHandlerRegistration (handlerType);
       }
 
-      if (handler is IContextPart part) part.Set (context);
       set.Add (handler);
-    }
-
-    /// To override.
-    protected override void OnElementAdded (IHandler element)
-    {
-      base.OnElementAdded (element);
-
-      Subscriber.Subscribe (element);
-    }
-
-    /// To override.
-    protected override void OnElementRemoved (IHandler element)
-    {
-      base.OnElementRemoved (element);
-
-      Subscriber.Unsubscribe (element);
     }
 
     /// To override.
     protected virtual void OnPipelineAdded (IPipeline pipeline)
     {
-      if (pipeline is IContextPart part) part.Set (Context);
-      if (pipeline is IHubPart hubPart) hubPart.Set (Hub);
+      if (pipeline is IContextPart part && part.Get () == null) part.Set (Context);
+      if (pipeline is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (Hub);
     }
 
     /// To override.
@@ -171,7 +154,7 @@ namespace Arunoki.Flow.Misc
       if (pipeline is IHubPart hubPart) hubPart.Set (null);
     }
 
-    protected override Collections.ISet<IHandler> GetConcreteSet () => Handlers;
+    protected override Collections.ISet<IHandler> GetSet () => Handlers;
 
     public override bool IsConsumable (object element)
       => element is IPipeline || element is IPipelineHandler;
