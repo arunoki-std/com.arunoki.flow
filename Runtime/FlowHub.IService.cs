@@ -2,7 +2,24 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : IService
   {
+    private bool isInitialized;
     public bool IsActive { get; private set; }
+
+    public void TryInitialize ()
+    {
+      if (!isInitialized)
+      {
+        isInitialized = true;
+        OnInitialized ();
+        return;
+      }
+    }
+
+    /// Invoked from constructor or before first activation.
+    protected virtual void OnInitialized ()
+    {
+      Contexts.TryInitialize ();
+    }
 
     /// To override.
     protected virtual void OnActivated ()
@@ -18,6 +35,8 @@ namespace Arunoki.Flow
 
     public void Activate ()
     {
+      TryInitialize ();
+
       if (!IsActive)
       {
         IsActive = true;

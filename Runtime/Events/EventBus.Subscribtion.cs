@@ -30,9 +30,9 @@ namespace Arunoki.Flow
       return EventBusUtility.Subscribe (this, handler);
     }
 
-    public void Subscribe (Type staticHandler)
+    public List<Callback> Subscribe (Type staticHandler)
     {
-      EventBusUtility.Subscribe (this, staticHandler);
+      return EventBusUtility.Subscribe (this, staticHandler);
     }
 
     public void Unsubscribe (Type staticHandler) => Unsubscribe (staticHandler as object);

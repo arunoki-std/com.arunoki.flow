@@ -9,10 +9,26 @@ namespace Arunoki.Flow.Misc
   public class ManagersSet : SetsTypeCollection<IContext>, IBuilder
   {
     protected readonly FlowHub Hub;
+    private bool isInitialized;
 
-    protected ManagersSet (FlowHub hub) => Hub = hub;
+    public ManagersSet (FlowHub hub) => Hub = hub;
 
     public ManagersSet (FlowHub hub, Type staticType) : this (hub) => Produce (staticType);
+
+    protected internal void TryInitialize ()
+    {
+      if (!isInitialized)
+      {
+        isInitialized = true;
+        OnInitialized ();
+      }
+    }
+
+    private void OnInitialized ()
+    {
+      foreach (var manager in SetsCache.Keys)
+        Hub.Handlers.Produce (manager);
+    }
 
     void IBuilder.Produce (object element)
     {

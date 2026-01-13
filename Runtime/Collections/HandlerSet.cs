@@ -1,5 +1,7 @@
 using Arunoki.Collections;
 
+using System;
+
 namespace Arunoki.Flow.Misc
 {
   public class HandlerSet : BaseHandlerSet
@@ -13,6 +15,11 @@ namespace Arunoki.Flow.Misc
 
     public virtual void Produce (IHandler handler)
       => Handlers.Add (handler);
+
+    internal void Produce (Type staticHandler)
+    {
+      GetSubscriber ().Subscribe (staticHandler);
+    }
 
     public override bool IsConsumable (object element)
       => element is IHandler;

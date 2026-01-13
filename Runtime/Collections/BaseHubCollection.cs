@@ -19,12 +19,13 @@ namespace Arunoki.Flow.Misc
     /// To override.
     protected virtual void OnInitialized () { }
 
-    protected internal void Initialize ()
+    protected internal void TryInitialize ()
     {
       if (!isInitialized)
       {
         isInitialized = true;
         OnInitialized ();
+        return;
       }
     }
 

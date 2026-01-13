@@ -3,7 +3,7 @@ using Arunoki.Collections.Utilities;
 
 namespace Arunoki.Flow.Misc
 {
-  public partial class ContextSet : BaseHubCollection<IContext>
+  public class ContextSet : BaseHubCollection<IContext>
   {
     private readonly Set<IContext> set;
 

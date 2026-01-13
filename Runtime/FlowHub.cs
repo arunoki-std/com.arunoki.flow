@@ -7,7 +7,7 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : SetsCollection<IHandler>
   {
-    public FlowHub (IContext entityContext)
+    public FlowHub (IContext entityContext, bool autoInit = true)
     {
       EntityContext = entityContext;
       Contexts = new ContextSet (this, EntityContext);
@@ -20,7 +20,7 @@ namespace Arunoki.Flow
       ForEachSet<IHubPart> (part => part.Set (this));
       ForEachSet<IContextPart> (part => part.Set (EntityContext));
 
-      Contexts.Initialize ();
+      if (autoInit) TryInitialize ();
     }
 
     protected IContext EntityContext { get; }

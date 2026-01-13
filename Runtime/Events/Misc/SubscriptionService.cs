@@ -1,5 +1,7 @@
 using Arunoki.Collections;
 
+using System;
+
 namespace Arunoki.Flow.Misc
 {
   public class SubscriptionService : Set<Callback>, IService
@@ -13,17 +15,21 @@ namespace Arunoki.Flow.Misc
 
     public bool IsActive { get; private set; }
 
+    public virtual void Subscribe (Type staticHandler)
+    {
+      AddRange (Events.Subscribe (staticHandler).ToArray ());
+    }
+
     public virtual void Subscribe (IHandler handler)
     {
-      var callbacks = Events.Subscribe (handler).ToArray ();
+      AddRange (Events.Subscribe (handler).ToArray ());
+    }
 
-      AddRange (callbacks);
+    protected override void OnElementAdded (Callback callback)
+    {
+      base.OnElementAdded (callback);
 
-      if (!IsActive)
-      {
-        foreach (var callback in callbacks)
-          Unsubscribe (callback);
-      }
+      if (!IsActive) Unsubscribe (callback);
     }
 
     public virtual void Unsubscribe (IHandler handler)
