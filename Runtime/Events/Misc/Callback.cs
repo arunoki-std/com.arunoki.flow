@@ -24,7 +24,7 @@ namespace Arunoki.Flow.Misc
     /// Subscriber instance (null if subscriber is static manager).
     public virtual object GetTargetInstance () => IsTargetStatic ? null : EventTarget;
 
-    public virtual bool IsActive ()
+    public virtual bool IsTargetReceivingEvents ()
     {
       return GetTargetInstance () is not IActiveHandler handler || handler.IsHandlingEvents;
     }

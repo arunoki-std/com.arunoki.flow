@@ -44,7 +44,11 @@ namespace Arunoki.Flow
     protected virtual void Publish (ref TEvent evt)
     {
       for (var index = Elements.Count - 1; index >= 0; index--)
-        (Elements [index] as Callback<TEvent>).Publish (ref evt);
+      {
+        var callback = Elements [index] as Callback<TEvent>;
+        if (callback.IsTargetReceivingEvents ())
+          callback.Publish (ref evt);
+      }
 
       if (OnEvent != null)
       {
