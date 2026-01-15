@@ -7,7 +7,7 @@ using System;
 namespace Arunoki.Flow
 {
   /// Represents Key (event) && Element (event channel) collection.
-  public partial class EventBus : Set<Type, EventChannel>
+  public partial class EventBus : Set<Type, EventChannel>, IResetable
   {
     /// Register reactive properties.
     public void AddEventSource (IContext context)
@@ -33,6 +33,14 @@ namespace Arunoki.Flow
       foreach (var (index, _, channel) in WithIndex ())
         if (context.Equals (channel.Context))
           RemoveAt (index);
+    }
+
+    /// Reset each event channel if its <see cref="IResetable"/>.
+    public virtual void Reset ()
+    {
+      foreach (var pair in Elements)
+        if (pair.Element is IResetable resetable)
+          resetable.Reset ();
     }
   }
 }

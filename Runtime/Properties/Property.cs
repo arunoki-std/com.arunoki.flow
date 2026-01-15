@@ -1,19 +1,21 @@
 namespace Arunoki.Flow
 {
-  public class Property<TEvent, TValue> : Channel<TEvent>, IProperty<TValue, TEvent>
+  public class Property<TEvent, TValue> : Channel<TEvent>, IProperty<TValue, TEvent>, IResetable
     where TEvent : struct, IValueEvent<TValue>
   {
+    private readonly TValue defaultValue;
+
+    public Property (TValue defaultValue)
+    {
+      this.defaultValue = defaultValue;
+    }
+
     public TValue Value { get; private set; }
 
     public TValue Previous { get; private set; }
 
-    public bool IsReadable { get; private set; }
-
-    public void SetReadable (bool readable) => IsReadable = readable;
-
     public virtual TValue Set (TValue value)
     {
-      if (IsReadable) return Value;
       if (!Equals (value, Value))
       {
         Previous = Value;
@@ -39,10 +41,10 @@ namespace Arunoki.Flow
     }
 
     /// Set values to default.
-    public virtual void Reset (TValue @default = default)
+    public virtual void Reset ()
     {
-      Value = @default;
-      Previous = @default;
+      Value = defaultValue;
+      Previous = defaultValue;
     }
 
     /// Remove all subscribers.

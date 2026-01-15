@@ -33,9 +33,10 @@ namespace Arunoki.Flow.Sample
 
     public void Reset ()
     {
-      Power.Reset ();
-      IsCharged.Reset ();
-      Overload.Reset ();
+      Hub.Events.Reset ();
+      // Power.Reset ();
+      // IsCharged.Reset ();
+      // Overload.Reset ();
     }
 
     IContainer<IHandler> IContainer<IHandler>.TargetContainer

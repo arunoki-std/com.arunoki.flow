@@ -4,6 +4,10 @@ namespace Arunoki.Flow
 {
   public class Float<TEvent> : Property<TEvent, float> where TEvent : struct, IValueEvent<float>
   {
+    public Float (float defaultValue = 0.0f) : base (defaultValue)
+    {
+    }
+
     public void Add (float value) => Set (Value + value);
     public void Subtract (float value) => Set (Value - value);
     public void Multiply (float value) => Set (Value * value);

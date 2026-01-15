@@ -4,6 +4,10 @@ namespace Arunoki.Flow
 {
   public class Uint<TEvent> : Property<TEvent, uint> where TEvent : struct, IValueEvent<uint>
   {
+    public Uint (uint defaultValue = 0) : base (defaultValue)
+    {
+    }
+
     public void Add (uint value) => Set (Value + value);
     public void Subtract (uint value) => Set (Value - value);
     public void Multiply (uint value) => Set (Value * value);
