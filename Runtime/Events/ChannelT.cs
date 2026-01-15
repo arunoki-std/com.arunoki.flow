@@ -34,7 +34,7 @@ namespace Arunoki.Flow
     }
 
     /// Methods from <see cref="IHandler"/> will be invoked first and after them <see cref="OnEvent"/> delegates.
-    public virtual void Publish ()
+    protected internal virtual void Publish ()
     {
       TEvent evt = GetEventInstance ();
 

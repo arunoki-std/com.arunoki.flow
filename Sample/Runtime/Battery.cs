@@ -13,7 +13,7 @@ namespace Arunoki.Flow.Sample
 
     public Float<PowerEvent> Power { get; } = new();
     public Bool<ChargeStatusEvent> IsCharged { get; } = new();
-    public Channel<OverloadEvent> Overload { get; } = new();
+    public Trigger<OverloadEvent> Overload { get; } = new();
 
     public Battery ()
     {
@@ -35,6 +35,7 @@ namespace Arunoki.Flow.Sample
     {
       Power.Reset ();
       IsCharged.Reset ();
+      Overload.Reset ();
     }
 
     IContainer<IHandler> IContainer<IHandler>.TargetContainer

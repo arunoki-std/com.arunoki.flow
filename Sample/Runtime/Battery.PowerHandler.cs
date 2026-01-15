@@ -20,7 +20,7 @@ namespace Arunoki.Flow.Sample
 
         else if (power.Value > 1.0f)
         {
-          Battery.Overload.Publish ();
+          Battery.Overload.Activate ();
           Battery.Charged ();
         }
       }

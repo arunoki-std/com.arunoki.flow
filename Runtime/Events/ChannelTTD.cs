@@ -18,7 +18,7 @@ namespace Arunoki.Flow
     }
 
     [Obsolete ("Use Publish (ref TData) instead.")]
-    public override void Publish ()
+    protected internal override void Publish ()
     {
       base.Publish ();
     }
