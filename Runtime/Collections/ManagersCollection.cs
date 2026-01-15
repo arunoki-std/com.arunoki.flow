@@ -6,16 +6,16 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ManagersSet : SetsTypeCollection<IContext>, IBuilder
+  public class ManagersCollection : SetsTypeCollection<IContext>
   {
     protected readonly FlowHub Hub;
     private bool isInitialized;
 
-    public ManagersSet (FlowHub hub) => Hub = hub;
+    public ManagersCollection (FlowHub hub) => Hub = hub;
 
-    public ManagersSet (FlowHub hub, Type staticType) : this (hub) => Produce (staticType);
+    public ManagersCollection (FlowHub hub, Type staticType) : this (hub) => Add (staticType);
 
-    protected internal void TryInitialize ()
+    protected internal void Initialize ()
     {
       if (!isInitialized)
       {
@@ -30,17 +30,7 @@ namespace Arunoki.Flow.Misc
         Hub.Handlers.Produce (manager);
     }
 
-    void IBuilder.Produce (object element)
-    {
-      switch (element)
-      {
-        case Type manager:
-          Produce (manager);
-          break;
-      }
-    }
-
-    public void Produce (Type manager)
+    public void Add (Type manager)
     {
       if (Utils.IsDebug () && !IsTypeStatic (manager))
         throw new StaticManagerException (manager);
@@ -66,7 +56,7 @@ namespace Arunoki.Flow.Misc
     {
       base.OnElementAdded (context);
 
-      Hub.Contexts.Produce (context);
+      Hub.Contexts.Add (context);
     }
 
     protected override void OnElementRemoved (IContext element)
@@ -75,9 +65,6 @@ namespace Arunoki.Flow.Misc
 
       Hub.Contexts.Remove (element);
     }
-
-    public bool IsConsumable (object element)
-      => element is Type type && IsTypeStatic (type);
 
     public static bool IsTypeStatic (Type type)
       => type.IsAbstract && type.IsSealed;

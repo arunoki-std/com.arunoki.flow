@@ -3,22 +3,22 @@ using Arunoki.Collections.Utilities;
 
 namespace Arunoki.Flow.Misc
 {
-  public class ContextSet : BaseHubCollection<IContext>
+  public class ContextsCollection : BaseHubCollection<IContext>
   {
     private readonly Set<IContext> set;
 
-    protected ContextSet (FlowHub hub)
+    protected ContextsCollection (FlowHub hub)
     {
       set = new Set<IContext> (this);
 
       (this as IHubPart).Set (hub);
     }
 
-    public ContextSet (FlowHub hub, IContext context) : this (hub)
+    public ContextsCollection (FlowHub hub, IContext context) : this (hub)
     {
       (this as IContextPart).Set (context);
 
-      Produce (context);
+      Add (context);
     }
 
     protected override void OnInitialized ()
@@ -28,12 +28,7 @@ namespace Arunoki.Flow.Misc
       ForEach (context => Hub.Produce (context));
     }
 
-    protected override void Produce (object element)
-    {
-      Produce (element as IContext);
-    }
-
-    public void Produce (IContext context)
+    public void Add (IContext context)
     {
       set.Add (context);
       set.AddRange (context.GetAllPropertiesWithNested<IContext> ().ToArray ());
@@ -59,8 +54,5 @@ namespace Arunoki.Flow.Misc
     }
 
     protected override ISet<IContext> GetSet () => set;
-
-    public override bool IsConsumable (object element)
-      => element is IContext;
   }
 }

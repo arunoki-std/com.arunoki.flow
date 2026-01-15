@@ -10,7 +10,7 @@ namespace Arunoki.Flow
     public FlowHub (IContext entityContext, bool autoInit = true)
     {
       EntityContext = entityContext;
-      Contexts = new ContextSet (this, EntityContext);
+      Contexts = new ContextsCollection (this, EntityContext);
 
       if (EntityContext is IContainer<IHandler> c) SetTargetContainer (c);
 
@@ -27,7 +27,7 @@ namespace Arunoki.Flow
 
     public EventBus Events { get; } = new();
 
-    public ContextSet Contexts { get; }
+    public ContextsCollection Contexts { get; }
 
     public PipelineSet Pipeline { get; } = new();
 

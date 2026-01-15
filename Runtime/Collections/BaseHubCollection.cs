@@ -5,7 +5,7 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  public abstract class BaseHubCollection<TElement> : CustomSet<TElement>, IContextPart, IHubPart, IBuilder
+  public abstract class BaseHubCollection<TElement> : CustomSet<TElement>, IContextPart, IHubPart
   {
     private bool isInitialized;
 
@@ -19,7 +19,7 @@ namespace Arunoki.Flow.Misc
     /// To override.
     protected virtual void OnInitialized () { }
 
-    protected internal void TryInitialize ()
+    protected internal void Initialize ()
     {
       if (!isInitialized)
       {
@@ -48,9 +48,5 @@ namespace Arunoki.Flow.Misc
 
       Hub = value;
     }
-
-    void IBuilder.Produce (object element) => Produce (element);
-    protected abstract void Produce (object element);
-    public abstract bool IsConsumable (object element);
   }
 }

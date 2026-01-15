@@ -1,6 +1,6 @@
 namespace Arunoki.Flow.Misc
 {
-  public abstract class BaseHandlerSet : BaseHubCollectionService<IHandler>
+  public abstract class BaseHandlerSet : BaseHubCollectionService<IHandler>, IBuilder
   {
     private SubscriptionService subscriber;
 
@@ -34,5 +34,9 @@ namespace Arunoki.Flow.Misc
 
       GetSubscriber ().Deactivate ();
     }
+
+    void IBuilder.Produce (object element) => Produce (element);
+    protected abstract void Produce (object element);
+    public abstract bool IsConsumable (object element);
   }
 }

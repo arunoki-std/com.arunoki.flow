@@ -18,7 +18,7 @@ namespace Arunoki.Flow.Misc
 
     public void Activate ()
     {
-      TryInitialize ();
+      Initialize ();
 
       if (!IsActive)
       {

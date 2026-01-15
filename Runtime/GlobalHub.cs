@@ -12,19 +12,19 @@ namespace Arunoki.Flow
     {
       if (Instance != null)
         throw new InvalidOperationException (
-          $"{nameof(GlobalHub)} already created. Only one instance per application.");
+          $"{nameof(GlobalHub)} already created. Instance per application.");
 
       Instance = this;
       Managers = new(this);
     }
 
-    public ManagersSet Managers { get; }
+    public ManagersCollection Managers { get; }
 
     protected override void OnInitialized ()
     {
       base.OnInitialized ();
 
-      Managers.TryInitialize ();
+      Managers.Initialize ();
     }
   }
 }
