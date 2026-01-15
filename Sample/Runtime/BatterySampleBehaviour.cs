@@ -22,9 +22,15 @@ namespace Arunoki.Flow.Sample
 
     private void OnDisable ()
     {
-      battery.Hub.Deactivate ();
-      battery.Power.Set (0.333333333f);
-      UnityEngine.Debug.LogWarning ("DEACTIVATED");
+      {
+        // battery.Dispose ();
+        // UnityEngine.Debug.LogWarning ("DISPOSED");
+      }
+      {
+        battery.Hub.Deactivate ();
+        battery.Power.Set (0.333333333f);
+        UnityEngine.Debug.LogWarning ("DEACTIVATED");
+      }
     }
 
     private void Update ()
