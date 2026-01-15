@@ -20,7 +20,7 @@ namespace Arunoki.Flow
       ForEachSet<IHubPart> (part => part.Set (this));
       ForEachSet<IContextPart> (part => part.Set (EntityContext));
 
-      if (autoInit) TryInitialize ();
+      if (autoInit) Initialize ();
     }
 
     protected IContext EntityContext { get; }

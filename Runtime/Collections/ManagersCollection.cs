@@ -27,7 +27,7 @@ namespace Arunoki.Flow.Misc
     private void OnInitialized ()
     {
       foreach (var manager in SetsCache.Keys)
-        Hub.Handlers.Produce (manager);
+        Hub.Handlers.GetSubscriber ().Subscribe (manager);
     }
 
     public void Add (Type manager)

@@ -4,7 +4,7 @@ using System;
 
 namespace Arunoki.Flow.Misc
 {
-  public class SubscriptionService : Set<Callback>, IService
+  internal class SubscriptionService : Set<Callback>, IService
   {
     public SubscriptionService (EventBus events)
     {

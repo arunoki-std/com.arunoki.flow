@@ -5,7 +5,7 @@ namespace Arunoki.Flow
     private bool isInitialized;
     public bool IsActive { get; private set; }
 
-    public void TryInitialize ()
+    public void Initialize ()
     {
       if (!isInitialized)
       {
@@ -35,7 +35,7 @@ namespace Arunoki.Flow
 
     public void Activate ()
     {
-      TryInitialize ();
+      Initialize ();
 
       if (!IsActive)
       {

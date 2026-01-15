@@ -4,7 +4,7 @@ namespace Arunoki.Flow.Misc
   {
     private SubscriptionService subscriber;
 
-    protected virtual SubscriptionService GetSubscriber ()
+    internal virtual SubscriptionService GetSubscriber ()
       => subscriber ??= new SubscriptionService (Hub.Events);
 
     protected override void OnElementAdded (IHandler element)
