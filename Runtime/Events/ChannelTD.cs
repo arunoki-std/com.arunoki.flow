@@ -7,7 +7,6 @@ namespace Arunoki.Flow
   /// One type of event per data.
   public class Channel<TEvent, TData> : Channel<TEvent>
     where TEvent : struct, IDataEvent<TData>
-    where TData : struct
   {
     public virtual void Publish (ref TData data)
     {
