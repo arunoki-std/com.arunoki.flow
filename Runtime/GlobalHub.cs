@@ -6,13 +6,13 @@ namespace Arunoki.Flow
 {
   public class GlobalHub : FlowHub
   {
-    public static GlobalHub Instance { get; private set; }
+    internal static GlobalHub Instance { get; private set; }
 
     public GlobalHub (IContext entityContext) : base (entityContext, false)
     {
       if (Instance != null)
         throw new InvalidOperationException (
-          $"{nameof(GlobalHub)} already created. Instance per application.");
+          $"{nameof(GlobalHub)} already created. One instance per application.");
 
       Instance = this;
       Managers = new(this);
