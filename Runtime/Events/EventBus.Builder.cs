@@ -1,3 +1,5 @@
+using Arunoki.Flow.Utilities;
+
 using System;
 
 namespace Arunoki.Flow
@@ -7,7 +9,7 @@ namespace Arunoki.Flow
     void IBuilder.Produce (object element)
     {
       if (element is IHandler handler) Subscribe (handler);
-      if (element is Type staticManager && IsConsumable (staticManager))
+      if (element is Type staticManager && staticManager.IsStatic ())
       {
         Subscribe (staticManager);
       }
@@ -16,10 +18,6 @@ namespace Arunoki.Flow
     /// Define whether is <param name="element"></param> can be subscribed.
     public bool IsConsumable (object element)
       => element is IHandler ||
-         element is Type type && IsConsumable (type);
-
-    /// Is type static.
-    public static bool IsConsumable (Type itemType)
-      => itemType.IsAbstract && itemType.IsSealed;
+         element is Type type && type.IsStatic ();
   }
 }

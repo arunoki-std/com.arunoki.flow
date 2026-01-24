@@ -11,7 +11,7 @@ namespace Arunoki.Flow
   public partial class EventBus
   {
     [Obsolete ("Manual invocation is not desirable.")]
-    public override void Add (Type key, Channel element) => base.Add (key, element);
+    public sealed override void Add (Type eventType, Channel channel) => Add (channel);
 
     protected internal void Add (Channel channel)
     {

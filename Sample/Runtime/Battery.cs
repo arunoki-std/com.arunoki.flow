@@ -11,8 +11,8 @@ namespace Arunoki.Flow.Sample
     public readonly FlowHub Hub;
     private IContainer<IHandler> targetContainer;
 
-    public Float<PowerEvent> Power { get; } = new();
-    public Bool<ChargeStatusEvent> IsCharged { get; } = new();
+    public FloatProperty<PowerEvent> Power { get; } = new();
+    public BoolProperty<ChargeStatusEvent> IsCharged { get; } = new();
     public Trigger<OverloadEvent> Overload { get; } = new();
 
     public Battery ()

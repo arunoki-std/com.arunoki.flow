@@ -4,7 +4,7 @@ namespace Arunoki.Flow
   {
     public bool IsTriggered { get; private set; }
 
-    public void Activate ()
+    public void Fire ()
     {
       if (!IsTriggered)
       {
