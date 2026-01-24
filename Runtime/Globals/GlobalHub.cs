@@ -6,12 +6,10 @@ namespace Arunoki.Flow.Globals
 {
   public class GlobalHub : FlowHub
   {
-    public GlobalHub (IContext entityContext, bool autoActivate = false)
-      : base (entityContext, false)
+    public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
     {
       if (Instance != null)
-        throw new InvalidOperationException (
-          $"{nameof(GlobalHub)} already created. One instance per application.");
+        throw new InvalidOperationException ($"{nameof(GlobalHub)} already created. One instance per application.");
 
       Instance = this;
       Managers = new(this);
@@ -19,10 +17,9 @@ namespace Arunoki.Flow.Globals
       if (autoActivate) Activate ();
     }
 
-    public GlobalHub (IContext entityContext, RuntimeManagers runtimeManagers, bool autoActivate = true)
-      : this (entityContext)
+    public GlobalHub (IContext context, StaticBootstrap bootstrap, bool autoActivate = true) : this (context)
     {
-      foreach (var staticType in runtimeManagers)
+      foreach (var staticType in bootstrap)
         Managers.Add (staticType);
 
       if (autoActivate) Activate ();

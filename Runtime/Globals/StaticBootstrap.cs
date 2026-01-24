@@ -7,38 +7,39 @@ using System.Runtime.CompilerServices;
 
 namespace Arunoki.Flow.Globals
 {
-  public class RuntimeManagers
+  public class StaticBootstrap
   {
-    public readonly List<Type> StaticTypes;
+    private readonly List<Type> staticTypes;
 
-    public RuntimeManagers ()
+    public StaticBootstrap ()
       : this (new List<Type> (32))
     {
     }
 
-    public RuntimeManagers (List<Type> staticTypes)
+    public StaticBootstrap (List<Type> staticTypes)
     {
-      StaticTypes = staticTypes;
+      this.staticTypes = staticTypes;
     }
 
-    public RuntimeManagers (Assembly assembly)
+    public StaticBootstrap (Assembly assembly)
       : this (new List<Type> (32))
     {
       Init (assembly);
     }
 
-    public RuntimeManagers (Assembly assembly, string nameSpace)
+    public StaticBootstrap (Assembly assembly, string nameSpace)
       : this (new List<Type> (32))
     {
       Init (assembly, new List<string> { nameSpace });
     }
 
-    public RuntimeManagers (Assembly assembly, List<string> namespaces)
+    public StaticBootstrap (Assembly assembly, List<string> namespaces)
       : this (new List<Type> (32))
     {
       Init (assembly, namespaces);
     }
 
+    /// Find all static classes at declared <see cref="namespaces"/> and run their class constructors.
     public void Init (Assembly assembly, List<string> namespaces = null)
     {
       foreach (var type in assembly.GetTypes ())
@@ -49,12 +50,15 @@ namespace Arunoki.Flow.Globals
         if (namespaces != null && namespaces.Count > 0 && !namespaces.Contains (type.Namespace))
           continue;
 
-        StaticTypes.Add (type);
+        staticTypes.Add (type);
+
         RuntimeHelpers.RunClassConstructor (type.TypeHandle);
       }
     }
 
-    public Enumerator GetEnumerator () => new(StaticTypes);
+    public IReadOnlyList<Type> GetTypes () => staticTypes;
+
+    public Enumerator GetEnumerator () => new(staticTypes);
 
     public struct Enumerator
     {
