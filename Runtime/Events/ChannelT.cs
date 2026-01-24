@@ -1,9 +1,9 @@
-using Arunoki.Flow.Core;
+using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
 using System.Reflection;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Events
 {
   public class Channel<TEvent> : Channel
     where TEvent : struct, IEvent

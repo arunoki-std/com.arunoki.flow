@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Events
 {
   /// One type of event per new data.
   public class Channel<TEvent, TData> : Channel<TEvent>

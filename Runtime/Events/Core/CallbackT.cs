@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Arunoki.Flow.Core
+namespace Arunoki.Flow.Events.Core
 {
   public class Callback<TEvent> : Callback where TEvent : struct, IEvent
   {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Arunoki.Flow.Core
+namespace Arunoki.Flow.Events.Core
 {
   internal readonly struct StaticContextWrapper : IContext
   {

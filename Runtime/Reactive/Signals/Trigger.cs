@@ -1,3 +1,5 @@
+using Arunoki.Flow.Events;
+
 namespace Arunoki.Flow
 {
   public class Trigger<TEvent> : Channel<TEvent>, IResettable where TEvent : struct, IDomainEvent

@@ -1,4 +1,4 @@
-using Arunoki.Flow.Core;
+using Arunoki.Flow.Events.Core;
 
 namespace Arunoki.Flow.Collections
 {

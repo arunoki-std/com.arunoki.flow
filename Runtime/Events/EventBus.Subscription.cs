@@ -1,30 +1,15 @@
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
 
-using Arunoki.Flow.Core;
+using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
 using System;
 using System.Collections.Generic;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Events
 {
   public partial class EventBus
   {
-    [Obsolete ("Manual invocation is not desirable.")]
-    public sealed override void Add (Type eventType, Channel channel) => Add (channel);
-
-    protected internal void Add (Channel channel)
-    {
-      base.Add (channel.GetEventType (), channel);
-    }
-
-    protected override void OnElementRemoved (Channel channel)
-    {
-      base.OnElementRemoved (channel);
-
-      channel.Clear ();
-    }
-
     public List<Callback> Subscribe (IHandler handler)
     {
       return EventBusUtility.Subscribe (this, handler);
@@ -50,6 +35,21 @@ namespace Arunoki.Flow
     public virtual void UnsubscribeAll ()
     {
       Elements.ForEach (pair => pair.Element.Clear ());
+    }
+
+    protected internal void Add (Channel channel)
+    {
+      base.Add (channel.GetEventType (), channel);
+    }
+
+    [Obsolete ("Manual invocation is not desirable.")]
+    public sealed override void Add (Type eventType, Channel channel) => Add (channel);
+
+    protected override void OnElementRemoved (Channel channel)
+    {
+      base.OnElementRemoved (channel);
+
+      channel.Clear ();
     }
   }
 }

@@ -2,7 +2,7 @@ using Arunoki.Flow.Utilities;
 
 using System;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Events
 {
   public partial class EventBus : IBuilder
   {

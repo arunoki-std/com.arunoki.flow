@@ -1,10 +1,10 @@
 using Arunoki.Collections;
-using Arunoki.Flow.Core;
+using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
 using System;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Events
 {
   /// Represents Key (event) && Element (event channel) collection.
   public partial class EventBus : Set<Type, Channel>, IResettable
@@ -12,13 +12,13 @@ namespace Arunoki.Flow
     /// Register reactive properties.
     public void RegisterSource (IContext context)
     {
-      this.GetReactiveProperties (context);
+      this.GetReactivePrimitives (context);
     }
 
     /// Register reactive properties.
     public void RegisterSource (Type staticType)
     {
-      this.GetReactiveProperties (staticType);
+      this.GetReactivePrimitives (staticType);
     }
 
     public void UnregisterSource (Type staticEventSource)

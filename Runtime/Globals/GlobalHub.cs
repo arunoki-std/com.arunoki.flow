@@ -35,5 +35,13 @@ namespace Arunoki.Flow.Globals
 
       Managers.Initialize ();
     }
+
+    /// Remove all elements from hub components and collections. 
+    public override void Clear ()
+    {
+      base.Clear ();
+
+      Managers.Clear ();
+    }
   }
 }

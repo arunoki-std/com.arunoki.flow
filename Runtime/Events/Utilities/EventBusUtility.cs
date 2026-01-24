@@ -1,4 +1,5 @@
-using Arunoki.Flow.Core;
+using Arunoki.Flow.Events;
+using Arunoki.Flow.Events.Core;
 
 using System;
 using System.Reflection;
@@ -7,28 +8,28 @@ namespace Arunoki.Flow.Utilities
 {
   internal static partial class EventBusUtility
   {
-    public static void GetReactiveProperties (this EventBus events, IContext context)
-      => events.GetReactiveProperties (context, context);
+    public static void GetReactivePrimitives (this EventBus events, IContext context)
+      => events.GetReactivePrimitives (context, context);
 
-    public static void GetReactiveProperties (this EventBus events, IContext context, object sourceObject)
+    public static void GetReactivePrimitives (this EventBus events, IContext context, object sourceObject)
     {
       const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
 
-      GetReactiveProperties (events, context, context.GetType (), sourceObject, flags);
+      GetReactivePrimitives (events, context, context.GetType (), sourceObject, flags);
     }
 
-    public static void GetReactiveProperties (this EventBus events, Type staticType)
+    public static void GetReactivePrimitives (this EventBus events, Type staticType)
     {
       if (Utils.IsDebug () && !(staticType.IsSealed && staticType.IsAbstract))
         throw new StaticManagerException (staticType);
 
       const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
-      GetReactiveProperties (events, new StaticContextWrapper (staticType), staticType, null, flags);
+      GetReactivePrimitives (events, new StaticContextWrapper (staticType), staticType, null, flags);
     }
 
     /// properties from static class won't be cached.
-    private static void GetReactiveProperties (EventBus events, IContext context, Type sourceType,
+    private static void GetReactivePrimitives (EventBus events, IContext context, Type sourceType,
       object sourceObject, BindingFlags bindingFlags)
     {
       var saveEntry = sourceObject != null;

@@ -1,3 +1,5 @@
+using Arunoki.Flow.Events;
+
 namespace Arunoki.Flow
 {
   public class ValueProperty<TValue, TEvent> : Channel<TEvent>, IValueProperty<TValue, TEvent>, IResettable

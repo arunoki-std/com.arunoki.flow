@@ -1,5 +1,6 @@
 using Arunoki.Collections;
 using Arunoki.Flow.Collections;
+using Arunoki.Flow.Events;
 
 using System;
 
@@ -29,8 +30,10 @@ namespace Arunoki.Flow
 
     public ContextsCollection Contexts { get; }
 
+    /// Part of the hub sets <see cref="ISet{TElement}"/> where element is <see cref="IHandler"/>.
     public PipelineSet Pipeline { get; } = new();
 
+    /// Part of the hub sets <see cref="ISet{TElement}"/> where element is <see cref="IHandler"/>.
     public HandlerSet Handlers { get; } = new();
 
     protected override void OnElementAdded (IHandler element)
@@ -50,13 +53,13 @@ namespace Arunoki.Flow
       if (element is IHubPart hubPart) hubPart.Set (null);
     }
 
-    /// Dispose all elements.
+    /// Remove all elements from hub components and collections.
     public override void Clear ()
     {
-      base.Clear ();
-
       Events.Clear ();
       Contexts.Clear ();
+
+      base.Clear ();
     }
   }
 }

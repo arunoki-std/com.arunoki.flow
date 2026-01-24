@@ -1,11 +1,11 @@
 using Arunoki.Collections;
-using Arunoki.Flow.Core;
+using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
 using System;
 using System.Reflection;
 
-namespace Arunoki.Flow
+namespace Arunoki.Flow.Events
 {
   public abstract class Channel : Set<Callback>, IEventChannel, IContextPart
   {
