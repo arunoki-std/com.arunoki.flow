@@ -1,7 +1,7 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Collections
 {
   public class ContextsCollection : BaseHubCollection<IContext>
   {

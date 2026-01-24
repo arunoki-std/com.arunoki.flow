@@ -2,7 +2,7 @@ using Arunoki.Collections;
 
 using System;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Core
 {
   internal class SubscriptionService : Set<Callback>, IService
   {

@@ -1,6 +1,6 @@
 using Arunoki.Collections;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Collections
 {
   public abstract class BaseHubCollectionService<TElement> : BaseHubCollection<TElement>, IService
   {

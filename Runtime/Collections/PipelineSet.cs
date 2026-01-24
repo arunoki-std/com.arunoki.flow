@@ -5,7 +5,7 @@ using Arunoki.Flow.Utilities;
 using System;
 using System.Collections.Generic;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Collections
 {
   /// Обрабатывает объекты <see cref="IPipeline"/>, <see cref="IPipelineHandler"/>.
   public class PipelineSet : BaseHandlerSet
@@ -154,7 +154,7 @@ namespace Arunoki.Flow.Misc
       if (pipeline is IHubPart hubPart) hubPart.Set (null);
     }
 
-    protected override Collections.ISet<IHandler> GetSet () => Handlers;
+    protected override Arunoki.Collections.ISet<IHandler> GetSet () => Handlers;
 
     public override bool IsConsumable (object element)
       => element is IPipeline || element is IPipelineHandler;

@@ -1,6 +1,6 @@
 using System;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Core
 {
   public abstract class Callback
   {

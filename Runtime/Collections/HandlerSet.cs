@@ -2,7 +2,7 @@ using Arunoki.Collections;
 
 using System;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Collections
 {
   public class HandlerSet : BaseHandlerSet
   {

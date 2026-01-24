@@ -1,4 +1,6 @@
-namespace Arunoki.Flow.Misc
+using Arunoki.Flow.Core;
+
+namespace Arunoki.Flow.Collections
 {
   public abstract class BaseHandlerSet : BaseHubCollectionService<IHandler>, IBuilder
   {

@@ -3,7 +3,7 @@ using Arunoki.Flow.Utilities;
 
 using System;
 
-namespace Arunoki.Flow.Misc
+namespace Arunoki.Flow.Collections
 {
   public abstract class BaseHubCollection<TElement> : CustomSet<TElement>, IContextPart, IHubPart
   {
