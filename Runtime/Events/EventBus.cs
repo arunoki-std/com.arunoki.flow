@@ -10,25 +10,25 @@ namespace Arunoki.Flow
   public partial class EventBus : Set<Type, EventChannel>, IResetable
   {
     /// Register reactive properties.
-    public void AddEventSource (IContext context)
+    public void RegisterSource (IContext context)
     {
       this.GetReactiveProperties (context);
     }
 
     /// Register reactive properties.
-    public void AddEventSource (Type staticType)
+    public void RegisterSource (Type staticType)
     {
       this.GetReactiveProperties (staticType);
     }
 
-    public void RemoveEvents (Type staticEventSource)
+    public void UnregisterSource (Type staticEventSource)
     {
       foreach (var (index, _, channel) in WithIndex ())
         if (channel.Context is StaticContextWrapper wrapper && wrapper.IsConsumable (staticEventSource))
           RemoveAt (index);
     }
 
-    public void RemoveEvents (IContext context)
+    public void UnregisterSource (IContext context)
     {
       foreach (var (index, _, channel) in WithIndex ())
         if (context.Equals (channel.Context))

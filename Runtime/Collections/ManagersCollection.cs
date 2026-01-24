@@ -42,14 +42,14 @@ namespace Arunoki.Flow.Misc
     {
       base.OnKeyAdded (manager);
 
-      Hub.Events.AddEventSource (manager);
+      Hub.Events.RegisterSource (manager);
     }
 
     protected override void OnKeyRemoved (Type manager)
     {
       base.OnKeyRemoved (manager);
 
-      Hub.Events.RemoveEvents (manager);
+      Hub.Events.UnregisterSource (manager);
     }
 
     protected override void OnElementAdded (IContext context)

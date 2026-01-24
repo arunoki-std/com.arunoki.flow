@@ -43,14 +43,14 @@ namespace Arunoki.Flow.Misc
     {
       base.OnElementAdded (context);
 
-      Hub.Events.AddEventSource (context);
+      Hub.Events.RegisterSource (context);
     }
 
     protected override void OnElementRemoved (IContext context)
     {
       base.OnElementRemoved (context);
 
-      Hub.Events.RemoveEvents (context);
+      Hub.Events.UnregisterSource (context);
     }
 
     protected override ISet<IContext> GetSet () => set;
