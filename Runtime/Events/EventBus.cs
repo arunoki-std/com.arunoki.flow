@@ -12,13 +12,13 @@ namespace Arunoki.Flow.Events
     /// Register reactive properties.
     public void RegisterSource (IContext context)
     {
-      this.GetReactivePrimitives (context);
+      this.GetEventChannels (context);
     }
 
     /// Register reactive properties.
     public void RegisterSource (Type staticType)
     {
-      this.GetReactivePrimitives (staticType);
+      this.GetEventChannels (staticType);
     }
 
     public void UnregisterSource (Type staticEventSource)

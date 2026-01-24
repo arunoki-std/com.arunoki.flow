@@ -8,28 +8,28 @@ namespace Arunoki.Flow.Utilities
 {
   internal static partial class EventBusUtility
   {
-    public static void GetReactivePrimitives (this EventBus events, IContext context)
-      => events.GetReactivePrimitives (context, context);
+    public static void GetEventChannels (this EventBus events, IContext context)
+      => events.GetEventChannels (context, context);
 
-    public static void GetReactivePrimitives (this EventBus events, IContext context, object sourceObject)
+    public static void GetEventChannels (this EventBus events, IContext context, object sourceObject)
     {
       const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
 
-      GetReactivePrimitives (events, context, context.GetType (), sourceObject, flags);
+      GetEventChannels (events, context, context.GetType (), sourceObject, flags);
     }
 
-    public static void GetReactivePrimitives (this EventBus events, Type staticType)
+    public static void GetEventChannels (this EventBus events, Type staticType)
     {
-      if (Utils.IsDebug () && !(staticType.IsSealed && staticType.IsAbstract))
+      if (Utils.IsDebug () && !staticType.IsStatic ())
         throw new StaticManagerException (staticType);
 
       const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
-      GetReactivePrimitives (events, new StaticContextWrapper (staticType), staticType, null, flags);
+      GetEventChannels (events, new StaticContextWrapper (staticType), staticType, null, flags);
     }
 
     /// properties from static class won't be cached.
-    private static void GetReactivePrimitives (EventBus events, IContext context, Type sourceType,
+    private static void GetEventChannels (EventBus events, IContext context, Type sourceType,
       object sourceObject, BindingFlags bindingFlags)
     {
       var saveEntry = sourceObject != null;
