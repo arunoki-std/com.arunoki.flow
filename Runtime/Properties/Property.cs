@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public class Property<TEvent, TValue> : Channel<TEvent>, IProperty<TValue, TEvent>, IResetable
+  public class Property<TEvent, TValue> : Channel<TEvent>, IProperty<TValue, TEvent>, IResettable
     where TEvent : struct, IValueEvent<TValue>
   {
     private readonly TValue defaultValue;

@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public class Trigger<TEvent> : Channel<TEvent>, IResetable where TEvent : struct, IDomainEvent
+  public class Trigger<TEvent> : Channel<TEvent>, IResettable where TEvent : struct, IDomainEvent
   {
     public bool IsTriggered { get; private set; }
 

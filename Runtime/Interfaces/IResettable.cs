@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public interface IResetable
+  public interface IResettable
   {
     void Reset ();
   }
