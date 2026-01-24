@@ -7,7 +7,7 @@ using System;
 namespace Arunoki.Flow
 {
   /// Represents Key (event) && Element (event channel) collection.
-  public partial class EventBus : Set<Type, EventChannel>, IResettable
+  public partial class EventBus : Set<Type, Channel>, IResettable
   {
     /// Register reactive properties.
     public void RegisterSource (IContext context)

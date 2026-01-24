@@ -21,8 +21,8 @@ namespace Arunoki.Flow.Utilities
           var src = Expression.Parameter (typeof(object), "src");
           var cast = Expression.Convert (src, typeof(ExpressionProbeSource));
           var prop = Expression.Property (cast, nameof(ExpressionProbeSource.Channel));
-          var toBase = Expression.Convert (prop, typeof(EventChannel));
-          Expression.Lambda<Func<object, EventChannel>> (toBase, src).Compile ();
+          var toBase = Expression.Convert (prop, typeof(Channel));
+          Expression.Lambda<Func<object, Channel>> (toBase, src).Compile ();
         }
 
         _expressionState = 1;
@@ -36,7 +36,7 @@ namespace Arunoki.Flow.Utilities
 
     private sealed class ExpressionProbeSource
     {
-      public EventChannel Channel => null!;
+      public Channel Channel => null!;
     }
   }
 }

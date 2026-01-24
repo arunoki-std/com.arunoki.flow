@@ -56,7 +56,7 @@ namespace Arunoki.Flow.Utilities
       // fallback (универсально: static игнорирует object)
       for (int i = 0; i < props.Length; i++)
       {
-        if (props [i].GetValue (sourceObject) is not EventChannel channel)
+        if (props [i].GetValue (sourceObject) is not Channel channel)
           continue;
 
         events.Add (channel);

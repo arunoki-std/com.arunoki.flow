@@ -11,18 +11,18 @@ namespace Arunoki.Flow
   public partial class EventBus
   {
     [Obsolete ("Manual invocation is not desirable.")]
-    public override void Add (Type key, EventChannel element) => base.Add (key, element);
+    public override void Add (Type key, Channel element) => base.Add (key, element);
 
-    protected internal void Add (EventChannel channel)
+    protected internal void Add (Channel channel)
     {
       base.Add (channel.GetEventType (), channel);
     }
 
-    protected override void OnElementRemoved (EventChannel eventChannel)
+    protected override void OnElementRemoved (Channel channel)
     {
-      base.OnElementRemoved (eventChannel);
+      base.OnElementRemoved (channel);
 
-      eventChannel.Clear ();
+      channel.Clear ();
     }
 
     public List<Callback> Subscribe (IHandler handler)

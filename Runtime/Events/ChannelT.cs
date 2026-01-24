@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Arunoki.Flow
 {
-  public class Channel<TEvent> : EventChannel
+  public class Channel<TEvent> : Channel
     where TEvent : struct, IEvent
   {
     public event RefActionEvent<TEvent> OnEvent;

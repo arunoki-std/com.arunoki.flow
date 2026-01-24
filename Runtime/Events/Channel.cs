@@ -7,13 +7,13 @@ using System.Reflection;
 
 namespace Arunoki.Flow
 {
-  public abstract class EventChannel : Set<Callback>, IEventChannel, IContextPart
+  public abstract class Channel : Set<Callback>, IEventChannel, IContextPart
   {
     private readonly Type eventType;
 
     public IContext Context { get; private set; }
 
-    protected EventChannel (Type eventType)
+    protected Channel (Type eventType)
     {
       this.eventType = eventType;
     }

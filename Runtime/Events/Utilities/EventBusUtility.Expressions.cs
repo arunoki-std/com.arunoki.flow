@@ -43,16 +43,16 @@ namespace Arunoki.Flow.Utilities
         var p = props [i];
         if (!p.CanRead) continue;
         if (p.GetIndexParameters ().Length != 0) continue;
-        if (!typeof(EventChannel).IsAssignableFrom (p.PropertyType)) continue;
+        if (!typeof(Channel).IsAssignableFrom (p.PropertyType)) continue;
         list.Add (p);
       }
 
       return list.ToArray ();
     }
 
-    private static Func<object, EventChannel> [] BuildGetters (Type sourceType, PropertyInfo [] props)
+    private static Func<object, Channel> [] BuildGetters (Type sourceType, PropertyInfo [] props)
     {
-      var getters = new Func<object, EventChannel>[props.Length];
+      var getters = new Func<object, Channel>[props.Length];
 
       var srcParam = Expression.Parameter (typeof(object), "src");
 
@@ -75,8 +75,8 @@ namespace Arunoki.Flow.Utilities
           access = Expression.Property (cast, p);
         }
 
-        var toBase = Expression.Convert (access, typeof(EventChannel));
-        getters [i] = Expression.Lambda<Func<object, EventChannel>> (toBase, srcParam).Compile ();
+        var toBase = Expression.Convert (access, typeof(Channel));
+        getters [i] = Expression.Lambda<Func<object, Channel>> (toBase, srcParam).Compile ();
       }
 
       return getters;
@@ -85,7 +85,7 @@ namespace Arunoki.Flow.Utilities
     internal sealed class ChannelAccessors
     {
       /// Fast way
-      public Func<object, EventChannel> []? Getters;
+      public Func<object, Channel> []? Getters;
 
       /// Fallback
       public PropertyInfo [] Props = Array.Empty<PropertyInfo> ();
