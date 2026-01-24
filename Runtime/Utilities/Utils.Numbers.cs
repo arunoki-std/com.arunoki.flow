@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Arunoki.Flow.Utilities
 {
-  internal static partial class Utils
+  public static partial class Utils
   {
     public static int ToInt (float value) => Mathf.FloorToInt (value);
 

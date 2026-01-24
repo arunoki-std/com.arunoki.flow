@@ -1,6 +1,6 @@
 namespace Arunoki.Flow.Utilities
 {
-  internal static partial class Utils
+  public static partial class Utils
   {
     public static bool IsDebug ()
     {
