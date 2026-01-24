@@ -14,11 +14,11 @@ namespace Arunoki.Flow
     {
     }
 
-    /// <exception cref="MultipleEventSubscription"></exception>
+    /// <exception cref="MultipleEventSubscriptionException"></exception>
     protected internal override Callback Subscribe (object target, MethodInfo [] methods)
     {
       if (Utils.IsDebug () && Any (callback => callback.IsConsumable (target)))
-        throw new MultipleEventSubscription (GetEventType (), target);
+        throw new MultipleEventSubscriptionException (GetEventType (), target);
 
       var callback = new Callback<TEvent> (target, GetEventType (), methods);
       Add (callback);

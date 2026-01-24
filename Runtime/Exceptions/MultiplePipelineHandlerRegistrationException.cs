@@ -2,11 +2,11 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public class MultiplePipelineHandlerRegistration : Exception
+  public class MultiplePipelineHandlerRegistrationException : Exception
   {
     public readonly Type HandlerType;
 
-    public MultiplePipelineHandlerRegistration (Type handlerType)
+    public MultiplePipelineHandlerRegistrationException (Type handlerType)
       : base ($"{nameof(IPipelineHandler)} '{handlerType}' has already been registered.")
     {
       HandlerType = handlerType;

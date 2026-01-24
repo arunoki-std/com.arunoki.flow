@@ -44,7 +44,7 @@ namespace Arunoki.Flow.Misc
         var type = pipeline.GetType ();
 
         if (Pipelines.FindIndex (e => e.GetType () == type) > -1)
-          throw new MultiplePipelineProduction (type);
+          throw new MultiplePipelineProductionException (type);
       }
 
       Pipelines.Add (pipeline);
@@ -126,7 +126,7 @@ namespace Arunoki.Flow.Misc
       }
     }
 
-    /// <exception cref="MultiplePipelineHandlerRegistration"></exception>
+    /// <exception cref="MultiplePipelineHandlerRegistrationException"></exception>
     protected virtual void ProduceHandler (IPipelineHandler handler, Set<IHandler> set, IContext context)
     {
       if (Utils.IsDebug ())
@@ -134,7 +134,7 @@ namespace Arunoki.Flow.Misc
         var handlerType = handler.GetType ();
 
         if (set.Any (e => handlerType == e.GetType ()))
-          throw new MultiplePipelineHandlerRegistration (handlerType);
+          throw new MultiplePipelineHandlerRegistrationException (handlerType);
       }
 
       set.Add (handler);

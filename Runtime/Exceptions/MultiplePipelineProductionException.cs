@@ -2,11 +2,11 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public class MultiplePipelineProduction : Exception
+  public class MultiplePipelineProductionException : Exception
   {
     public readonly Type PipelineType;
 
-    public MultiplePipelineProduction (Type pipelineType)
+    public MultiplePipelineProductionException (Type pipelineType)
       : base ($"Pipeline '{pipelineType}' has already been instantiated.")
     {
       PipelineType = pipelineType;

@@ -2,12 +2,12 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public class MultipleEventSubscription : Exception
+  public class MultipleEventSubscriptionException : Exception
   {
     public readonly Type Event;
     public readonly Type Handler;
 
-    public MultipleEventSubscription (Type eventType, object eventTarget)
+    public MultipleEventSubscriptionException (Type eventType, object eventTarget)
       : base ($"Trying to subscribe '{Nameof (eventTarget)}' multiple times on event '{eventType}'.")
     {
       Event = eventType;
