@@ -46,7 +46,7 @@ namespace Arunoki.Flow
       for (var index = Elements.Count - 1; index >= 0; index--)
       {
         var callback = Elements [index] as Callback<TEvent>;
-        if (callback.IsTargetReceivingEvents ())
+        if (callback.CanReceiveEvents ())
           callback.Publish (ref evt);
       }
 
