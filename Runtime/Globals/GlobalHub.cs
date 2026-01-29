@@ -4,6 +4,7 @@ using System;
 
 namespace Arunoki.Flow.Globals
 {
+  /// Do not use singleton instance in static constructors.
   public class GlobalHub : FlowHub
   {
     public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
@@ -26,6 +27,8 @@ namespace Arunoki.Flow.Globals
     }
 
     internal static GlobalHub Instance { get; private set; }
+
+    public static bool IsAssemblyInitialized => Instance != null;
 
     public ManagersCollection Managers { get; }
 
