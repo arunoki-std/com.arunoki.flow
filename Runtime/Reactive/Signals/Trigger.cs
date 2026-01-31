@@ -6,7 +6,7 @@ namespace Arunoki.Flow
   {
     public bool IsTriggered { get; private set; }
 
-    public void Fire ()
+    public void Set ()
     {
       if (!IsTriggered)
       {
@@ -20,5 +20,7 @@ namespace Arunoki.Flow
     {
       IsTriggered = false;
     }
+
+    public static implicit operator bool (Trigger<TEvent> a) => a.IsTriggered;
   }
 }

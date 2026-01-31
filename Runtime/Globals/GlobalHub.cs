@@ -7,6 +7,11 @@ namespace Arunoki.Flow.Globals
   /// Do not use singleton instance in static constructors.
   public class GlobalHub : FlowHub
   {
+    public GlobalHub (bool autoActivate = false)
+      : this (new DummyContext (), autoActivate)
+    {
+    }
+
     public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
     {
       if (Instance != null)
@@ -16,6 +21,11 @@ namespace Arunoki.Flow.Globals
       Managers = new(this);
 
       if (autoActivate) Activate ();
+    }
+
+    public GlobalHub (StaticBootstrap bootstrap, bool autoActivate = true)
+      : this (new DummyContext (), bootstrap, autoActivate)
+    {
     }
 
     public GlobalHub (IContext context, StaticBootstrap bootstrap, bool autoActivate = true) : this (context)

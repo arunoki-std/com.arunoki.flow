@@ -1,6 +1,7 @@
 using Arunoki.Collections;
 using Arunoki.Flow.Collections;
 using Arunoki.Flow.Events;
+using Arunoki.Flow.Globals;
 
 using System;
 
@@ -16,7 +17,7 @@ namespace Arunoki.Flow
       if (EntityContext is IContainer<IHandler> c) SetTargetContainer (c);
 
       AddSetsFrom (this);
-      AddSetsFrom (EntityContext);
+      if (EntityContext is not DummyContext) AddSetsFrom (EntityContext);
 
       ForEachSet<IHubPart> (part => part.Set (this));
       ForEachSet<IContextPart> (part => part.Set (EntityContext));
