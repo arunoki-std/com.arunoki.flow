@@ -12,7 +12,7 @@ namespace Arunoki.Flow.Globals
     {
     }
 
-    public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
+    public GlobalHub (IContext context, bool autoActivate = true) : base (context, false)
     {
       if (Instance != null)
         throw new InvalidOperationException ($"{nameof(GlobalHub)} already created. One instance per application.");
@@ -28,7 +28,8 @@ namespace Arunoki.Flow.Globals
     {
     }
 
-    public GlobalHub (IContext context, StaticBootstrap bootstrap, bool autoActivate = true) : this (context)
+    public GlobalHub (IContext context, StaticBootstrap bootstrap, bool autoActivate = true)
+      : this (context, false)
     {
       foreach (var staticType in bootstrap)
         Managers.Add (staticType);

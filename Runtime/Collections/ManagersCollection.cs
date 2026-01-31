@@ -24,7 +24,7 @@ namespace Arunoki.Flow.Collections
       }
     }
 
-    private void OnInitialized ()
+    protected virtual void OnInitialized ()
     {
       foreach (var manager in SetsCache.Keys)
         Hub.Handlers.GetSubscriber ().Subscribe (manager);
@@ -32,7 +32,7 @@ namespace Arunoki.Flow.Collections
 
     public void Add (Type manager)
     {
-      if (Utils.IsDebug () && !IsTypeStatic (manager))
+      if (Utils.IsDebug () && !manager.IsStatic ())
         throw new StaticManagerException (manager);
 
       Add (manager, manager.GetAllPropertiesWithNested<IContext> ().ToArray ());
@@ -65,8 +65,5 @@ namespace Arunoki.Flow.Collections
 
       Hub.Contexts.Remove (element);
     }
-
-    public static bool IsTypeStatic (Type type)
-      => type.IsAbstract && type.IsSealed;
   }
 }

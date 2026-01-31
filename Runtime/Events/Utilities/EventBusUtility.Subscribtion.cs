@@ -86,43 +86,5 @@ namespace Arunoki.Flow.Utilities
 
       return result;
     }
-
-    #region Obsolete
-
-    // public static void Subscribe (this EventChannelSet set, object receiver, Func<object, MethodInfo [], EventsHandler> createCallback)
-    // {
-    //   var receiverType = receiver.GetType ();
-    //   var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
-    //
-    //   foreach (var kvp in GetMethodsGroup (receiverType, bindingFlags))
-    //   {
-    //     if (set.TryGet (kvp.Item1, out var channel))
-    //     {
-    //       channel.Subscribe (createCallback (receiver, kvp.Item2));
-    //     }
-    //     else if (Utils.IsWarningsEnabled ())
-    //     {
-    //       UnityEngine.Debug.LogWarning (
-    //         $"Event hub does not contain any channel capable of handling '{kvp.Item1}'.\n" +
-    //         $"The methods of '{receiver.GetType ()}' will not be invoked: \n{Utils.JoinAsList (kvp.Item2)}. "
-    //       );
-    //     }
-    //   }
-    // }
-
-    // private static IEnumerable<(Type, MethodInfo [])> GetMethodsGroup (Type handlerType, BindingFlags bindingFlags)
-    // {
-    //   return handlerType.GetMethods (bindingFlags)
-    //     .Where (info =>
-    //     {
-    //       var parameters = info.GetParameters ();
-    //       return parameters.Length == 1 && BaseEventType.IsAssignableFrom (parameters [0].ParameterType);
-    //     })
-    //     .GroupBy (info => info.GetParameters () [0].ParameterType)
-    //     .Select (grouping => (Type: grouping.Key, Methods: grouping.ToArray ()))
-    //     .ToArray ();
-    // }
-
-    #endregion
   }
 }
