@@ -21,6 +21,11 @@ namespace Arunoki.Flow.Globals
       this.staticTypes = staticTypes;
     }
 
+    public StaticBootstrap (Type assemblySource)
+      : this (assemblySource.Assembly, assemblySource.Namespace)
+    {
+    }
+
     public StaticBootstrap (Assembly assembly)
       : this (new List<Type> (32))
     {
@@ -38,6 +43,9 @@ namespace Arunoki.Flow.Globals
     {
       Init (assembly, namespaces);
     }
+
+    public void Init (Type assemblySource)
+      => Init (assemblySource.Assembly, new List<string> { assemblySource.Namespace });
 
     /// Find all static classes at declared <see cref="namespaces"/> and run their class constructors.
     public void Init (Assembly assembly, List<string> namespaces = null)
