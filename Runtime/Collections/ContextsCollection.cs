@@ -39,6 +39,13 @@ namespace Arunoki.Flow.Collections
       set.Remove (context);
     }
 
+    public virtual void Reset ()
+    {
+      foreach (var resettable in set.Cast<IResettable> ())
+        if (resettable.AutoReset ())
+          resettable.Reset ();
+    }
+
     protected override void OnElementAdded (IContext context)
     {
       base.OnElementAdded (context);

@@ -4,6 +4,13 @@ namespace Arunoki.Flow
 {
   public class Trigger<TEvent> : Channel<TEvent>, IResettable where TEvent : struct, IDomainEvent
   {
+    private readonly bool autoReset;
+
+    public Trigger (bool autoReset = true)
+    {
+      this.autoReset = autoReset;
+    }
+
     public bool IsTriggered { get; private set; }
 
     public void Set ()
@@ -15,6 +22,8 @@ namespace Arunoki.Flow
         Publish ();
       }
     }
+
+    public bool AutoReset () => autoReset;
 
     public void Reset ()
     {

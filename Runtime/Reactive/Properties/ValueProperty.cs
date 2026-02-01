@@ -6,15 +6,19 @@ namespace Arunoki.Flow
     where TEvent : struct, IValueEvent<TValue>
   {
     private readonly TValue defaultValue;
+    private readonly bool autoReset;
 
-    public ValueProperty (TValue defaultValue)
+    public ValueProperty (TValue defaultValue, bool autoReset = true)
     {
       this.defaultValue = defaultValue;
+      this.autoReset = autoReset;
     }
 
     public TValue Value { get; private set; }
 
     public TValue Previous { get; private set; }
+
+    public bool AutoReset () => autoReset;
 
     public virtual TValue Set (TValue value)
     {

@@ -62,5 +62,13 @@ namespace Arunoki.Flow
 
       base.Clear ();
     }
+
+    /// Reset all mapped contexts and their event sources (properties, proxy data, triggers ets.) if they are
+    /// <see cref="IResettable"/> and <see cref="IResettable.AutoReset"/> enabled. 
+    public virtual void Reset ()
+    {
+      Events.Reset ();
+      Contexts.Reset ();
+    }
   }
 }

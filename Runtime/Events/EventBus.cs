@@ -35,11 +35,13 @@ namespace Arunoki.Flow.Events
           RemoveAt (index);
     }
 
-    /// Reset each event channel if its <see cref="IResettable"/>.
+    bool IResettable.AutoReset () => true;
+
+    /// Reset each event channel if its <see cref="IResettable"/> and its <see cref="IResettable.AutoReset"/> is on.
     public virtual void Reset ()
     {
       foreach (var pair in Elements)
-        if (pair.Element is IResettable resettable)
+        if (pair.Element is IResettable resettable && resettable.AutoReset ())
           resettable.Reset ();
     }
   }

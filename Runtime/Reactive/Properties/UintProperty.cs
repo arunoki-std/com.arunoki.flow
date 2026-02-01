@@ -4,7 +4,8 @@ namespace Arunoki.Flow
 {
   public class UintProperty<TEvent> : ValueProperty<uint, TEvent> where TEvent : struct, IValueEvent<uint>
   {
-    public UintProperty (uint defaultValue = 0) : base (defaultValue)
+    public UintProperty (uint defaultValue = 0, bool autoReset = true)
+      : base (defaultValue, autoReset)
     {
     }
 
