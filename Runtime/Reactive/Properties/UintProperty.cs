@@ -9,6 +9,11 @@ namespace Arunoki.Flow
     {
     }
 
+    public UintProperty (bool autoReset = true)
+      : base (0, autoReset)
+    {
+    }
+
     public void Add (uint value) => Set (Value + value);
     public void Subtract (uint value) => Set (Value - value);
     public void Multiply (uint value) => Set (Value * value);

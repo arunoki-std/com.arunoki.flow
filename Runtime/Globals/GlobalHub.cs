@@ -7,12 +7,15 @@ namespace Arunoki.Flow.Globals
   /// Do not use singleton instance in static constructors.
   public class GlobalHub : FlowHub
   {
+    public event Action OnReady;
+    private bool isReady;
+
     public GlobalHub (bool autoActivate = false)
       : this (new DummyContext (), autoActivate)
     {
     }
 
-    public GlobalHub (IContext context, bool autoActivate = true) : base (context, false)
+    public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
     {
       if (Instance != null)
         throw new InvalidOperationException ($"{nameof(GlobalHub)} already created. One instance per application.");
@@ -23,31 +26,38 @@ namespace Arunoki.Flow.Globals
       if (autoActivate) Activate ();
     }
 
-    public GlobalHub (StaticBootstrap bootstrap, bool autoActivate = true)
-      : this (new DummyContext (), bootstrap, autoActivate)
-    {
-    }
-
-    public GlobalHub (IContext context, StaticBootstrap bootstrap, bool autoActivate = true)
-      : this (context, false)
+    public static GlobalHub Init (GlobalHub hub, StaticBootstrap bootstrap)
     {
       foreach (var staticType in bootstrap)
-        Managers.Add (staticType);
+        hub.Managers.Add (staticType);
 
-      if (autoActivate) Activate ();
+      hub.Activate ();
+      return hub;
     }
-
-    internal static GlobalHub Instance { get; private set; }
 
     public static bool IsAssemblyInitialized => Instance != null;
 
     public ManagersCollection Managers { get; }
+
+    internal static GlobalHub Instance { get; private set; }
 
     protected override void OnInitialized ()
     {
       base.OnInitialized ();
 
       Managers.Initialize ();
+    }
+
+    protected override void OnActivated ()
+    {
+      base.OnActivated ();
+
+      if (!isReady)
+      {
+        isReady = true;
+        OnReady?.Invoke ();
+        OnReady = null;
+      }
     }
 
     /// Remove all elements from hub components and collections. 

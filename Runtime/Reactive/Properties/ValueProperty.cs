@@ -8,6 +8,11 @@ namespace Arunoki.Flow
     private readonly TValue defaultValue;
     private readonly bool autoReset;
 
+    public ValueProperty (bool autoReset = true)
+      : this (default, autoReset)
+    {
+    }
+
     public ValueProperty (TValue defaultValue, bool autoReset = true)
     {
       this.defaultValue = defaultValue;
@@ -20,28 +25,30 @@ namespace Arunoki.Flow
 
     public bool AutoReset () => autoReset;
 
-    public virtual TValue Set (TValue value)
+    protected virtual bool TryChange (ref TValue value)
     {
-      if (!Equals (value, Value))
+      var current = Value;
+      if (!Equals (ref value, ref current))
       {
-        Previous = Value;
+        Previous = current;
         Value = value;
 
-        Publish ();
+        return true;
       }
 
+      return false;
+    }
+
+    public virtual TValue Set (TValue value)
+    {
+      if (TryChange (ref value)) Publish ();
       return value;
     }
 
     /// Update values if needed and publish event anyway
     public virtual TValue Force (TValue value)
     {
-      if (!Equals (value, Value))
-      {
-        Previous = Value;
-        Value = value;
-      }
-
+      TryChange (ref value);
       Publish ();
       return value;
     }
@@ -60,6 +67,8 @@ namespace Arunoki.Flow
 
       Reset ();
     }
+
+    protected virtual bool Equals (ref TValue a, ref TValue b) => ReferenceEquals (a, b);
 
     protected override TEvent GetEventInstance ()
     {

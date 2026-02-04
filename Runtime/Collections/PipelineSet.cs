@@ -50,7 +50,8 @@ namespace Arunoki.Flow.Collections
       Pipelines.Add (pipeline);
       OnPipelineAdded (pipeline);
 
-      var context = pipeline is IContext ctx ? ctx : Context;
+      var context = pipeline is IContext ctx ? ctx :
+        (pipeline is IContextPart p && p.Get () != null) ? p.Get () : Context;
       var pipelineType = pipeline.GetType ();
 
       ProducePipelineHandlers (pipelineType, context);
@@ -68,7 +69,7 @@ namespace Arunoki.Flow.Collections
       ProduceHandler (handler, pipelineType, ctx);
     }
 
-    public void Remove<TPipeline> () where TPipeline : IPipelineHandler
+    public void RemovePipeline<TPipeline> () where TPipeline : IPipeline
     {
       RemovePipeline (typeof(TPipeline));
     }
@@ -137,6 +138,7 @@ namespace Arunoki.Flow.Collections
           throw new MultiplePipelineHandlerRegistrationException (handlerType);
       }
 
+      if (handler is IContextPart part && part.Get () == null) part.Set (context);
       set.Add (handler);
     }
 

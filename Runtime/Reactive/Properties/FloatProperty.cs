@@ -4,10 +4,17 @@ namespace Arunoki.Flow
 {
   public class FloatProperty<TEvent> : ValueProperty<float, TEvent> where TEvent : struct, IValueEvent<float>
   {
+    public FloatProperty (bool autoReset = true)
+      : base (0.0f, autoReset)
+    {
+    }
+
     public FloatProperty (float defaultValue = 0.0f, bool autoReset = true)
       : base (defaultValue, autoReset)
     {
     }
+
+    protected override bool Equals (ref float a, ref float b) => UnityEngine.Mathf.Approximately (a, b);
 
     public void Add (float value) => Set (Value + value);
     public void Subtract (float value) => Set (Value - value);
