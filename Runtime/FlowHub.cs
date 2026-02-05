@@ -1,4 +1,5 @@
 using Arunoki.Collections;
+using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Collections;
 using Arunoki.Flow.Events;
 using Arunoki.Flow.Globals;
@@ -9,21 +10,7 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : SetsCollection<IHandler>
   {
-    public FlowHub (IContext entityContext, bool autoInit = true)
-    {
-      EntityContext = entityContext;
-      Contexts = new ContextsCollection (this, EntityContext);
-
-      if (EntityContext is IContainer<IHandler> c) SetTargetContainer (c);
-
-      AddSetsFrom (this);
-      if (EntityContext is not DummyContext) AddSetsFrom (EntityContext);
-
-      ForEachSet<IHubPart> (part => part.Set (this));
-      ForEachSet<IContextPart> (part => part.Set (EntityContext));
-
-      if (autoInit) Initialize ();
-    }
+    protected System.Collections.Generic.List<IService> Services = new(16);
 
     protected IContext EntityContext { get; }
 
@@ -31,11 +18,56 @@ namespace Arunoki.Flow
 
     public ContextsCollection Contexts { get; }
 
-    /// Part of the hub sets <see cref="ISet{TElement}"/> where element is <see cref="IHandler"/>.
+    /// Part of the hub sets <see cref="Arunoki.Collections.ISet{TElement}"/> where element is <see cref="IHandler"/>.
     public PipelineSet Pipeline { get; } = new();
 
-    /// Part of the hub sets <see cref="ISet{TElement}"/> where element is <see cref="IHandler"/>.
+    /// Part of the hub sets <see cref="Arunoki.Collections.ISet{TElement}"/> where element is <see cref="IHandler"/>.
     public HandlerSet Handlers { get; } = new();
+
+    public FlowHub (IContext entityContext, bool autoInit = true)
+    {
+      EntityContext = entityContext;
+      Contexts = new ContextsCollection (this, EntityContext);
+
+      if (EntityContext is IContainer<IHandler> c) SetTargetContainer (c);
+
+      InitSets ();
+      InitServices ();
+
+      ForEachSet<IHubPart> (part => part.Set (this));
+      ForEachSet<IContextPart> (part => part.Set (EntityContext));
+
+      if (autoInit) Initialize ();
+    }
+
+    protected virtual void InitSets ()
+    {
+      AddSetsFrom (this);
+      if (EntityContext is not DummyContext) AddSetsFrom (EntityContext);
+    }
+
+    protected virtual void InitServices ()
+    {
+      AddServicesFrom (this);
+      if (EntityContext is not DummyContext) AddServicesFrom (EntityContext);
+    }
+
+    protected virtual void AddServicesFrom (object target)
+    {
+      var list = target.GetAllProperties<IService> ();
+      for (var i = 0; i < list.Count; i++)
+      {
+        var service = list [i];
+
+        if (service is Arunoki.Collections.ISet<IHandler> e && Sets.Contains (e))
+          continue;
+
+        if (Services.Contains (service))
+          continue;
+
+        Services.Add (service);
+      }
+    }
 
     protected override void OnElementAdded (IHandler element)
     {

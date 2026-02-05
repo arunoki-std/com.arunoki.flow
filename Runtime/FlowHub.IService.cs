@@ -25,12 +25,18 @@ namespace Arunoki.Flow
     protected virtual void OnActivated ()
     {
       ForEachSet<IService> (service => service.Activate ());
+
+      foreach (var service in Services)
+        service.Activate ();
     }
 
     /// To override.
     protected virtual void OnDeactivated ()
     {
       ForEachSet<IService> (service => service.Deactivate ());
+
+      foreach (var service in Services)
+        service.Deactivate ();
     }
 
     public void Activate ()

@@ -1,7 +1,5 @@
 using Arunoki.Collections;
 
-using System;
-
 namespace Arunoki.Flow.Collections
 {
   public class HandlerSet : BaseHandlerSet
@@ -11,7 +9,7 @@ namespace Arunoki.Flow.Collections
     protected override ISet<IHandler> GetSet () => Handlers;
 
     protected sealed override void Produce (object element)
-      => Produce (element as IHandler);
+      => Produce ((IHandler) element);
 
     public virtual void Produce (IHandler handler)
       => Handlers.Add (handler);
