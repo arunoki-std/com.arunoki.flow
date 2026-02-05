@@ -59,6 +59,9 @@ namespace Arunoki.Flow
       {
         var service = list [i];
 
+        if (service is IManualService)
+          continue;
+
         if (service is Arunoki.Collections.ISet<IHandler> e && Sets.Contains (e))
           continue;
 

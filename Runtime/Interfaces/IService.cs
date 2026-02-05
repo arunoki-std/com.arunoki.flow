@@ -5,6 +5,11 @@ namespace Arunoki.Flow
     bool IsActive { get; }
 
     void Activate ();
+
     void Deactivate ();
+  }
+
+  public interface IManualService : IService
+  {
   }
 }
