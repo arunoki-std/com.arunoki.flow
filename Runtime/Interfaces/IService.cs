@@ -9,7 +9,7 @@ namespace Arunoki.Flow
     void Deactivate ();
   }
 
-  public interface IManualService : IService
+  public interface IManuallyActivatedService : IService
   {
   }
 }

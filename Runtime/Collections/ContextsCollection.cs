@@ -31,7 +31,7 @@ namespace Arunoki.Flow.Collections
     public void Add (IContext context)
     {
       set.Add (context);
-      set.AddRange (context.GetAllPropertiesWithNested<IContext> ().ToArray ());
+      set.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
     }
 
     public void Remove (IContext context)
@@ -51,6 +51,17 @@ namespace Arunoki.Flow.Collections
       base.OnElementAdded (context);
 
       Hub.Events.RegisterSource (context);
+
+      if (context is IContextPart ctxPart && ctxPart.Get () == null)
+        ctxPart.Set (Context);
+
+      foreach (var service in context.FindProperties<IService> ())
+      {
+        if (service is IContextPart part && part.Get () == null) 
+          part.Set (context);
+
+        Hub.OnTryAddService (service);
+      }
     }
 
     protected override void OnElementRemoved (IContext context)
