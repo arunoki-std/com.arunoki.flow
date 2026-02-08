@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : IService
+  public partial class FlowHub
   {
     private bool isInitialized;
     public bool IsActive { get; private set; }
@@ -24,16 +24,13 @@ namespace Arunoki.Flow
     /// To override.
     protected virtual void OnActivated ()
     {
-      foreach (var service in Services)
-        if (service is not IManuallyActivatedService)
-          service.Activate ();
+      Services.Activate ();
     }
 
     /// To override.
     protected virtual void OnDeactivated ()
     {
-      foreach (var service in Services)
-        service.Deactivate ();
+      Services.Deactivate ();
     }
 
     public void Activate ()

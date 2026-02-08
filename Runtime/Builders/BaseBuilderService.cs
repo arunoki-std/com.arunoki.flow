@@ -2,9 +2,9 @@ using Arunoki.Collections;
 
 namespace Arunoki.Flow.Collections
 {
-  public abstract class BaseHubCollectionService<TElement> : BaseHubCollection<TElement>, IService
+  public abstract class BaseBuilderService<TElement> : BaseBuilder<TElement>, IService where TElement : class
   {
-    protected BaseHubCollectionService (IContainer<TElement> targetContainer = null) : base (targetContainer)
+    protected BaseBuilderService(IContainer<TElement> rootContainer) : base(rootContainer)
     {
     }
 
@@ -14,7 +14,8 @@ namespace Arunoki.Flow.Collections
     /// To override.
     protected virtual void OnDeactivate () { }
 
-    public bool IsActive { get; private set; }
+    bool IService.IsActive => IsActive;
+    protected internal bool IsActive { get; private set; }
 
     public void Activate ()
     {

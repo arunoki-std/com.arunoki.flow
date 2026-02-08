@@ -1,6 +1,6 @@
-namespace Arunoki.Flow.StateMachine
+namespace Arunoki.Flow
 {
-  public partial class Hfsm
+  public partial class StateMachine
   {
     public bool IsActive { get; private set; }
 

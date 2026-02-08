@@ -3,23 +3,16 @@ using Arunoki.Collections.Utilities;
 
 namespace Arunoki.Flow.Collections
 {
-  public class ContextsCollection : BaseHubCollection<IContext>
+  public class ContextSet : BaseSet<IContext>
   {
-    private readonly Set<IContext> set;
-
-    protected ContextsCollection (FlowHub hub)
-    {
-      set = new Set<IContext> (this);
-
-      (this as IHubPart).Set (hub);
-    }
-
-    public ContextsCollection (FlowHub hub, IContext context) : this (hub)
+    public ContextSet (IContext context, IContainer<IContext> rootContainer = null)
+      : base (rootContainer)
     {
       (this as IContextPart).Set (context);
 
-      Add (context);
+      TryAdd (context);
     }
+
 
     protected override void OnInitialized ()
     {
@@ -28,20 +21,9 @@ namespace Arunoki.Flow.Collections
       ForEach (context => Hub.Produce (context));
     }
 
-    public void Add (IContext context)
-    {
-      set.Add (context);
-      set.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
-    }
-
-    public void Remove (IContext context)
-    {
-      set.Remove (context);
-    }
-
     public virtual void Reset ()
     {
-      foreach (var resettable in set.Cast<IResettable> ())
+      foreach (var resettable in Cast<IResettable> ())
         if (resettable.AutoReset ())
           resettable.Reset ();
     }
@@ -57,11 +39,13 @@ namespace Arunoki.Flow.Collections
 
       foreach (var service in context.FindProperties<IService> ())
       {
-        if (service is IContextPart part && part.Get () == null) 
+        if (service is IContextPart part && part.Get () == null)
           part.Set (context);
 
         Hub.OnTryAddService (service);
       }
+
+      AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
     }
 
     protected override void OnElementRemoved (IContext context)
@@ -70,7 +54,5 @@ namespace Arunoki.Flow.Collections
 
       Hub.Events.UnregisterSource (context);
     }
-
-    protected override ISet<IContext> GetSet () => set;
   }
 }

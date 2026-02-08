@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Sample
 {
   [Preserve]
   [DisallowMultipleComponent]
-  public sealed class SampleBootPanel : MonoBehaviour, IPipelineHandler
+  public sealed class SampleBootPanel : MonoBehaviour, IHandler
   {
     [SerializeField] private Text percents;
     [SerializeField] private Text completed;
@@ -22,7 +22,7 @@ namespace Arunoki.Flow.Sample
       while (!SampleManager.Boot.IsStarted)
         yield return null;
 
-      SampleHub.Get.Pipeline.Produce (this);
+      SampleHub.Get.Produce (this);
 
       SetProgress (0);
       SetReady (false);
@@ -30,7 +30,7 @@ namespace Arunoki.Flow.Sample
 
     private void OnDestroy ()
     {
-      SampleHub.Get.Pipeline.Remove (this);
+      SampleHub.Get.Clear (this);
     }
 
     public void OnProgressChanged (ref BootstrapProgress e)

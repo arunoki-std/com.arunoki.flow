@@ -35,7 +35,7 @@ namespace Arunoki.Flow.Collections
       if (Utils.IsDebug () && !manager.IsStatic ())
         throw new StaticManagerException (manager);
 
-      Add (manager, manager.FindPropertiesWithNested<IContext> ().ToArray ());
+      TryAddRange (manager, manager.FindPropertiesWithNested<IContext> ().ToArray ());
     }
 
     protected override void OnKeyAdded (Type manager)
@@ -56,7 +56,7 @@ namespace Arunoki.Flow.Collections
     {
       base.OnElementAdded (context);
 
-      Hub.Contexts.Add (context);
+      Hub.Contexts.TryAdd (context);
     }
 
     protected override void OnElementRemoved (IContext element)

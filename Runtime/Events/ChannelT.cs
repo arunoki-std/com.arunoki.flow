@@ -21,7 +21,7 @@ namespace Arunoki.Flow.Events
         throw new MultipleEventSubscriptionException (GetEventType (), target);
 
       var callback = new Callback<TEvent> (target, GetEventType (), methods);
-      Add (callback);
+      TryAdd (callback);
       return callback;
     }
 

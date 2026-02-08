@@ -9,26 +9,28 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : SetsCollection<IHandler>
   {
-    protected System.Collections.Generic.List<IService> Services = new(16);
-
     protected IContext EntityContext { get; }
 
     public EventBus Events { get; } = new();
 
-    public ContextsCollection Contexts { get; }
+    public ContextSet Contexts { get; }
 
-    /// Part of the hub sets <see cref="Arunoki.Collections.ISet{TElement}"/> where element is <see cref="IHandler"/>.
-    public PipelineSet Pipeline { get; } = new();
+    public ServiceSet Services { get; }
 
-    /// Part of the hub sets <see cref="Arunoki.Collections.ISet{TElement}"/> where element is <see cref="IHandler"/>.
-    public HandlerSet Handlers { get; } = new();
+    public PipelineBuilder Pipeline { get; }
+
+    public HandlersBuilder Handlers { get; }
 
     public FlowHub (IContext entityContext, bool autoInit = true)
     {
       EntityContext = entityContext;
-      Contexts = new ContextsCollection (this, EntityContext);
+      
+      Contexts = new ContextSet (EntityContext, TryGetContainer<IContext> ());
+      Services = new ServiceSet (TryGetContainer<IService> ());
+      Pipeline = new PipelineBuilder (TryGetContainer<IPipeline> ());
+      Handlers = new HandlersBuilder (TryGetContainer<IHandler> ());
 
-      if (EntityContext is IContainer<IHandler> c) SetTargetContainer (c);
+      if (EntityContext is IContainer<IHandler> c) SetRootContainer (c);//obsolete
 
       OnInitSets ();
       OnInitServices ();
@@ -37,6 +39,11 @@ namespace Arunoki.Flow
       ForEachSet<IContextPart> (part => part.Set (EntityContext));
 
       if (autoInit) Initialize ();
+    }
+
+    protected virtual IContainer<T> TryGetContainer<T> ()
+    {
+      return this as IContainer<T>;
     }
 
     protected virtual void OnInitSets ()
@@ -52,16 +59,13 @@ namespace Arunoki.Flow
 
     protected internal virtual bool OnTryAddService (IService service)
     {
-      if (service is IContext)
-        return false;
+      if (Services.TryAdd (service))
+      {
+        TryInjectDependencies (service);
+        return true;
+      }
 
-      if (Services.Contains (service))
-        return false;
-
-      Services.Add (service);
-      OnInjectDependencies (service);
-
-      return true;
+      return false;
     }
 
     protected override void OnSetAdded (ISet<IHandler> set)
@@ -74,7 +78,7 @@ namespace Arunoki.Flow
     protected override void OnElementAdded (IHandler element)
     {
       base.OnElementAdded (element);
-      OnInjectDependencies (element);
+      TryInjectDependencies (element);
     }
 
     protected override void OnElementRemoved (IHandler element)
@@ -84,12 +88,6 @@ namespace Arunoki.Flow
       if (element is IDisposable disposable) disposable.Dispose ();
       if (element is IContextPart ctxPart) ctxPart.Set (null);
       if (element is IHubPart hubPart) hubPart.Set (null);
-    }
-
-    protected virtual void OnInjectDependencies (object target)
-    {
-      if (target is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (this);
-      if (target is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (EntityContext);
     }
 
     /// Remove all elements from hub components and collections.

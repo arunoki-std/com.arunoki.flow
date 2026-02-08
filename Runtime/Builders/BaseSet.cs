@@ -5,15 +5,16 @@ using System;
 
 namespace Arunoki.Flow.Collections
 {
-  public abstract class BaseHubCollection<TElement> : CustomSet<TElement>, IContextPart, IHubPart
+  public class BaseSet<TEntity> : Set<TEntity>, IHubPart, IContextPart where TEntity : class
   {
     private bool isInitialized;
 
-    protected BaseHubCollection (IContainer<TElement> targetContainer = null) : base (targetContainer)
+    protected BaseSet (IContainer<TEntity> rootContainer = null) : base (rootContainer)
     {
     }
 
     public FlowHub Hub { get; private set; }
+
     public IContext Context { get; private set; }
 
     /// To override.
