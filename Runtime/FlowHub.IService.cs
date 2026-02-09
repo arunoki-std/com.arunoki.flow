@@ -18,19 +18,17 @@ namespace Arunoki.Flow
     /// Invoked from constructor or before first activation.
     protected virtual void OnInitialized ()
     {
-      Contexts.Initialize ();
+      (Contexts as IInitializable).Initialize ();
     }
 
     /// To override.
     protected virtual void OnActivated ()
     {
-      Services.Activate ();
     }
 
     /// To override.
     protected virtual void OnDeactivated ()
     {
-      Services.Deactivate ();
     }
 
     public void Activate ()

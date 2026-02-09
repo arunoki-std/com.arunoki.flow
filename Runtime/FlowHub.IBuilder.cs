@@ -6,19 +6,24 @@ namespace Arunoki.Flow
   {
     public void Produce (object entity)
     {
-      TryInjectDependencies (entity);
-      ForEachSet<IBuilder> (builder =>
-      {
-        if (builder.IsConsumable (entity)) builder.Produce (entity);
-      });
+      // TryInjectDependencies (entity);
+      // ForEachSet<IBuilder> (builder =>
+      // {
+      //   if (builder.IsConsumable (entity)) builder.Produce (entity);
+      // });
     }
 
-    public void Clear (object entity)
+    public virtual void Clear (object entity)
     {
-      ForEachSet<IBuilder> (builder =>
-      {
-        if (builder.IsConsumable (entity)) builder.Clear (entity);
-      });
+      // ForEachSet<IBuilder> (builder =>
+      // {
+      //   if (builder.IsConsumable (entity)) builder.Clear (entity);
+      // });
+    }
+
+    public virtual void ClearAll ()
+    {
+      
     }
 
     protected virtual void TryInjectDependencies (object entity)
@@ -28,7 +33,7 @@ namespace Arunoki.Flow
       if (entity is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (EntityContext);
     }
 
-    public bool IsConsumable (object entity)
-      => ForAnySet<IBuilder> (builder => builder.IsConsumable (entity));
+    public bool IsConsumable (object entity) => false;
+      // => ForAnySet<IBuilder> (builder => builder.IsConsumable (entity));
   }
 }

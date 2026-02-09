@@ -1,5 +1,5 @@
 using Arunoki.Collections;
-using Arunoki.Flow.Collections;
+using Arunoki.Flow.Basics;
 
 namespace Arunoki.Flow
 {

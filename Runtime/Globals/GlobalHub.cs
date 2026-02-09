@@ -1,4 +1,4 @@
-using Arunoki.Flow.Collections;
+using Arunoki.Flow.Basics;
 
 using System;
 
@@ -29,7 +29,7 @@ namespace Arunoki.Flow.Globals
     public static GlobalHub Init (GlobalHub hub, StaticBootstrap bootstrap)
     {
       foreach (var staticType in bootstrap)
-        hub.Managers.Add (staticType);
+        hub.Managers.Produce (staticType);
 
       hub.Activate ();
       return hub;
@@ -37,7 +37,7 @@ namespace Arunoki.Flow.Globals
 
     public static bool IsAssemblyInitialized => Instance != null;
 
-    public ManagersCollection Managers { get; }
+    public ManagersBuilder Managers { get; }
 
     internal static GlobalHub Instance { get; private set; }
 
@@ -45,7 +45,7 @@ namespace Arunoki.Flow.Globals
     {
       base.OnInitialized ();
 
-      Managers.Initialize ();
+      // Managers.Initialize ();
     }
 
     protected override void OnActivated ()
@@ -61,11 +61,11 @@ namespace Arunoki.Flow.Globals
     }
 
     /// Remove all elements from hub components and collections. 
-    public override void Clear ()
+    public override void ClearAll ()
     {
-      base.Clear ();
+      base.ClearAll ();
 
-      Managers.Clear ();
+      Managers.ClearAll ();
     }
   }
 }

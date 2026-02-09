@@ -3,11 +3,10 @@ using Arunoki.Flow.Events.Core;
 
 using System;
 
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Flow.Basics
 {
-  public class HandlersBuilder : BaseBuilderService<IHandler>, IContainer<Type>
+  public class HandlersBuilder : BaseHubCollection<IHandler>, IContainer<Type>
   {
-    protected internal readonly Set<IHandler> Set;
     protected internal readonly SetsTypeCollection<IHandler> KeySet;
 
     private IContainer<Type> rootKeyBuilder;
@@ -23,37 +22,29 @@ namespace Arunoki.Flow.Collections
     {
       this.rootKeyBuilder = rootKeyBuilder;
 
-      Set = new(this);
       KeySet = new(this, this);
     }
 
-    public sealed override void Produce (IHandler handler)
+    /// Encapsulates Events (Subscribe / Unsubscribe) without Handlers allocation when Hub (Activated / Deactivated).
+    internal SubscriptionService Subscriber => (subscriber ??= new SubscriptionService (Hub.Events));
+
+    public sealed override bool Clear (IHandler entity)
     {
-      base.Produce (handler);
-
-      Set.TryAdd (handler);
-    }
-
-    public sealed override void Clear (IHandler entity)
-    {
-      base.Clear (entity);
-
-      if (!Set.Remove (entity))
-        KeySet.Remove (entity);
+      return base.Clear (entity) || KeySet.Remove (entity);
     }
 
     protected override void OnElementAdded (IHandler handler)
     {
       base.OnElementAdded (handler);
 
-      GetSubscriber ().Subscribe (handler);
+      Subscriber.Register (handler);
     }
 
     protected override void OnElementRemoved (IHandler handler)
     {
       base.OnElementRemoved (handler);
 
-      GetSubscriber ().Unsubscribe (handler);
+      Subscriber.Remove (handler);
     }
 
     protected virtual void OnKeyAdded (Type key)
@@ -66,25 +57,24 @@ namespace Arunoki.Flow.Collections
       rootKeyBuilder?.OnRemoved (key);
     }
 
-    protected override void OnActivate ()
+    protected override void OnActivated ()
     {
-      base.OnActivate ();
+      base.OnActivated ();
 
-      GetSubscriber ().Activate ();
+      Subscriber.Activate ();
     }
 
-    protected override void OnDeactivate ()
+    protected override void OnDeactivated ()
     {
-      base.OnDeactivate ();
+      base.OnDeactivated ();
 
-      GetSubscriber ().Deactivate ();
+      Subscriber.Deactivate ();
     }
-
-    internal SubscriptionService GetSubscriber ()
-      => subscriber ??= new SubscriptionService (Hub.Events);
 
     void IContainer<Type>.OnAdded (Type key) => OnKeyAdded (key);
     void IContainer<Type>.OnRemoved (Type key) => OnKeyRemoved (key);
     IContainer<Type> IContainer<Type>.RootContainer { get => rootKeyBuilder; set => rootKeyBuilder = value; }
+
+    protected override bool IsMultiInstancesSupported () => false;
   }
 }

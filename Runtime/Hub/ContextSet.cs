@@ -1,28 +1,29 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Flow.Basics
 {
-  public class ContextSet : BaseSet<IContext>
+  public class ContextSet : BaseHubCollection<IContext>
   {
     public ContextSet (IContext context, IContainer<IContext> rootContainer = null)
       : base (rootContainer)
     {
       (this as IContextPart).Set (context);
-
-      TryAdd (context);
+      Elements.TryAdd (context);
     }
-
 
     protected override void OnInitialized ()
     {
       base.OnInitialized ();
 
-      ForEach (context => Hub.Produce (context));
+      foreach (IContext context in this)
+        Hub.Produce (context);
     }
 
-    public virtual void Reset ()
+    protected override void OnReset ()
     {
+      base.OnReset ();
+
       foreach (var resettable in Cast<IResettable> ())
         if (resettable.AutoReset ())
           resettable.Reset ();
@@ -45,7 +46,7 @@ namespace Arunoki.Flow.Collections
         Hub.OnTryAddService (service);
       }
 
-      AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
+      Elements.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
     }
 
     protected override void OnElementRemoved (IContext context)
@@ -54,5 +55,9 @@ namespace Arunoki.Flow.Collections
 
       Hub.Events.UnregisterSource (context);
     }
+
+    protected override bool CanBuildAfterHubInit () => false;
+    protected override bool CanBuildAfterHubStarted () => false;
+    protected override bool CanBuildAfterHubActivation () => false;
   }
 }

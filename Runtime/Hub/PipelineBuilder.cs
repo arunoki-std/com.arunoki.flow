@@ -3,52 +3,38 @@ using Arunoki.Collections.Utilities;
 
 using System;
 
-namespace Arunoki.Flow.Collections
+namespace Arunoki.Flow.Basics
 {
-  public class PipelineBuilder : BaseBuilder<IPipeline>
+  public class PipelineBuilder : BaseHubCollection<IPipeline>
   {
-    protected readonly Set<IPipeline> Pipelines;
-
     public PipelineBuilder (IContainer<IPipeline> rootContainer = null) : base (rootContainer)
     {
-      Pipelines = new(this);
     }
 
     protected virtual HandlersBuilder Handlers => Hub.Handlers;
-
-    public override void Produce (IPipeline pipeline)
-    {
-      base.Produce (pipeline);
-
-      Pipelines.TryAdd (pipeline);
-    }
 
     public void Produce<TPipeline> () where TPipeline : IPipeline, new ()
     {
       Produce (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
     }
 
-    public override void Clear (IPipeline entity)
+    public bool Clear<TPipeline> () where TPipeline : IPipeline
     {
-      base.Clear (entity);
-
-      Pipelines.Remove (entity);
+      return Clear (typeof(TPipeline));
     }
 
-    public void Clear<TPipeline> () where TPipeline : IPipeline
+    public bool Clear (Type pipelineType)
     {
-      Clear (typeof(TPipeline));
-    }
+      foreach ((int index, IPipeline element) in WithIndex ())
+      {
+        if (element.GetType () == pipelineType)
+        {
+          Elements.RemoveAt (index);
+          return true;
+        }
+      }
 
-    public void Clear (Type pipelineType)
-    {
-      Pipelines.RemoveWhere (p => p.GetType () == pipelineType);
-    }
-
-    /// Clear all pipelines and handlers.
-    public void Clear ()
-    {
-      Pipelines.Clear ();
+      return false;
     }
 
     protected virtual void CreateHandlers (Type pipelineType, IContext context)
@@ -85,5 +71,7 @@ namespace Arunoki.Flow.Collections
 
       Handlers.KeySet.Clear (pipeline.GetType ());
     }
+
+    protected override bool IsMultiInstancesSupported () => false;
   }
 }

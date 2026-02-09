@@ -23,7 +23,7 @@ namespace Arunoki.Flow.Events
 
     public void UnregisterSource (Type staticEventSource)
     {
-      foreach (var (index, _, channel) in WithIndex ())
+      foreach ((int index, _, Channel channel) in WithIndex ())
         if (channel.Context is StaticContextWrapper wrapper && wrapper.IsConsumable (staticEventSource))
           RemoveAt (index);
     }

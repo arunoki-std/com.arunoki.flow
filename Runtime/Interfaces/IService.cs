@@ -2,7 +2,7 @@ namespace Arunoki.Flow
 {
   public interface IService
   {
-    bool IsActive { get; }
+    bool IsActivated ();
 
     void Activate ();
 

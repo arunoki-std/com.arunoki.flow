@@ -4,60 +4,65 @@ using System;
 
 namespace Arunoki.Flow.Events.Core
 {
-  internal class SubscriptionService : Set<Callback>, IService
+  internal class SubscriptionService : Container<Callback>, IService
   {
-    public SubscriptionService (EventBus events)
+    private bool isActivated;
+
+    internal readonly Set<Callback> Callbacks;
+
+    public SubscriptionService (EventBus events) : base (null)
     {
       Events = events;
+      Callbacks = new(this);
     }
 
     protected EventBus Events { get; }
 
-    public bool IsActive { get; private set; }
+    public bool IsActivated () => isActivated;
 
-    public virtual void Subscribe (Type staticHandler)
+    public virtual void Register (Type staticHandler)
     {
-      AddRange (Events.Subscribe (staticHandler).ToArray ());
+      Callbacks.AddRange (Events.Subscribe (staticHandler).ToArray ());
     }
 
-    public virtual void Subscribe (IHandler handler)
+    public virtual void Register (IHandler handler)
     {
-      AddRange (Events.Subscribe (handler).ToArray ());
+      Callbacks.AddRange (Events.Subscribe (handler).ToArray ());
+    }
+
+    public virtual void Remove (IHandler handler)
+    {
+      Events.Unsubscribe (handler);
+    }
+
+    protected void Remove (Callback callback)
+    {
+      Events [callback.EventType].Remove (callback);
     }
 
     protected override void OnElementAdded (Callback callback)
     {
       base.OnElementAdded (callback);
 
-      if (!IsActive) Unsubscribe (callback);
-    }
-
-    public virtual void Unsubscribe (IHandler handler)
-    {
-      Events.Unsubscribe (handler);
-    }
-
-    protected void Unsubscribe (Callback callback)
-    {
-      Events [callback.EventType].Remove (callback);
+      if (!isActivated) Remove (callback);
     }
 
     public void Activate ()
     {
-      if (IsActive) return;
-      IsActive = true;
+      if (isActivated) return;
+      isActivated = true;
 
-      foreach (var callback in Elements)
+      foreach (var callback in Callbacks)
         Events [callback.EventType].TryAdd (callback);
     }
 
     public void Deactivate ()
     {
-      if (!IsActive) return;
-      IsActive = false;
+      if (!isActivated) return;
+      isActivated = false;
 
-      foreach (var callback in Elements)
-        Unsubscribe (callback);
+      foreach (var callback in Callbacks)
+        Remove (callback);
     }
   }
 }

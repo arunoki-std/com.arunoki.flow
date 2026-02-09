@@ -1,13 +1,13 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
-using Arunoki.Flow.Collections;
+using Arunoki.Flow.Basics;
 using Arunoki.Flow.Events;
 
 using System;
 
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : SetsCollection<IHandler>
+  public partial class FlowHub : BaseService
   {
     protected IContext EntityContext { get; }
 
@@ -24,19 +24,19 @@ namespace Arunoki.Flow
     public FlowHub (IContext entityContext, bool autoInit = true)
     {
       EntityContext = entityContext;
-      
+
       Contexts = new ContextSet (EntityContext, TryGetContainer<IContext> ());
       Services = new ServiceSet (TryGetContainer<IService> ());
       Pipeline = new PipelineBuilder (TryGetContainer<IPipeline> ());
       Handlers = new HandlersBuilder (TryGetContainer<IHandler> ());
 
-      if (EntityContext is IContainer<IHandler> c) SetRootContainer (c);//obsolete
+      // if (EntityContext is IContainer<IHandler> c) SetRootContainer (c);//obsolete
 
       OnInitSets ();
       OnInitServices ();
 
-      ForEachSet<IHubPart> (part => part.Set (this));
-      ForEachSet<IContextPart> (part => part.Set (EntityContext));
+      // ForEachSet<IHubPart> (part => part.Set (this));
+      // ForEachSet<IContextPart> (part => part.Set (EntityContext));
 
       if (autoInit) Initialize ();
     }
@@ -48,8 +48,8 @@ namespace Arunoki.Flow
 
     protected virtual void OnInitSets ()
     {
-      AddSetsFrom (this);
-      AddSetsFrom (EntityContext);
+      // AddSetsFrom (this);
+      // AddSetsFrom (EntityContext);
     }
 
     protected virtual void OnInitServices ()
@@ -59,7 +59,7 @@ namespace Arunoki.Flow
 
     protected internal virtual bool OnTryAddService (IService service)
     {
-      if (Services.TryAdd (service))
+      if (Services.Elements.TryAdd (service))
       {
         TryInjectDependencies (service);
         return true;
@@ -68,43 +68,45 @@ namespace Arunoki.Flow
       return false;
     }
 
-    protected override void OnSetAdded (ISet<IHandler> set)
-    {
-      base.OnSetAdded (set);
+    // protected override void OnSetAdded (ISet<IHandler> set)
+    // {
+    //   base.OnSetAdded (set);
+    //
+    //   if (set is IService service) OnTryAddService (service);
+    // }
+    //
+    // protected override void OnElementAdded (IHandler element)
+    // {
+    //   base.OnElementAdded (element);
+    //   TryInjectDependencies (element);
+    // }
+    //
+    // protected override void OnElementRemoved (IHandler element)
+    // {
+    //   base.OnElementRemoved (element);
+    //
+    //   if (element is IDisposable disposable) disposable.Dispose ();
+    //   if (element is IContextPart ctxPart) ctxPart.Set (null);
+    //   if (element is IHubPart hubPart) hubPart.Set (null);
+    // }
 
-      if (set is IService service) OnTryAddService (service);
-    }
-
-    protected override void OnElementAdded (IHandler element)
-    {
-      base.OnElementAdded (element);
-      TryInjectDependencies (element);
-    }
-
-    protected override void OnElementRemoved (IHandler element)
-    {
-      base.OnElementRemoved (element);
-
-      if (element is IDisposable disposable) disposable.Dispose ();
-      if (element is IContextPart ctxPart) ctxPart.Set (null);
-      if (element is IHubPart hubPart) hubPart.Set (null);
-    }
-
-    /// Remove all elements from hub components and collections.
-    public override void Clear ()
-    {
-      Events.Clear ();
-      Contexts.Clear ();
-
-      base.Clear ();
-    }
+    // Remove all elements from hub components and collections.
+    // public override void Clear ()
+    // {
+    //   Events.Clear ();
+    //   Contexts.Elements.Clear ();
+    //
+    //   base.Clear ();
+    // }
 
     /// Reset all mapped contexts and their event sources (properties, proxy data, triggers ets.) if they are
     /// <see cref="IResettable"/> and <see cref="IResettable.AutoReset"/> enabled. 
-    public virtual void Reset ()
+    protected override void OnReset ()
     {
+      base.OnReset ();
+
       Events.Reset ();
-      Contexts.Reset ();
+      // Contexts.Reset ();
     }
   }
 }

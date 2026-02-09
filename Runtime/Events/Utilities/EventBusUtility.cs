@@ -21,7 +21,7 @@ namespace Arunoki.Flow.Utilities
     public static void GetEventChannels (this EventBus events, Type staticType)
     {
       if (Utils.IsDebug () && !staticType.IsStatic ())
-        throw new StaticManagerException (staticType);
+        throw new InvalidOperationException($"For static types only. '{staticType}' is not supported.");
 
       const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
