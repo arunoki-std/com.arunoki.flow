@@ -58,7 +58,7 @@ namespace Arunoki.Flow
 
     protected internal virtual bool OnTryAddService (IService service)
     {
-      if (Services.Elements.TryAdd (service))
+      if (Services.Set.TryAdd (service))
       {
         TryInjectDependencies (service);
         return true;

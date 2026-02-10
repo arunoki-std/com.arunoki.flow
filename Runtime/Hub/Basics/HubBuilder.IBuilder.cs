@@ -31,7 +31,7 @@ namespace Arunoki.Flow.Basics
       if (!CanBuildAfterHubActivation () && Hub.IsActivated ())
         throw BuildOperationException.AfterHubActivated (element);
 
-      return Elements.TryAdd (element);
+      return Set.TryAdd (element);
     }
 
     void IBuilder.Clear (object entity) => Clear (entity as TElement);

@@ -9,6 +9,7 @@ namespace Arunoki.Flow.Basics
     protected internal bool IsInitialized () => isInitialized;
     protected internal bool IsActivated () => isActivated;
     protected internal bool IsStarted () => isStarted;
+    protected virtual bool AutoReset () => true;
 
     /// To override.
     protected virtual void OnInitialized () { }
@@ -25,52 +26,59 @@ namespace Arunoki.Flow.Basics
     /// To override.
     protected virtual void OnReset () { }
 
+    bool IInitializable.IsInitialized () => isInitialized;
     bool IService.IsActivated () => isActivated;
+    bool IStartable.IsStarted () => isStarted;
 
     void IInitializable.Initialize ()
     {
-      if (isInitialized) return;
-
-      OnInitialized ();
-      isInitialized = true;
+      if (!isInitialized)
+      {
+        OnInitialized ();
+        isInitialized = true;
+      }
     }
 
     void IStartable.Start ()
     {
-      if (isStarted) return;
-
-      if (!isInitialized)
+      if (!isStarted)
+      {
         (this as IInitializable).Initialize ();
+        (this as IService).Activate ();
 
-      OnStarted ();
-      isStarted = true;
+        OnStarted ();
+        isStarted = true;
+      }
     }
 
     void IService.Activate ()
     {
-      if (isActivated) return;
-      if (!isStarted) (this as IStartable).Start ();
+      if (!isActivated)
+      {
+        (this as IInitializable).Initialize ();
 
-      OnActivated ();
-      isActivated = true;
+        OnActivated ();
+        isActivated = true;
+      }
     }
 
     void IService.Deactivate ()
     {
-      if (!isActivated) return;
-
-      OnDeactivated ();
-      isActivated = false;
+      if (isActivated)
+      {
+        OnDeactivated ();
+        isActivated = false;
+      }
     }
 
     void IResettable.Reset ()
     {
       (this as IService).Deactivate ();
-      isStarted = false;
 
       OnReset ();
+      isStarted = false;
     }
 
-    bool IResettable.AutoReset () => true;
+    bool IResettable.AutoReset () => AutoReset ();
   }
 }

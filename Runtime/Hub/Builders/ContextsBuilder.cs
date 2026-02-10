@@ -14,24 +14,15 @@ namespace Arunoki.Flow.Builders
       Root = context;
 
       (this as IContextPart).Set (context);
-      Elements.TryAdd (context);
+      Set.TryAdd (context);
     }
 
     protected override void OnInitialized ()
     {
-      base.OnInitialized ();
-
       foreach (IContext context in this)
         Hub.Produce (context);
-    }
 
-    protected override void OnReset ()
-    {
-      base.OnReset ();
-
-      foreach (var resettable in Cast<IResettable> ())
-        if (resettable.AutoReset ())
-          resettable.Reset ();
+      base.OnInitialized ();
     }
 
     protected override void OnElementAdded (IContext context)
@@ -56,7 +47,7 @@ namespace Arunoki.Flow.Builders
         }
       }
 
-      Elements.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
+      Set.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
     }
 
     protected override void OnElementRemoved (IContext context)
@@ -65,18 +56,6 @@ namespace Arunoki.Flow.Builders
 
       Hub.Events.UnregisterSource (context);
       Hub.Services.KeySet.Clear (context.GetType ());
-    }
-
-    protected virtual void OnServiceAdded (IService service)
-    {
-      (this as IContainer<IService>).RootContainer?.OnAdded (service);
-    }
-
-    protected virtual void OnServiceRemoved (IService service)
-    {
-      (this as IContainer<IService>).RootContainer?.OnRemoved (service);
-
-      Hub.Services.Clear (service);
     }
 
     protected override bool CanBuildAfterHubInit () => false;

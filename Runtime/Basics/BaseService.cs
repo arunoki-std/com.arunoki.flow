@@ -25,48 +25,57 @@ namespace Arunoki.Flow.Basics
     /// To override.
     protected virtual void OnReset () { }
 
+    bool IInitializable.IsInitialized () => isInitialized;
     bool IService.IsActivated () => isActivated;
+    bool IStartable.IsStarted () => isStarted;
 
     public void Initialize ()
     {
-      if (isInitialized) return;
-
-      OnInitialized ();
-      isInitialized = true;
+      if (!isInitialized)
+      {
+        OnInitialized ();
+        isInitialized = true;
+      }
     }
 
     public void Start ()
     {
-      if (isStarted) return;
-      if (!isInitialized) Initialize ();
+      if (!isStarted)
+      {
+        Initialize ();
+        Activate ();
 
-      OnStarted ();
-      isStarted = true;
+        OnStarted ();
+        isStarted = true;
+      }
     }
 
     public void Activate ()
     {
-      if (isActivated) return;
-      if (!isStarted) Start ();
+      if (!isActivated)
+      {
+        Initialize ();
 
-      OnActivated ();
-      isActivated = true;
+        OnActivated ();
+        isActivated = true;
+      }
     }
 
     public void Deactivate ()
     {
-      if (!isActivated) return;
-      
-      OnDeactivated ();
-      isActivated = false;
+      if (isActivated)
+      {
+        OnDeactivated ();
+        isActivated = false;
+      }
     }
 
     public void Reset ()
     {
       Deactivate ();
-      isStarted = false;
 
       OnReset ();
+      isStarted = false;
     }
 
     public virtual bool AutoReset () => true;

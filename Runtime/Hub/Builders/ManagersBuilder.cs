@@ -18,7 +18,7 @@ namespace Arunoki.Flow.Builders
     public ManagersBuilder (FlowHub hub, Type staticType)
       : this (hub)
     {
-      Elements.TryAdd (staticType);
+      Set.TryAdd (staticType);
     }
 
     protected override void OnInitialized ()
@@ -37,8 +37,8 @@ namespace Arunoki.Flow.Builders
 
       Hub.Contexts.KeySet.GetOrCreate (staticType)
         .AddRange (staticType.FindPropertiesWithNested<IContext> ().ToArray ());
-      
-      Hub.Services.Elements.AddRange (staticType.FindPropertiesWithNested<IService> ().ToArray ());
+
+      Hub.Services.Set.AddRange (staticType.FindPropertiesWithNested<IService> ().ToArray ());
     }
 
     protected override void OnElementRemoved (Type staticType)
@@ -67,5 +67,10 @@ namespace Arunoki.Flow.Builders
     protected override bool CanBuildAfterHubStarted () => false;
     protected override bool CanBuildAfterHubActivation () => false;
     protected override bool IsMultiInstancesSupported () => false;
+
+    protected override bool IsCompositionInitializable () => false;
+    protected override bool IsCompositionResettable () => false;
+    protected override bool IsCompositionStartable () => false;
+    protected override bool IsCompositionServiceAvailable () => false;
   }
 }

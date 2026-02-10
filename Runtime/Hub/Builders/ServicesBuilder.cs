@@ -9,29 +9,14 @@ namespace Arunoki.Flow.Builders
     {
     }
 
-    protected override void OnActivated ()
-    {
-      base.OnActivated ();
-
-      foreach (IService service in this)
-        if (service is not IManuallyActivatedService)
-          service.Activate ();
-    }
-
-    protected override void OnDeactivated ()
-    {
-      base.OnDeactivated ();
-
-      foreach (IService service in this)
-        service.Deactivate ();
-    }
-
     public override bool IsConsumable (IService service)
     {
       switch (service)
       {
         case IBuilder:
         case IContext:
+        case IPipeline:
+        case IHandler:
           return false;
 
         default: return service is not null;
