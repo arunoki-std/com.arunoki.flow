@@ -1,13 +1,18 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
+using Arunoki.Flow.Basics;
 
-namespace Arunoki.Flow.Basics
+namespace Arunoki.Flow.Builders
 {
-  public class ContextSet : BaseHubCollection<IContext>
+  public class ContextsBuilder : HubBuilder<IContext>
   {
-    public ContextSet (IContext context, IContainer<IContext> rootContainer = null)
+    public IContext Root { get; }
+
+    public ContextsBuilder (IContext context, IContainer<IContext> rootContainer = null)
       : base (rootContainer)
     {
+      Root = context;
+
       (this as IContextPart).Set (context);
       Elements.TryAdd (context);
     }
@@ -38,12 +43,17 @@ namespace Arunoki.Flow.Basics
       if (context is IContextPart ctxPart && ctxPart.Get () == null)
         ctxPart.Set (Context);
 
-      foreach (var service in context.FindProperties<IService> ())
+      var allServices = context.FindProperties<IService> ();
+      if (allServices.Count > 0)
       {
-        if (service is IContextPart part && part.Get () == null)
-          part.Set (context);
+        var set = Hub.Services.KeySet.GetOrCreate (context.GetType ());
+        foreach (var service in allServices)
+        {
+          if (service is IContextPart part && part.Get () == null)
+            part.Set (context);
 
-        Hub.OnTryAddService (service);
+          set.TryAdd (service);
+        }
       }
 
       Elements.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
@@ -54,6 +64,19 @@ namespace Arunoki.Flow.Basics
       base.OnElementRemoved (context);
 
       Hub.Events.UnregisterSource (context);
+      Hub.Services.KeySet.Clear (context.GetType ());
+    }
+
+    protected virtual void OnServiceAdded (IService service)
+    {
+      (this as IContainer<IService>).RootContainer?.OnAdded (service);
+    }
+
+    protected virtual void OnServiceRemoved (IService service)
+    {
+      (this as IContainer<IService>).RootContainer?.OnRemoved (service);
+
+      Hub.Services.Clear (service);
     }
 
     protected override bool CanBuildAfterHubInit () => false;

@@ -1,11 +1,12 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
+using Arunoki.Flow.Basics;
 
 using System;
 
-namespace Arunoki.Flow.Basics
+namespace Arunoki.Flow.Builders
 {
-  public class PipelineBuilder : BaseHubCollection<IPipeline>
+  public class PipelineBuilder : HubBuilder<IPipeline>
   {
     public PipelineBuilder (IContainer<IPipeline> rootContainer = null) : base (rootContainer)
     {
@@ -18,23 +19,21 @@ namespace Arunoki.Flow.Basics
       Produce (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
     }
 
-    public bool Clear<TPipeline> () where TPipeline : IPipeline
+    public void Clear<TPipeline> () where TPipeline : IPipeline
     {
-      return Clear (typeof(TPipeline));
+      Clear (typeof(TPipeline));
     }
 
-    public bool Clear (Type pipelineType)
+    public void Clear (Type pipelineType)
     {
-      foreach ((int index, IPipeline element) in WithIndex ())
+      foreach (IPipeline pipeline in this)
       {
-        if (element.GetType () == pipelineType)
+        if (pipeline.GetType () == pipelineType)
         {
-          Elements.RemoveAt (index);
-          return true;
+          Clear (pipeline);
+          break;
         }
       }
-
-      return false;
     }
 
     protected virtual void CreateHandlers (Type pipelineType, IContext context)

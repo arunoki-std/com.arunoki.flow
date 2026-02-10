@@ -5,20 +5,20 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class BaseHubBuilder<TElement> : IBuilder
+  public abstract partial class HubBuilder<TElement> : IBuilder
     where TElement : class
   {
     private readonly List<Type> cachedTypes = new(16);
 
-    void IBuilder.Produce (object entity) => Produce (entity as TElement);
+    bool IBuilder.Produce (object entity) => Produce (entity as TElement);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="element"></param>
     /// <exception cref="ArgumentNullException"> <see cref="element"/> is null.</exception>
-    /// /// <exception cref="BuildOperationException"><see cref="CanBuildAfterHubInit"/>, <see cref="CanBuildAfterHubStarted"/>, <see cref="CanBuildAfterHubActivation"/>, <see cref="IsMultiInstancesSupported"/></exception>
-    public virtual void Produce (TElement element)
+    /// <exception cref="BuildOperationException"><see cref="CanBuildAfterHubInit"/>, <see cref="CanBuildAfterHubStarted"/>, <see cref="CanBuildAfterHubActivation"/></exception>
+    public virtual bool Produce (TElement element)
     {
       if (element == null) throw new ArgumentNullException (nameof(element));
 
@@ -31,34 +31,10 @@ namespace Arunoki.Flow.Basics
       if (!CanBuildAfterHubActivation () && Hub.IsActivated ())
         throw BuildOperationException.AfterHubActivated (element);
 
-      if (Utils.IsDebug () && !IsMultiInstancesSupported () && cachedTypes.Contains (typeof(TElement)))
-        throw BuildOperationException.MultiInstancesNotSupported (element, this);
+      return Elements.TryAdd (element);
     }
 
     void IBuilder.Clear (object entity) => Clear (entity as TElement);
-
-    public virtual bool Clear (TElement element)
-    {
-      return element == null ? throw new ArgumentNullException (nameof(element)) : false;
-    }
-
-    protected override void OnElementAdded (TElement element)
-    {
-      if (Utils.IsDebug () && !IsMultiInstancesSupported ()) 
-        cachedTypes.Add (element.GetType ());
-
-      base.OnElementAdded (element);
-    }
-
-    protected override void OnElementRemoved (TElement element)
-    {
-      base.OnElementRemoved (element);
-
-      if (Utils.IsDebug () && !IsMultiInstancesSupported ()) 
-        cachedTypes.Remove (element.GetType ());
-    }
-
-    public abstract void ClearAll ();
 
     bool IBuilder.IsConsumable (object entity) => IsConsumable (entity as TElement);
 

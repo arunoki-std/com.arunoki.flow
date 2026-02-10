@@ -1,9 +1,8 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
+using Arunoki.Flow.Builders;
 using Arunoki.Flow.Events;
-
-using System;
 
 namespace Arunoki.Flow
 {
@@ -13,9 +12,9 @@ namespace Arunoki.Flow
 
     public EventBus Events { get; } = new();
 
-    public ContextSet Contexts { get; }
+    public ContextsBuilder Contexts { get; }
 
-    public ServiceSet Services { get; }
+    public ServicesBuilder Services { get; }
 
     public PipelineBuilder Pipeline { get; }
 
@@ -25,8 +24,8 @@ namespace Arunoki.Flow
     {
       EntityContext = entityContext;
 
-      Contexts = new ContextSet (EntityContext, TryGetContainer<IContext> ());
-      Services = new ServiceSet (TryGetContainer<IService> ());
+      Contexts = new ContextsBuilder (EntityContext, TryGetContainer<IContext> ());
+      Services = new ServicesBuilder (TryGetContainer<IService> ());
       Pipeline = new PipelineBuilder (TryGetContainer<IPipeline> ());
       Handlers = new HandlersBuilder (TryGetContainer<IHandler> ());
 

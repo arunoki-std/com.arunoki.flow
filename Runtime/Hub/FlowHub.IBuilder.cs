@@ -4,8 +4,9 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : IBuilder
   {
-    public void Produce (object entity)
+    public bool Produce (object entity)
     {
+      return false;
       // TryInjectDependencies (entity);
       // ForEachSet<IBuilder> (builder =>
       // {
@@ -23,7 +24,6 @@ namespace Arunoki.Flow
 
     public virtual void ClearAll ()
     {
-      
     }
 
     protected virtual void TryInjectDependencies (object entity)
@@ -34,6 +34,6 @@ namespace Arunoki.Flow
     }
 
     public bool IsConsumable (object entity) => false;
-      // => ForAnySet<IBuilder> (builder => builder.IsConsumable (entity));
+    // => ForAnySet<IBuilder> (builder => builder.IsConsumable (entity));
   }
 }
