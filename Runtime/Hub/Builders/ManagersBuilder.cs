@@ -9,8 +9,7 @@ namespace Arunoki.Flow.Builders
 {
   public class ManagersBuilder : HubBuilder<Type>
   {
-    public ManagersBuilder (FlowHub hub, IContainer<Type> rootContainer = null)
-      : base (rootContainer)
+    public ManagersBuilder (FlowHub hub)
     {
       (this as IHubPart).Set (hub);
     }

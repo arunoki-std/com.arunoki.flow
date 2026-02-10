@@ -30,7 +30,7 @@ namespace Arunoki.Flow
     {
       if (entity == null) throw new NullReferenceException (nameof(entity));
       if (entity is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (this);
-      if (entity is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (EntityContext);
+      if (entity is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (Contexts.Root);
     }
 
     public bool IsConsumable (object entity) => false;

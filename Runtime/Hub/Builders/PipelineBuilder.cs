@@ -1,4 +1,3 @@
-using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
 
@@ -8,10 +7,6 @@ namespace Arunoki.Flow.Builders
 {
   public class PipelineBuilder : HubBuilder<IPipeline>
   {
-    public PipelineBuilder (IContainer<IPipeline> rootContainer = null) : base (rootContainer)
-    {
-    }
-
     protected virtual HandlersBuilder Handlers => Hub.Handlers;
 
     public void Produce<TPipeline> () where TPipeline : IPipeline, new ()

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubBuilder<TElement> : IContainer<TElement>, IContainer<Type>
+  public abstract partial class HubBuilder<TElement>
   {
     private readonly List<TElement> all = new(32);
 
@@ -24,14 +24,11 @@ namespace Arunoki.Flow.Basics
         else throw BuildOperationException.MultiInstancesNotSupported (element, this);
       }
 
-      (this as IContainer<TElement>).RootContainer?.OnAdded (element);
       all.Add (element);
     }
 
     protected virtual void OnElementRemoved (TElement element)
     {
-      (this as IContainer<TElement>).RootContainer?.OnRemoved (element);
-
       if (Utils.IsDebug () && !IsMultiInstancesSupported ())
         cachedTypes.Remove (element.GetType ());
 
@@ -52,25 +49,29 @@ namespace Arunoki.Flow.Basics
       KeySet.Clear ();
     }
 
-    protected virtual void OnKeyAdded (Type key)
-    {
-      (this as IContainer<Type>).RootContainer?.OnAdded (key);
-    }
+    /// To override.
+    protected virtual void OnKeyAdded (Type key) { }
 
-    protected virtual void OnKeyRemoved (Type key)
-    {
-      (this as IContainer<Type>).RootContainer?.OnRemoved (key);
-    }
-
-    IContainer<TElement> IContainer<TElement>.RootContainer { get; set; }
-    void IContainer<TElement>.OnAdded (TElement element) => OnElementAdded (element);
-    void IContainer<TElement>.OnRemoved (TElement element) => OnElementRemoved (element);
-
-    void IContainer<Type>.OnAdded (Type key) => OnKeyAdded (key);
-    void IContainer<Type>.OnRemoved (Type key) => OnKeyRemoved (key);
-    IContainer<Type> IContainer<Type>.RootContainer { get; set; }
+    /// To override.
+    protected virtual void OnKeyRemoved (Type key) { }
 
     public MutableEnumerator<TElement> GetEnumerator () => new(all);
     public MutableCastEnumerable<TElement, T> Cast<T> () => new(all);
+
+    private class KeyContainer : IContainer<Type>
+    {
+      private readonly HubBuilder<TElement> builder;
+      public KeyContainer (HubBuilder<TElement> builder) => this.builder = builder;
+      public void OnAdded (Type key) => builder.OnKeyAdded (key);
+      public void OnRemoved (Type key) => builder.OnKeyRemoved (key);
+    }
+
+    private class Container : IContainer<TElement>
+    {
+      private readonly HubBuilder<TElement> builder;
+      public Container (HubBuilder<TElement> builder) => this.builder = builder;
+      public void OnAdded (TElement element) => builder.OnElementAdded (element);
+      public void OnRemoved (TElement element) => builder.OnElementRemoved (element);
+    }
   }
 }

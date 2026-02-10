@@ -2,7 +2,7 @@ namespace Arunoki.Flow.Basics
 {
   public abstract partial class HubBuilder<TElement>
   {
-    private readonly CompositeService<TElement> composition;
+    private readonly ServiceContainer<TElement> composition;
 
     /// Init all elements at composition if <see cref="IsCompositionInitializable"/>.
     protected override void OnInitialized ()

@@ -31,7 +31,7 @@ namespace Arunoki.Flow.Utilities
       {
         (Type eventType, MethodInfo [] methods) = groups [i];
 
-        if (events.TryGet (eventType, out var channel))
+        if (events.Channels.TryGet (eventType, out var channel))
         {
           callbacks.Add (channel.Subscribe (receiver, methods));
         }

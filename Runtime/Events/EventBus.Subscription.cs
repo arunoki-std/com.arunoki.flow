@@ -1,5 +1,4 @@
-#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
-
+using Arunoki.Collections;
 using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
@@ -26,30 +25,37 @@ namespace Arunoki.Flow.Events
 
     protected virtual void Unsubscribe (object handler)
     {
-      foreach (var pair in Elements)
-      foreach ((int index, Callback callback) in pair.Element.WithIndex ())
+      foreach (var channel in Channels)
+      foreach ((int index, Callback callback) in channel.WithIndex ())
         if (callback.IsConsumable (handler))
-          pair.Element.RemoveAt (index);
+          channel.RemoveAt (index);
     }
 
     public virtual void UnsubscribeAll ()
     {
-      Elements.ForEach (pair => pair.Element.Clear ());
+      Channels.Clear ();
     }
 
     protected internal void Add (Channel channel)
     {
-      base.Add (channel.GetEventType (), channel);
+      Channels.Add (channel.GetEventType (), channel);
     }
 
-    [Obsolete ("Manual invocation is not desirable.")]
-    public sealed override void Add (Type eventType, Channel channel) => Add (channel);
-
-    protected override void OnElementRemoved (Channel channel)
+    protected virtual void OnChannelAdded (Channel channel)
     {
-      base.OnElementRemoved (channel);
+    }
 
+    protected virtual void OnChannelRemoved (Channel channel)
+    {
       channel.Clear ();
+    }
+
+    private class Container : IContainer<Channel>
+    {
+      private readonly EventBus eventBus;
+      public Container (EventBus eventBus) => this.eventBus = eventBus;
+      public void OnAdded (Channel element) => eventBus.OnChannelAdded (element);
+      public void OnRemoved (Channel element) => eventBus.OnChannelRemoved (element);
     }
   }
 }

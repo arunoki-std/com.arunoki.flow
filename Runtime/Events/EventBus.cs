@@ -1,4 +1,5 @@
 using Arunoki.Collections;
+using Arunoki.Collections.Enumerators;
 using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
@@ -7,8 +8,15 @@ using System;
 namespace Arunoki.Flow.Events
 {
   /// Represents Key (event) && Element (event channel) collection.
-  public partial class EventBus : Set<Type, Channel>, IResettable
+  public partial class EventBus : IResettable
   {
+    public EventBus ()
+    {
+      Channels = new(new Container (this));
+    }
+
+    protected internal Set<Type, Channel> Channels { get; }
+
     /// Register reactive properties.
     public void RegisterSource (IContext context)
     {
@@ -23,16 +31,16 @@ namespace Arunoki.Flow.Events
 
     public void UnregisterSource (Type staticEventSource)
     {
-      foreach ((int index, _, Channel channel) in WithIndex ())
+      foreach ((int index, _, Channel channel) in Channels.WithIndex ())
         if (channel.Context is StaticContextWrapper wrapper && wrapper.IsConsumable (staticEventSource))
-          RemoveAt (index);
+          Channels.RemoveAt (index);
     }
 
     public void UnregisterSource (IContext context)
     {
-      foreach (var (index, _, channel) in WithIndex ())
+      foreach ((int index, _, Channel channel) in Channels.WithIndex ())
         if (context.Equals (channel.Context))
-          RemoveAt (index);
+          Channels.RemoveAt (index);
     }
 
     bool IResettable.AutoReset () => true;
@@ -40,9 +48,11 @@ namespace Arunoki.Flow.Events
     /// Reset each event channel if its <see cref="IResettable"/> and its <see cref="IResettable.AutoReset"/> is on.
     public virtual void Reset ()
     {
-      foreach (var pair in Elements)
-        if (pair.Element is IResettable resettable && resettable.AutoReset ())
+      foreach (var channel in Channels)
+        if (channel is IResettable resettable && resettable.AutoReset ())
           resettable.Reset ();
     }
+
+    public MutablePairValueEnumerator<Type, Channel> GetEnumerator () => Channels.GetEnumerator ();
   }
 }

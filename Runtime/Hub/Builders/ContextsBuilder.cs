@@ -6,15 +6,13 @@ namespace Arunoki.Flow.Builders
 {
   public class ContextsBuilder : HubBuilder<IContext>
   {
-    public IContext Root { get; }
+    public IContext Root { get; private set; }
 
-    public ContextsBuilder (IContext context, IContainer<IContext> rootContainer = null)
-      : base (rootContainer)
+    protected internal void SetRoot (IContext root)
     {
-      Root = context;
-
-      (this as IContextPart).Set (context);
-      Set.TryAdd (context);
+      Root = root;
+      (this as IContextPart).Set (root);
+      Set.TryAdd (root);
     }
 
     protected override void OnInitialized ()

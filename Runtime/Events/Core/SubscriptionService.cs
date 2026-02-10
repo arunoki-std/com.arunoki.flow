@@ -37,7 +37,7 @@ namespace Arunoki.Flow.Events.Core
 
     protected void Remove (Callback callback)
     {
-      Events [callback.EventType].Remove (callback);
+      Events.Channels [callback.EventType].Remove (callback);
     }
 
     protected override void OnElementAdded (Callback callback)
@@ -53,7 +53,7 @@ namespace Arunoki.Flow.Events.Core
       isActivated = true;
 
       foreach (var callback in Callbacks)
-        Events [callback.EventType].TryAdd (callback);
+        Events.Channels [callback.EventType].TryAdd (callback);
     }
 
     public void Deactivate ()

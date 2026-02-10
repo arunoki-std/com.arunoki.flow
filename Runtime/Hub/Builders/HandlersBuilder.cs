@@ -1,4 +1,3 @@
-using Arunoki.Collections;
 using Arunoki.Flow.Basics;
 using Arunoki.Flow.Events.Core;
 
@@ -7,11 +6,6 @@ namespace Arunoki.Flow.Builders
   public class HandlersBuilder : HubBuilder<IHandler>
   {
     private SubscriptionService subscriber;
-
-    public HandlersBuilder (IContainer<IHandler> rootBuilder = null)
-      : base (rootBuilder)
-    {
-    }
 
     /// Encapsulates Events (Subscribe / Unsubscribe) without Handlers allocation when Hub (Activated / Deactivated).
     internal SubscriptionService Subscriber => (subscriber ??= new SubscriptionService (Hub.Events));

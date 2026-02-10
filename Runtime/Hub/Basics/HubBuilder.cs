@@ -7,13 +7,10 @@ namespace Arunoki.Flow.Basics
   public abstract partial class HubBuilder<TElement> : HubPart
     where TElement : class
   {
-    protected HubBuilder (IContainer<TElement> rootContainer = null, IContainer<Type> rootKeyBuilder = null)
+    protected HubBuilder ()
     {
-      (this as IContainer<TElement>).RootContainer = rootContainer;
-      (this as IContainer<Type>).RootContainer = rootKeyBuilder;
-
-      Set = new(this, IsConsumable);
-      KeySet = new(this, this); //TODO: add isConsumable to set collection
+      Set = new(new Container (this), IsConsumable);
+      KeySet = new(new Container (this), new KeyContainer (this)); //TODO: add isConsumable to set collection
 
       composition = new(all);
     }

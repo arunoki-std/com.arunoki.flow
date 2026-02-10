@@ -8,28 +8,15 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : BaseService
   {
-    protected IContext EntityContext { get; }
-
     public EventBus Events { get; } = new();
-
-    public ContextsBuilder Contexts { get; }
-
-    public ServicesBuilder Services { get; }
-
-    public PipelineBuilder Pipeline { get; }
-
-    public HandlersBuilder Handlers { get; }
+    public ContextsBuilder Contexts { get; } = new();
+    public ServicesBuilder Services { get; } = new();
+    public PipelineBuilder Pipeline { get; } = new();
+    public HandlersBuilder Handlers { get; } = new();
 
     public FlowHub (IContext entityContext, bool autoInit = true)
     {
-      EntityContext = entityContext;
-
-      Contexts = new ContextsBuilder (EntityContext, TryGetContainer<IContext> ());
-      Services = new ServicesBuilder (TryGetContainer<IService> ());
-      Pipeline = new PipelineBuilder (TryGetContainer<IPipeline> ());
-      Handlers = new HandlersBuilder (TryGetContainer<IHandler> ());
-
-      // if (EntityContext is IContainer<IHandler> c) SetRootContainer (c);//obsolete
+      Contexts.SetRoot (entityContext);
 
       OnInitSets ();
       OnInitServices ();
