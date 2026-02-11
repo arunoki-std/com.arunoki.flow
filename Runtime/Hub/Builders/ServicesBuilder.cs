@@ -12,5 +12,7 @@ namespace Arunoki.Flow.Builders
         _ => service is not null
       };
     }
+
+    protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Services;
   }
 }

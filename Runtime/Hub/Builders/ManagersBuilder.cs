@@ -1,4 +1,3 @@
-using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
 using Arunoki.Flow.Utilities;
@@ -37,7 +36,8 @@ namespace Arunoki.Flow.Builders
       Hub.Contexts.KeySet.GetOrCreate (staticType)
         .AddRange (staticType.FindPropertiesWithNested<IContext> ().ToArray ());
 
-      Hub.Services.Set.AddRange (staticType.FindPropertiesWithNested<IService> ().ToArray ());
+      Hub.Services.KeySet.GetOrCreate (staticType)
+        .AddRange (staticType.FindProperties<IService> ().ToArray ());
     }
 
     protected override void OnElementRemoved (Type staticType)
@@ -47,11 +47,8 @@ namespace Arunoki.Flow.Builders
       Hub.Events.UnregisterSource (staticType);
       Hub.Events.Unsubscribe (staticType);
 
-      foreach (var context in staticType.FindPropertiesWithNested<IContext> ().ToArray ())
-        Hub.Contexts.Clear (context);
-
-      foreach (var service in staticType.FindPropertiesWithNested<IService> ().ToArray ())
-        Hub.Services.Clear (service);
+      Hub.Services.KeySet.Clear (staticType);
+      Hub.Contexts.KeySet.Clear (staticType);
     }
 
     private void SubscribeHandlers (Type staticType)
@@ -71,5 +68,7 @@ namespace Arunoki.Flow.Builders
     protected override bool IsCompositionResettable () => false;
     protected override bool IsCompositionStartable () => false;
     protected override bool IsCompositionServiceAvailable () => false;
+
+    protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Managers;
   }
 }

@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  internal class ServiceContainer<TElement> : BaseService where TElement : class
+  public class ServiceContainer<TElement> : BaseService where TElement : class
   {
     protected readonly List<TElement> Elements;
 
-    public ServiceContainer () : this (new()) { }
+    public ServiceContainer () : this (new(8)) { }
 
     public ServiceContainer (List<TElement> elements)
     {

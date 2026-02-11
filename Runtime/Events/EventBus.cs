@@ -53,6 +53,11 @@ namespace Arunoki.Flow.Events
           resettable.Reset ();
     }
 
+    public virtual void ClearAll ()
+    {
+      Channels.Clear ();
+    }
+
     public MutablePairValueEnumerator<Type, Channel> GetEnumerator () => Channels.GetEnumerator ();
   }
 }

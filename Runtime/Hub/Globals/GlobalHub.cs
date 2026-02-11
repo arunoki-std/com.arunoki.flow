@@ -41,13 +41,6 @@ namespace Arunoki.Flow.Globals
 
     internal static GlobalHub Instance { get; private set; }
 
-    protected override void OnInitialized ()
-    {
-      base.OnInitialized ();
-
-      // Managers.Initialize ();
-    }
-
     protected override void OnActivated ()
     {
       base.OnActivated ();
@@ -58,14 +51,6 @@ namespace Arunoki.Flow.Globals
         OnReady?.Invoke ();
         OnReady = null;
       }
-    }
-
-    /// Remove all elements from hub components and collections. 
-    public override void ClearAll ()
-    {
-      base.ClearAll ();
-
-      Managers.ClearAll ();
     }
   }
 }

@@ -25,6 +25,7 @@ namespace Arunoki.Flow.Basics
       }
 
       all.Add (element);
+      Hub.TryInjectDependencies (element);
     }
 
     protected virtual void OnElementRemoved (TElement element)

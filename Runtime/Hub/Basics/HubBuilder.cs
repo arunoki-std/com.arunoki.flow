@@ -1,10 +1,6 @@
-using Arunoki.Collections;
-
-using System;
-
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubBuilder<TElement> : HubPart
+  public abstract partial class HubBuilder<TElement> : BaseHubBuilder
     where TElement : class
   {
     protected HubBuilder ()

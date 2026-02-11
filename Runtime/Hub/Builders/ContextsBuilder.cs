@@ -1,4 +1,3 @@
-using Arunoki.Collections;
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
 
@@ -59,5 +58,7 @@ namespace Arunoki.Flow.Builders
     protected override bool CanBuildAfterHubInit () => false;
     protected override bool CanBuildAfterHubStarted () => false;
     protected override bool CanBuildAfterHubActivation () => false;
+
+    protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Contexts;
   }
 }
