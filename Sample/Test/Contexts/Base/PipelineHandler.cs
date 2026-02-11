@@ -1,6 +1,6 @@
 namespace Arunoki.Flow.Sample
 {
-  public abstract class PipelineHandler : IPipelineHandler, IContextPart
+  public abstract class PipelineHandler : IHandler, IContextPart
   {
     public SampleContext Context { get; private set; }
 

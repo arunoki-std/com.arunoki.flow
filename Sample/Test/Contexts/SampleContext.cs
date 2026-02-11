@@ -2,7 +2,7 @@ using Arunoki.Flow.Sample.Events;
 
 namespace Arunoki.Flow.Sample
 {
-  public partial class SampleContext : IContext, IPipeline, IPipelineHandler
+  public partial class SampleContext : IContext, IPipeline, IHandler
   {
     public Trigger<SampleContextFired> IsFired { get; } = new();
 

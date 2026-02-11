@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Sample
   public partial class SamplePipeline
   {
     [Preserve]
-    public class Boot : IPipelineHandler
+    public class Boot : IHandler
     {
       public void OnStarted (ref BootstrapStarted e)
       {

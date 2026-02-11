@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Sample
   public partial class SamplePipeline
   {
     [Preserve]
-    public class Fire : IPipelineHandler
+    public class Fire : IHandler
     {
       public void OnTestFired (ref SampleContextFired e)
       {
