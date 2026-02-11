@@ -1,5 +1,7 @@
 using Arunoki.Flow.Events;
 
+using System.Collections.Generic;
+
 namespace Arunoki.Flow
 {
   public class ValueProperty<TValue, TEvent> : Channel<TEvent>, IValueProperty<TValue, TEvent>, IResettable
@@ -68,7 +70,8 @@ namespace Arunoki.Flow
       Reset ();
     }
 
-    protected virtual bool Equals (ref TValue a, ref TValue b) => ReferenceEquals (a, b);
+    protected virtual bool Equals (ref TValue a, ref TValue b)
+      => EqualityComparer<TValue>.Default.Equals (a, b);
 
     protected override TEvent GetEventInstance ()
     {

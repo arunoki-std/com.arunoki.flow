@@ -26,9 +26,9 @@ namespace Arunoki.Flow.Events
     protected virtual void Unsubscribe (object handler)
     {
       foreach (var channel in Channels)
-      foreach ((int index, Callback callback) in channel.WithIndex ())
-        if (callback.IsConsumable (handler))
-          channel.RemoveAt (index);
+        for (var i = channel.Callbacks.Count - 1; i >= 0; i--)
+          if (channel.Callbacks [i].IsConsumable (handler))
+            channel.RemoveAt (i);
     }
 
     public virtual void UnsubscribeAll ()

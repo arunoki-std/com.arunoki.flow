@@ -14,7 +14,8 @@ namespace Arunoki.Flow
     {
     }
 
-    protected override bool Equals (ref float a, ref float b) => UnityEngine.Mathf.Approximately (a, b);
+    protected override bool Equals (ref float a, ref float b)
+      => UnityEngine.Mathf.Approximately (a, b);
 
     public void Add (float value) => Set (Value + value);
     public void Subtract (float value) => Set (Value - value);

@@ -53,7 +53,7 @@ namespace Arunoki.Flow.Events.Core
       isActivated = true;
 
       foreach (var callback in Callbacks)
-        Events.Channels [callback.EventType].TryAdd (callback);
+        Events.Channels [callback.EventType].Add (callback);
     }
 
     public void Deactivate ()

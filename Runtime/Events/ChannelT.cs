@@ -17,11 +17,11 @@ namespace Arunoki.Flow.Events
     /// <exception cref="MultipleEventSubscriptionException"></exception>
     protected internal override Callback Subscribe (object target, MethodInfo [] methods)
     {
-      if (Utils.IsDebug () && Any (callback => callback.IsConsumable (target)))
+      if (Utils.IsDebug () && Callbacks.Find (cb => cb.IsConsumable (target)) != null)
         throw new MultipleEventSubscriptionException (GetEventType (), target);
 
       var callback = new Callback<TEvent> (target, GetEventType (), methods);
-      TryAdd (callback);
+      Add (callback);
       return callback;
     }
 
@@ -46,9 +46,9 @@ namespace Arunoki.Flow.Events
     /// Methods from <see cref="IHandler"/> will be invoked first and after them <see cref="OnEvent"/> delegates.
     protected virtual void Publish (ref TEvent evt)
     {
-      for (var index = Elements.Count - 1; index >= 0; index--)
+      for (var index = Callbacks.Count - 1; index >= 0; index--)
       {
-        var callback = Elements [index];
+        var callback = Callbacks [index];
 
         if (!callback.CanReceiveEvents ())
           continue;
