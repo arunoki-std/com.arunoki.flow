@@ -59,7 +59,7 @@ namespace Arunoki.Flow
       for (var i = 0; i < Elements.Count; i++)
       {
         var builder = Elements [i];
-        if (builder.IsConsumable (entity)) builder.Produce (entity);
+        if (builder.IsConsumable (entity)) builder.Clear (entity);
       }
     }
 

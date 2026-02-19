@@ -57,6 +57,7 @@ namespace Arunoki.Flow.Builders
     protected override bool CanBuildAfterHubInit () => false;
     protected override bool CanBuildAfterHubStarted () => false;
     protected override bool CanBuildAfterHubActivation () => false;
+    protected override bool IsMultiInstancesSupported () => false;
 
     protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Contexts;
   }
