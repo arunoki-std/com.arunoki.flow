@@ -6,7 +6,7 @@ namespace Arunoki.Flow.Basics
     protected HubBuilder ()
     {
       Set = new(new Container (this), IsConsumable);
-      KeySet = new(new Container (this), new KeyContainer (this)); //TODO: add isConsumable to set collection
+      KeySet = new(new Container (this), new KeyContainer (this), IsConsumable);
 
       composition = new(all);
     }
