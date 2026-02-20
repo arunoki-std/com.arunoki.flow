@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubBuilder<TElement> : IBuilder
+  public abstract partial class HubBuilder<TElement> : IHubBuilder
     where TElement : class
   {
     private readonly List<Type> cachedTypes = new(16);
 
-    bool IBuilder.Produce (object entity) => Produce (entity as TElement);
+    bool IHubBuilder.Produce (object entity) => Produce (entity as TElement);
 
     /// <summary>
     /// 
@@ -32,9 +32,9 @@ namespace Arunoki.Flow.Basics
       return !all.Contains (element) && Set.TryAdd (element);
     }
 
-    void IBuilder.Clear (object entity) => Clear (entity as TElement);
+    void IHubBuilder.Clear (object entity) => Clear (entity as TElement);
 
-    bool IBuilder.IsConsumable (object entity) => IsConsumable (entity as TElement);
+    bool IHubBuilder.IsConsumable (object entity) => IsConsumable (entity as TElement);
 
     public virtual bool IsConsumable (TElement element) => element != null;
 

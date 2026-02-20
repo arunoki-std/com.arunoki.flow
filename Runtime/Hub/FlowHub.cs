@@ -1,10 +1,11 @@
 using Arunoki.Flow.Basics;
 using Arunoki.Flow.Builders;
 using Arunoki.Flow.Events;
+using Arunoki.Flow.Globals;
 
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : ServiceContainer<IBuilder>
+  public partial class FlowHub : ServiceContainer<IHubBuilder>
   {
     public EventBus Events { get; } = new();
     public ContextsBuilder Contexts { get; }
@@ -12,12 +13,13 @@ namespace Arunoki.Flow
     public PipelineBuilder Pipeline { get; } = new();
     public HandlersBuilder Handlers { get; } = new();
 
-    public FlowHub (IContext entityContext, bool autoInit = true)
+    public FlowHub (IContext context, bool autoInit = true)
     {
-      Contexts = new ContextsBuilder (entityContext);
-      OnCreateBuilders (entityContext);
+      Contexts = new ContextsBuilder (context, this);
+
+      FindBuildersAt (this);
+      if (context is not DummyContext) FindBuildersAt (context);
       OnInitBuilders ();
-      Contexts.Set.TryAdd (entityContext);
 
       if (autoInit) Initialize ();
     }

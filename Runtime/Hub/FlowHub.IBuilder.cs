@@ -1,12 +1,11 @@
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
-using Arunoki.Flow.Globals;
 
 using System;
 
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : IBuilder
+  public partial class FlowHub : IHubBuilder
   {
     internal enum BuildOrder
     {
@@ -18,24 +17,19 @@ namespace Arunoki.Flow
       Handlers = short.MinValue + 4
     }
 
-    protected virtual void OnCreateBuilders (IContext context)
-    {
-      Elements.AddRange (this.FindProperties<IBuilder> ());
-
-      if (context is not DummyContext)
-        Elements.AddRange (context.FindProperties<IBuilder> ());
-
-      Elements.Sort ((a, b)
-        => Order (a).CompareTo (Order (b)));
-    }
-
     protected virtual void OnInitBuilders ()
     {
       for (var i = 0; i < Elements.Count; i++)
         TryInjectDependencies (Elements [i]);
     }
 
-    private static int Order (IBuilder x) =>
+    protected virtual void FindBuildersAt (object target)
+    {
+      Elements.AddRange (target.FindProperties<IHubBuilder> ());
+      Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
+    }
+
+    private static int Order (IHubBuilder x) =>
       x is BaseHubBuilder bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
 
     public bool Produce (object entity)

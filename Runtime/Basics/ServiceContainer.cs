@@ -4,7 +4,7 @@ namespace Arunoki.Flow.Basics
 {
   public class ServiceContainer<TElement> : BaseService where TElement : class
   {
-    protected readonly List<TElement> Elements;
+    protected internal readonly List<TElement> Elements;
 
     public ServiceContainer () : this (new(8)) { }
 

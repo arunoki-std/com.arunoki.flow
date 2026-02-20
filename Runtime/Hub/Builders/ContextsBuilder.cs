@@ -5,10 +5,13 @@ namespace Arunoki.Flow.Builders
 {
   public class ContextsBuilder : HubBuilder<IContext>
   {
-    public ContextsBuilder (IContext root)
+    public ContextsBuilder (IContext root, FlowHub hub)
     {
       Root = root;
       (this as IContextPart).Set (root);
+      (this as IHubPart).Set (hub);
+
+      Set.TryAdd (root);
     }
 
     public IContext Root { get; }

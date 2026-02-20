@@ -24,7 +24,7 @@ namespace Arunoki.Flow
         $"This type of entity '{entity.GetType ()}' must be produced before {nameof(FlowHub)} has been activated.");
     }
 
-    public static BuildOperationException MultiInstancesNotSupported (object entity, IBuilder builder)
+    public static BuildOperationException MultiInstancesNotSupported (object entity, IHubBuilder builder)
     {
       return new BuildOperationException (
         $"Builder '{builder.GetType ()}' can produce only one instance per type '{entity.GetType ()}'.");

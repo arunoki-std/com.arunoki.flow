@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Builders
     {
       return service switch
       {
-        IBuilder or IContext or IPipeline or IHandler => false,
+        IHubBuilder or IContext or IPipeline or IHandler => false,
         _ => service is not null
       };
     }
