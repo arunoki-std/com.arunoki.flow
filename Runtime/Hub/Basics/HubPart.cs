@@ -1,4 +1,4 @@
-using System;
+using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow.Basics
 {
@@ -23,9 +23,7 @@ namespace Arunoki.Flow.Basics
 
     void IContextPart.Set (IContext value)
     {
-      if (Context != null && value != null && Context != value)
-        throw new InvalidOperationException (
-          $"Trying to rewrite existing {nameof(Context)} '{Context}' by '{value}' at {this}.");
+      Guard.ThrowIfRewrite (Context, value);
 
       Context = value;
     }
@@ -34,9 +32,7 @@ namespace Arunoki.Flow.Basics
 
     void IHubPart.Set (FlowHub value)
     {
-      if (Hub != null && value != null && Hub != value)
-        throw new InvalidOperationException (
-          $"Trying to rewrite existing {nameof(Hub)} '{Hub}' by '{value}' at {this}.");
+      Guard.ThrowIfRewrite (Hub, value);
 
       Hub = value;
     }
