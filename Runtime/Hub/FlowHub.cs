@@ -39,12 +39,10 @@ namespace Arunoki.Flow
 
       var prevCount = Elements.Count;
 
-      foreach (var hubPart in target.FindProperties<HubPart> ())
+      foreach (var builder in target.FindProperties<IHubBuilder> ())
       {
-        TryInjectDependencies (hubPart);
-
-        if (hubPart is IHubBuilder builder)
-          Elements.Add (builder);
+        TryInjectDependencies (builder);
+        Elements.Add (builder);
       }
 
       if (Elements.Count != prevCount) SortBuilders ();

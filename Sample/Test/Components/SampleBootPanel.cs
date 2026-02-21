@@ -22,7 +22,7 @@ namespace Arunoki.Flow.Sample
       while (!SampleManager.Boot.IsStarted)
         yield return null;
 
-      SampleHub.Get.Produce (this);
+      SampleHub.Get.Build (this);
 
       SetProgress (0);
       SetReady (false);

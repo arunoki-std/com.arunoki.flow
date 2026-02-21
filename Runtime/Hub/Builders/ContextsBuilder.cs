@@ -19,7 +19,7 @@ namespace Arunoki.Flow.Builders
     protected override void OnInitialized ()
     {
       foreach (IContext context in this)
-        Hub.Produce (context);
+        Hub.Build (context);
 
       base.OnInitialized ();
     }
@@ -29,9 +29,6 @@ namespace Arunoki.Flow.Builders
       base.OnElementAdded (context);
 
       Hub.Events.RegisterSource (context);
-
-      if (context is IContextPart ctxPart && ctxPart.Get () == null)
-        ctxPart.Set (Context);
 
       var allServices = context.FindProperties<IService> ();
       if (allServices.Count > 0)

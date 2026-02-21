@@ -2,7 +2,7 @@ namespace Arunoki.Flow
 {
   public interface IHubBuilder
   {
-    bool Produce (object entity);
+    bool Build (object entity);
     void Clear (object entity);
     void ClearAll ();
 

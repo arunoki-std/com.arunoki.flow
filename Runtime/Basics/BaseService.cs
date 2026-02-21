@@ -2,7 +2,7 @@ namespace Arunoki.Flow.Basics
 {
   public abstract class BaseService : IInitializable, IStartable, IService, IResettable
   {
-    private readonly object targetService;
+    protected object TargetService;
 
     private bool isStarted;
     private bool isActivated;
@@ -10,18 +10,18 @@ namespace Arunoki.Flow.Basics
 
     protected BaseService (object targetService = null)
     {
-      this.targetService = targetService;
+      TargetService = targetService;
     }
 
     protected internal bool IsInitialized () => isInitialized;
     protected internal bool IsActivated () => isActivated;
     protected internal bool IsStarted () => isStarted;
 
-    protected virtual void OnInitialized () => (targetService as IInitializable)?.Initialize ();
-    protected virtual void OnStarted () => (targetService as IStartable)?.Start ();
-    protected virtual void OnActivated () => (targetService as IService)?.Activate ();
-    protected virtual void OnDeactivated () => (targetService as IService)?.Deactivate ();
-    protected virtual void OnReset () => (targetService as IResettable)?.Reset ();
+    protected virtual void OnInitialized () => (TargetService as IInitializable)?.Initialize ();
+    protected virtual void OnStarted () => (TargetService as IStartable)?.Start ();
+    protected virtual void OnActivated () => (TargetService as IService)?.Activate ();
+    protected virtual void OnDeactivated () => (TargetService as IService)?.Deactivate ();
+    protected virtual void OnReset () => (TargetService as IResettable)?.Reset ();
 
     bool IInitializable.IsInitialized () => isInitialized;
     bool IService.IsActivated () => isActivated;

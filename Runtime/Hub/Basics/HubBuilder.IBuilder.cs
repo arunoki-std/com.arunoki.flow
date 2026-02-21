@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Basics
   {
     private readonly List<Type> cachedTypes = new(16);
 
-    bool IHubBuilder.Produce (object entity) => Produce (entity as TElement);
+    bool IHubBuilder.Build (object entity) => Produce (entity as TElement);
 
     /// <summary>
     /// 
@@ -36,7 +36,7 @@ namespace Arunoki.Flow.Basics
 
     bool IHubBuilder.IsConsumable (object entity) => IsConsumable (entity as TElement);
 
-    public virtual bool IsConsumable (TElement element) => element != null;
+    public virtual bool IsConsumable (TElement element) => element != null && element is not IDummy;
 
     /// Check whether is element type unique at elements collection. For debug build.
     protected virtual bool IsMultiInstancesSupported () => true;

@@ -4,7 +4,14 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub : IHubBuilder
   {
-    public bool Produce (object entity)
+    protected override void OnReset ()
+    {
+      Events.Reset ();
+
+      base.OnReset ();
+    }
+
+    public bool Build (object entity)
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
       var result = false;
@@ -12,7 +19,7 @@ namespace Arunoki.Flow
       for (var i = 0; i < Elements.Count; i++)
       {
         var builder = Elements [i];
-        result = (builder.IsConsumable (entity) && builder.Produce (entity)) || result;
+        result = (builder.IsConsumable (entity) && builder.Build (entity)) || result;
       }
 
       return result;

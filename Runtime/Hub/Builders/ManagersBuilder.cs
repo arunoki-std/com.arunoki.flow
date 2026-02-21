@@ -64,11 +64,6 @@ namespace Arunoki.Flow.Builders
     protected override bool CanBuildAfterHubActivation () => false;
     protected override bool IsMultiInstancesSupported () => false;
 
-    protected override bool IsCompositionInitializable () => false;
-    protected override bool IsCompositionResettable () => false;
-    protected override bool IsCompositionStartable () => false;
-    protected override bool IsCompositionServiceAvailable () => false;
-
     protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Managers;
   }
 }
