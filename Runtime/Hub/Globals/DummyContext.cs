@@ -1,6 +1,6 @@
 namespace Arunoki.Flow.Globals
 {
-  internal sealed class DummyContext : IContext
+  internal sealed class DummyContext : IContext, IDummy
   {
   }
 }

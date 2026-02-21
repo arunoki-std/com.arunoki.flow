@@ -8,6 +8,17 @@ namespace Arunoki.Flow.Basics
 
     public IContext Context { get; private set; }
 
+    protected override void OnInitialized ()
+    {
+      base.OnInitialized ();
+
+      if (Hub == null)
+        throw new BuildOperationException ($"'{GetType ()}' is supposed to be a part of the '{nameof(FlowHub)}'.");
+
+      if (Context == null)
+        throw new BuildOperationException ($"'{GetType ()}' is supposed to be a part of the '{nameof(Context)}'.");
+    }
+
     IContext IContextPart.Get () => Context;
 
     void IContextPart.Set (IContext value)

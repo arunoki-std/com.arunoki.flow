@@ -1,37 +1,9 @@
-using Arunoki.Collections.Utilities;
-using Arunoki.Flow.Basics;
-
 using System;
 
 namespace Arunoki.Flow
 {
   public partial class FlowHub : IHubBuilder
   {
-    internal enum BuildOrder
-    {
-      Any = 0,
-      Managers = short.MinValue,
-      Contexts = short.MinValue + 1,
-      Services = short.MinValue + 2,
-      Pipelines = short.MinValue + 3,
-      Handlers = short.MinValue + 4
-    }
-
-    protected virtual void OnInitBuilders ()
-    {
-      for (var i = 0; i < Elements.Count; i++)
-        TryInjectDependencies (Elements [i]);
-    }
-
-    protected virtual void FindBuildersAt (object target)
-    {
-      Elements.AddRange (target.FindProperties<IHubBuilder> ());
-      Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
-    }
-
-    private static int Order (IHubBuilder x) =>
-      x is BaseHubBuilder bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
-
     public bool Produce (object entity)
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
@@ -63,12 +35,6 @@ namespace Arunoki.Flow
 
       for (var i = 0; i < Elements.Count; i++)
         Elements [i].ClearAll ();
-    }
-
-    protected internal virtual void TryInjectDependencies (object entity)
-    {
-      if (entity is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (this);
-      if (entity is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (Contexts.Root);
     }
 
     public bool IsConsumable (object entity)

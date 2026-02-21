@@ -1,12 +1,22 @@
+using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
 using Arunoki.Flow.Builders;
 using Arunoki.Flow.Events;
-using Arunoki.Flow.Globals;
 
 namespace Arunoki.Flow
 {
   public partial class FlowHub : ServiceContainer<IHubBuilder>
   {
+    internal enum BuildOrder
+    {
+      Any = 0,
+      Managers = short.MinValue,
+      Contexts = short.MinValue + 1,
+      Services = short.MinValue + 2,
+      Pipelines = short.MinValue + 3,
+      Handlers = short.MinValue + 4
+    }
+
     public EventBus Events { get; } = new();
     public ContextsBuilder Contexts { get; }
     public ServicesBuilder Services { get; } = new();
@@ -17,11 +27,39 @@ namespace Arunoki.Flow
     {
       Contexts = new ContextsBuilder (context, this);
 
-      FindBuildersAt (this);
-      if (context is not DummyContext) FindBuildersAt (context);
-      OnInitBuilders ();
+      FindPartsAt (this);
+      FindPartsAt (context);
 
       if (autoInit) Initialize ();
     }
+
+    protected virtual void FindPartsAt (object target)
+    {
+      if (target is IDummy) return;
+
+      var prevCount = Elements.Count;
+
+      foreach (var hubPart in target.FindProperties<HubPart> ())
+      {
+        TryInjectDependencies (hubPart);
+
+        if (hubPart is IHubBuilder builder)
+          Elements.Add (builder);
+      }
+
+      if (Elements.Count != prevCount) SortBuilders ();
+    }
+
+    protected internal virtual void TryInjectDependencies (object entity)
+    {
+      if (entity is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (this);
+      if (entity is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (Contexts.Root);
+    }
+
+    protected void SortBuilders ()
+      => Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
+
+    private static int Order (IHubBuilder x) =>
+      x is BaseHubBuilder bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
   }
 }
