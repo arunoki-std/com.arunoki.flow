@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 
@@ -8,35 +6,35 @@ namespace Arunoki.Flow
   internal sealed class StateNode<TEntity> where TEntity : class
   {
     public readonly string Name;
-    private readonly IState<TEntity> state;
+    internal readonly IState<TEntity> State;
 
-    public StateNode<TEntity>? Parent { get; private set; }
-    public StateNode<TEntity>? DefaultChild { get; private set; }
-    public StateNode<TEntity>? ActiveChild { get; private set; }
+    public StateNode<TEntity> Parent { get; private set; }
+    public StateNode<TEntity> DefaultChild { get; private set; }
+    public StateNode<TEntity> ActiveChild { get; private set; }
 
     public List<StateNode<TEntity>> Children = new(8);
 
     public StateNode (string name, IState<TEntity> state)
     {
       Name = name;
-      this.state = state;
+      State = state;
     }
 
     public void EnterSelf ()
     {
-      state.OnEnter ();
+      State.OnEnter ();
       ActiveChild = null;
     }
 
     public void ExitSelf ()
     {
-      state.OnExit ();
+      State.OnExit ();
       ActiveChild = null;
     }
 
     public void UpdateSelf ()
     {
-      state.OnUpdate ();
+      State.OnUpdate ();
     }
 
     public void AddChild (StateNode<TEntity> child, bool isDefault)
@@ -82,6 +80,21 @@ namespace Arunoki.Flow
       ActiveChild = null;
     }
 
+    /// Путь от root до этого узла.
+    public static void BuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
+    {
+      buffer.Clear ();
+      var cur = node;
+      while (cur != null)
+      {
+        buffer.Add (cur);
+        cur = cur.Parent!;
+      }
+
+      // buffer сейчас leaf->root, переворачиваем в root->leaf
+      buffer.Reverse ();
+    }
+
     public StateNode<TEntity> GetActiveLeaf ()
     {
       var node = this;
@@ -92,6 +105,16 @@ namespace Arunoki.Flow
       return node;
     }
 
-    public bool IsRoot () => Parent == null;
+    public bool IsPathDefault ()
+    {
+      var cur = this;
+      while (cur != null)
+      {
+        if (!cur.State.IsDefault ()) return false;
+        cur = cur.Parent;
+      }
+
+      return true;
+    }
   }
 }

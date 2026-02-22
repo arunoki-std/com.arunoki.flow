@@ -9,5 +9,6 @@ namespace Arunoki.Flow
     void OnUpdate ();
 
     bool IsDefault ();
+    bool IsRoot ();
   }
 }

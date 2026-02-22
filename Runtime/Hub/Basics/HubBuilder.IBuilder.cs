@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Basics
   {
     private readonly List<Type> cachedTypes = new(16);
 
-    bool IHubBuilder.Build (object entity) => Produce (entity as TElement);
+    bool IHubBuilder.Build (object entity) => Build (entity as TElement);
 
     /// <summary>
     /// 
@@ -16,7 +16,7 @@ namespace Arunoki.Flow.Basics
     /// <param name="element"></param>
     /// <exception cref="ArgumentNullException"> <see cref="element"/> is null.</exception>
     /// <exception cref="BuildOperationException"><see cref="CanBuildAfterHubInit"/>, <see cref="CanBuildAfterHubStarted"/>, <see cref="CanBuildAfterHubActivation"/></exception>
-    public virtual bool Produce (TElement element)
+    public virtual bool Build (TElement element)
     {
       if (element == null) throw new ArgumentNullException (nameof(element));
 

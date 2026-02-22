@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Builders
 
     public void Produce<TPipeline> () where TPipeline : IPipeline, new ()
     {
-      Produce (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
+      Build (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
     }
 
     public void Clear<TPipeline> () where TPipeline : IPipeline

@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Utilities
 
     public static void ThrowIfRewrite (object? current, object? other)
     {
-      if (current == null || other == null) return;
+      if (current == null || other == null || current == other) return;
       throw new RewriteOperationException (current, other);
     }
 

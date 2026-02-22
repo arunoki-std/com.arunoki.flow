@@ -10,13 +10,30 @@ namespace Arunoki.Flow
   {
     internal Dictionary<Type, StateNode<TEntity>> Nodes = new(16);
 
-    protected void CreateNodesFrom (object source)
+    protected virtual void InitStates ()
+    {
+      foreach (var node in Nodes.Values)
+        if (node.State is IInitializable state && !state.IsInitialized ())
+          state.Initialize ();
+    }
+
+    protected virtual void ResetStates ()
+    {
+      foreach (var node in Nodes.Values)
+        if (node.State is IResettable state && state.AutoReset ())
+          state.Reset ();
+    }
+
+    protected void CreateStatesFrom (object source)
     {
       if (source is IDummy) return;
 
       foreach (Type stateType in source.GetType ().GetNestedTypes<IState<TEntity>> ())
         CreateNode (stateType);
     }
+
+    private StateNode<TEntity> CreateNode<TState> () where TState : IState<TEntity>, new ()
+      => CreateNode (typeof(TState));
 
     private StateNode<TEntity> CreateNode (Type stateType)
     {
@@ -26,6 +43,8 @@ namespace Arunoki.Flow
       var state = CreateState (stateType);
       node = new StateNode<TEntity> (stateType.Name, state);
       Nodes.Add (stateType, node);
+
+      if (state.IsRoot ()) SetRoot (node);
 
       if (TryGetParentNode (stateType, out var parentNode))
         parentNode.AddChild (node, state.IsDefault ());

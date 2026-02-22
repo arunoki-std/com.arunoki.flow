@@ -7,11 +7,11 @@ namespace Arunoki.Flow
   /// Hierarchical finite state machine.
   public partial class StateMachine<TEntity> : BaseServiceExplicit where TEntity : class
   {
-    private readonly Action<StateMachine<TEntity>> onPreInit;
+    private readonly Action<IFsmBuilder<TEntity>> onPreInit;
     protected internal readonly TEntity Entity;
     protected readonly FlowHub Hub;
 
-    public StateMachine (TEntity entity, FlowHub hub, Action<StateMachine<TEntity>> onPreInit = null)
+    public StateMachine (TEntity entity, FlowHub hub, Action<IFsmBuilder<TEntity>> onPreInit = null)
     {
       TargetService = new ServiceContainer<IStateRouter<TEntity>> (Routers);
       Entity = entity;
@@ -22,13 +22,24 @@ namespace Arunoki.Flow
 
     protected override void OnInitialized ()
     {
-      CreateNodesFrom (Entity);
+      CreateStatesFrom (Entity);
       CreateRoutersFrom (Entity);
 
-      onPreInit?.Invoke (this);
-      OnInitRouters ();
+      onPreInit?.Invoke (GetBuilder (this));
+      InitRouters ();
 
       base.OnInitialized ();
+    }
+
+    protected override void OnReset ()
+    {
+      base.OnReset ();
+      ResetStates ();
+    }
+
+    public virtual void Dispose ()
+    {
+      ClearRouters ();
     }
   }
 }
