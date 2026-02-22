@@ -1,7 +1,22 @@
+using Arunoki.Collections.Utilities;
+
+using System;
+using System.Collections.Generic;
+
 namespace Arunoki.Flow
 {
   public partial class StateMachine<TEntity>
   {
+    protected readonly List<IStateRouter<TEntity>> Routers = new(16);
+
+    protected void CreateRoutersFrom (object source)
+    {
+      if (source is IDummy) return;
+
+      foreach (Type routerType in source.GetType ().GetNestedTypes<IStateRouter<TEntity>> ())
+        Bind ((IStateRouter<TEntity>) Activator.CreateInstance (routerType));
+    }
+
     protected virtual void OnInitRouters ()
     {
       for (var index = 0; index < Routers.Count; index++)
@@ -27,7 +42,9 @@ namespace Arunoki.Flow
       router.Entity = Entity;
 
       if (IsInitialized ())
-        throw new BuildOperationException ($"{nameof(Bind)} '{nameof(router)}' before state machine was initialized.");
+        throw new BuildOperationException (
+          $"{nameof(Bind)} must be called to bind the router '{router}' before the state machine is initialized. " +
+          $"Try callback '{nameof(onPreInit)}' for this case.");
     }
   }
 }

@@ -7,5 +7,7 @@ namespace Arunoki.Flow
     void OnEnter ();
     void OnExit ();
     void OnUpdate ();
+
+    bool IsDefault ();
   }
 }

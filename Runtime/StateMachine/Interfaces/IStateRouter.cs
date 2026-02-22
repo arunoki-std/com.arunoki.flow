@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public interface IStateRouter<TEntity> : IPipeline, IHandler
+  public interface IStateRouter<TEntity> : IHandler
     where TEntity : class
   {
     TEntity Entity { get; set; }

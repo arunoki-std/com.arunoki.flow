@@ -15,6 +15,20 @@ namespace Arunoki.Flow.Utilities
     public static bool IsConcrete (this Type type) =>
       !type.IsAbstract && !type.IsInterface && !type.ContainsGenericParameters;
 
+    /// Gets the type from which the current Type directly inherits if it's not abstract and implements interface.
+    public static bool TryGetConcreteParent<TInterface> (this Type type, out Type parent)
+    {
+      parent = null;
+
+      var baseType = type?.BaseType;
+      if (baseType is null || baseType.IsAbstract) return false;
+
+      if (!typeof(TInterface).IsAssignableFrom(baseType)) return false;
+
+      parent = baseType;
+      return true;
+    }
+
     public static string [] NamespaceToArray (this Type type)
     {
       var parts = type.Namespace.Split (new [] { '.' });

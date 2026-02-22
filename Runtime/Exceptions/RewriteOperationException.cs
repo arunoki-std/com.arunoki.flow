@@ -9,8 +9,8 @@ namespace Arunoki.Flow
     {
     }
 
-    public RewriteOperationException (string propertyName)
-      : base ($"Trying to rewrite existing '{propertyName}' value.")
+    public RewriteOperationException (string message)
+      : base (message)
     {
     }
   }
