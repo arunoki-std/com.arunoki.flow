@@ -8,12 +8,10 @@ namespace Arunoki.Flow
   {
     protected readonly Type ParentType;
     protected readonly bool IsDefault;
-    protected readonly bool IsRoot;
     private TEntity entity;
 
-    protected State (bool isDefault, bool isRoot, Type parentType)
+    protected State (bool isDefault, Type parentType)
     {
-      IsRoot = isRoot;
       IsDefault = isDefault;
       ParentType = parentType;
     }
@@ -34,7 +32,6 @@ namespace Arunoki.Flow
 
     TEntity IState<TEntity>.Entity { get => Entity; set => Entity = value; }
     bool IState<TEntity>.IsDefault () => IsDefault;
-    bool IState<TEntity>.IsRoot () => IsRoot;
     bool IState<TEntity>.IsSubState () => ParentType != null;
     Type IState<TEntity>.GetParentType () => ParentType;
   }

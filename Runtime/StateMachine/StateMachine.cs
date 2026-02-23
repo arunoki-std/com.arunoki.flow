@@ -1,23 +1,18 @@
 using Arunoki.Flow.Basics;
 
-using System;
-
 namespace Arunoki.Flow
 {
   /// Hierarchical finite state machine.
   public partial class StateMachine<TEntity> : BaseServiceExplicit where TEntity : class
   {
-    private readonly Action<IFsmBuilder<TEntity>> onPreInit;
     protected internal readonly TEntity Entity;
     protected readonly FlowHub Hub;
 
-    public StateMachine (TEntity entity, FlowHub hub, Action<IFsmBuilder<TEntity>> onPreInit = null)
+    public StateMachine (TEntity entity, FlowHub hub)
     {
       TargetService = new ServiceContainer<IStateRouter<TEntity>> (Routers);
       Entity = entity;
       Hub = hub;
-
-      this.onPreInit = onPreInit;
     }
 
     protected override void OnInitialized ()
@@ -25,10 +20,12 @@ namespace Arunoki.Flow
       CreateStatesFrom (Entity);
       CreateRoutersFrom (Entity);
 
-      onPreInit?.Invoke (GetBuilder (this));
-      InitRouters ();
+      if (Entity is IStateInitializer<TEntity> e)
+        e.OnInit (new Builder (this));
 
       base.OnInitialized ();
+
+      BuildRouters ();
     }
 
     protected override void OnReset ()

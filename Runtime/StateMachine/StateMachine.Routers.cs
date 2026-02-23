@@ -9,15 +9,16 @@ namespace Arunoki.Flow
   {
     protected readonly List<IStateRouter<TEntity>> Routers = new(16);
 
-    protected void CreateRoutersFrom (object source)
+    protected internal void CreateRoutersFrom (object source)
     {
+      if (source == null) throw new ArgumentNullException (nameof(source));
       if (source is IDummy) return;
 
       foreach (Type routerType in source.GetType ().GetNestedTypes<IStateRouter<TEntity>> ())
-        AddRouter ((IStateRouter<TEntity>) Activator.CreateInstance (routerType));
+        InitRouter ((IStateRouter<TEntity>) Activator.CreateInstance (routerType));
     }
 
-    protected virtual void InitRouters ()
+    protected virtual void BuildRouters ()
     {
       for (var index = 0; index < Routers.Count; index++)
         Hub.Build (Routers [index]);
@@ -29,16 +30,22 @@ namespace Arunoki.Flow
         Hub.Clear (Routers [index]);
     }
 
-    protected void CreateRouter<TRouter> () where TRouter : IStateRouter<TEntity>, new ()
+    protected void InitRouter<TRouter> () where TRouter : IStateRouter<TEntity>, new ()
     {
-      AddRouter (new TRouter ());
+      InitRouter (new TRouter ());
     }
 
-    protected void AddRouter (IStateRouter<TEntity> router)
+    protected void InitRouter (IStateRouter<TEntity> router)
     {
+      if (IsInitialized ())
+        throw StateMachineException.RouterRegistrationOrder (this, router);
+
       Routers.Add (router);
       router.Machine = this;
       router.Entity = Entity;
+
+      if (router is IStateInitializer<TEntity> preInitializer)
+        preInitializer.OnInit (new Builder(this));
     }
   }
 }

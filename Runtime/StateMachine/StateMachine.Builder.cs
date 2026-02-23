@@ -2,10 +2,7 @@ namespace Arunoki.Flow
 {
   public partial class StateMachine<TEntity>
   {
-    public static IFsmBuilder<TEntity> GetBuilder (StateMachine<TEntity> stateMachine)
-      => new Builder (stateMachine);
-
-    internal readonly struct Builder : IFsmBuilder<TEntity>
+    protected readonly struct Builder : IStateBuilder<TEntity>
     {
       private readonly StateMachine<TEntity> stateMachine;
 
@@ -14,30 +11,43 @@ namespace Arunoki.Flow
         this.stateMachine = stateMachine;
       }
 
+      public void InitRoot<TState> () where TState : IState<TEntity>, new ()
+      {
+        stateMachine.InitRoot<TState> ();
+      }
+
       public void AddState<TState> () where TState : IState<TEntity>, new ()
       {
         stateMachine.CreateNode<TState> ();
       }
 
-      public void AddRouter<TRouter> () where TRouter : IStateRouter<TEntity>, new ()
+      public void InitRouter<TRouter> () where TRouter : IStateRouter<TEntity>, new ()
       {
-        stateMachine.CreateRouter<TRouter> ();
+        stateMachine.InitRouter<TRouter> ();
       }
 
-      public void GetStatesFrom (object source)
+      public void ProduceStatesFrom (object source)
       {
+        if (source == stateMachine.Entity)
+          throw new StateMachineException (
+            $"States were already produced from '{nameof(TEntity)}', no need to do it manually.");
+
         stateMachine.CreateStatesFrom (source);
       }
 
-      public void GetRoutersFrom (object source)
+      public void ProduceRoutersFrom (object source)
       {
+        if (source == stateMachine.Entity)
+          throw new StateMachineException (
+            $"Routers were already produced from '{nameof(TEntity)}', no need to do it manually.");
+
         stateMachine.CreateRoutersFrom (source);
       }
 
-      public void GetAllFrom (object source)
+      public void ProduceAllFrom (object source)
       {
-        stateMachine.CreateStatesFrom (source);
-        stateMachine.CreateRoutersFrom (source);
+        ProduceStatesFrom (source);
+        ProduceRoutersFrom (source);
       }
     }
   }

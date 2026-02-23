@@ -26,6 +26,7 @@ namespace Arunoki.Flow
 
     protected void CreateStatesFrom (object source)
     {
+      if (source == null) throw new ArgumentNullException (nameof(source));
       if (source is IDummy) return;
 
       foreach (Type stateType in source.GetType ().GetNestedTypes<IState<TEntity>> ())
@@ -43,8 +44,6 @@ namespace Arunoki.Flow
       var state = CreateState (stateType);
       node = new StateNode<TEntity> (stateType.Name, state);
       Nodes.Add (stateType, node);
-
-      if (state.IsRoot ()) SetRoot (node);
 
       if (TryGetParentNode (stateType, out var parentNode))
         parentNode.AddChild (node, state.IsDefault ());

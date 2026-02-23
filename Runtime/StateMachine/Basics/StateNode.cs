@@ -81,7 +81,7 @@ namespace Arunoki.Flow
     }
 
     /// Путь от root до этого узла.
-    public static void BuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
+    public static void TryBuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
     {
       buffer.Clear ();
       while (node != null)
@@ -104,16 +104,7 @@ namespace Arunoki.Flow
       return node;
     }
 
-    public bool IsPathDefault ()
-    {
-      var cur = this;
-      while (cur != null)
-      {
-        if (!cur.State.IsDefault ()) return false;
-        cur = cur.Parent;
-      }
-
-      return true;
-    }
+    public StateNode<TEntity> GetRoot ()
+      => Parent != null ? Parent.GetRoot () : this;
   }
 }

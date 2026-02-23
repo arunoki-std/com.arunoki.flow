@@ -1,5 +1,3 @@
-using Arunoki.Flow.Utilities;
-
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +14,7 @@ namespace Arunoki.Flow
       base.OnStarted ();
 
       if (root == null)
-        throw new InvalidOperationException ($"Root state is not defined at '{this}'.");
+        throw StateMachineException.RootIsNotDefined (this);
 
       root.EnterSelf ();
       root.EnterDefaultPath ();
@@ -39,23 +37,31 @@ namespace Arunoki.Flow
       }
     }
 
-    public void ChangeState<TState> () where TState : IState<TEntity>, new ()
+    public void Change<TState> () where TState : IState<TEntity>, new ()
     {
-      var nextNode = Nodes [typeof(TState)];
-      if (nextNode == root.GetActiveLeaf ()) return;
+      StateNode<TEntity> node;
+      try
+      {
+        node = Nodes [typeof(TState)];
+      }
+      catch (Exception)
+      {
+        throw StateMachineException.StateIsNotDefined (this, typeof(TState));
+      }
 
-      ChangeState (nextNode);
+      Change (node);
     }
 
-    internal void ChangeState (StateNode<TEntity> target)
+    internal void Change (StateNode<TEntity> target)
     {
       if (target == null) throw new ArgumentNullException (nameof(target));
 
-      var current = root.GetActiveLeaf ();
+      // Root might be null on start.
+      var previous = root?.GetActiveLeaf ();
 
       // Строим пути root->leaf и root->target
-      StateNode<TEntity>.BuildPathToRoot (current, pathA);
-      StateNode<TEntity>.BuildPathToRoot (target, pathB);
+      StateNode<TEntity>.TryBuildPathToRoot (previous, pathA);
+      StateNode<TEntity>.TryBuildPathToRoot (target, pathB);
 
       // Находим LCA (общий префикс)
       int i = 0;
@@ -85,23 +91,28 @@ namespace Arunoki.Flow
         node.EnterSelf ();
       }
 
-      root = pathB [0];
+      root = target.GetRoot ();
 
       // 3) Проваливаемся по default дочерним состояниям у target
       target.EnterDefaultPath ();
     }
 
-    protected void SetRoot<TState> () where TState : IState<TEntity>, new ()
+    /// Invoke before starting state machine.
+    protected void InitRoot<TState> () where TState : IState<TEntity>, new ()
     {
       if (!Nodes.TryGetValue (typeof(TState), out var node))
         node = CreateNode<TState> ();
 
-      SetRoot (node);
+      InitRoot (node);
     }
 
-    private void SetRoot (StateNode<TEntity> node)
+    /// Invoke before starting state machine.
+    private void InitRoot (StateNode<TEntity> node)
     {
-      Guard.ThrowIfRewrite (root, node);
+      if (IsStarted ())
+        throw new StateMachineException (
+          $"Manual '{nameof(InitRoot)}' can only be called before starting state machine.) ");
+
       root = node;
     }
   }
