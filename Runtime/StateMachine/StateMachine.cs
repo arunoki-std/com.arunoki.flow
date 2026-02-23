@@ -23,6 +23,9 @@ namespace Arunoki.Flow
       if (Entity is IStateInitializer<TEntity> e)
         e.OnInit (new Builder (this));
 
+      InitStates ();
+
+      // init routers
       base.OnInitialized ();
 
       BuildRouters ();
@@ -30,8 +33,8 @@ namespace Arunoki.Flow
 
     protected override void OnReset ()
     {
+      root = initialRoot;
       base.OnReset ();
-      ResetStates ();
     }
 
     public virtual void Dispose ()

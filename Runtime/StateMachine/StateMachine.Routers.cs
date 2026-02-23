@@ -44,8 +44,8 @@ namespace Arunoki.Flow
       router.Machine = this;
       router.Entity = Entity;
 
-      if (router is IStateInitializer<TEntity> preInitializer)
-        preInitializer.OnInit (new Builder(this));
+      if (router is IStateInitializer<TEntity> stateInitializer)
+        stateInitializer.OnInit (new Builder (this));
     }
   }
 }

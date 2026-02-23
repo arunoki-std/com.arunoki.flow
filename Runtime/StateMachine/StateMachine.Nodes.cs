@@ -12,16 +12,38 @@ namespace Arunoki.Flow
 
     protected virtual void InitStates ()
     {
+      var parents = new List<StateNode<TEntity>> (Nodes.Count);
+      var children = new List<StateNode<TEntity>> (Nodes.Count);
+
+      foreach (var node in Nodes.Values)
+      {
+        if (node.State.IsSubState ()) children.Add (node);
+        else parents.Add (node);
+      }
+
+      foreach (var childNode in children)
+      {
+        var requiredType = childNode.State.GetParentType ();
+        bool targetFound = false;
+
+        foreach (var parentNode in parents)
+        {
+          var parentType = parentNode.State.GetType ();
+          if (ReferenceEquals (parentType, requiredType) || requiredType.IsAssignableFrom (parentType))
+          {
+            parentNode.AddChild (childNode, childNode.State.IsDefault ());
+            targetFound = true;
+            break;
+          }
+        }
+
+        if (!targetFound)
+          throw new StateMachineException ($"Parent for state '{childNode.State}' not found.");
+      }
+
       foreach (var node in Nodes.Values)
         if (node.State is IInitializable state && !state.IsInitialized ())
           state.Initialize ();
-    }
-
-    protected virtual void ResetStates ()
-    {
-      foreach (var node in Nodes.Values)
-        if (node.State is IResettable state && state.AutoReset ())
-          state.Reset ();
     }
 
     protected void CreateStatesFrom (object source)
@@ -45,24 +67,7 @@ namespace Arunoki.Flow
       node = new StateNode<TEntity> (stateType.Name, state);
       Nodes.Add (stateType, node);
 
-      if (TryGetParentNode (stateType, out var parentNode))
-        parentNode.AddChild (node, state.IsDefault ());
-
       return node;
-    }
-
-    private bool TryGetParentNode (Type childState, out StateNode<TEntity> parentNode)
-    {
-      parentNode = null;
-      if (childState.TryGetConcreteParent<IState<TEntity>> (out Type parentState))
-      {
-        if (Nodes.TryGetValue (parentState, out parentNode))
-          return true;
-
-        parentNode = CreateNode (parentState);
-      }
-
-      return parentNode != null;
     }
 
     private IState<TEntity> CreateState (Type stateType)

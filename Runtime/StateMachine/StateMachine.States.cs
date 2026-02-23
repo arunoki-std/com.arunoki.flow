@@ -8,6 +8,7 @@ namespace Arunoki.Flow
     private readonly List<StateNode<TEntity>> pathA = new(16);
     private readonly List<StateNode<TEntity>> pathB = new(16);
     private StateNode<TEntity> root;
+    private StateNode<TEntity> initialRoot;
 
     protected override void OnStarted ()
     {
@@ -109,14 +110,11 @@ namespace Arunoki.Flow
     /// Invoke before starting state machine.
     private void InitRoot (StateNode<TEntity> node)
     {
-      if (IsStarted ())
-        throw new StateMachineException (
-          $"Manual '{nameof(InitRoot)}' can only be called before starting state machine.) ");
-
       if (node.Parent != null)
         throw new StateMachineException ($"State '{node.State.GetType ().Name}' with parent cant be root.");
 
       root = node;
+      initialRoot = node;
     }
   }
 }
