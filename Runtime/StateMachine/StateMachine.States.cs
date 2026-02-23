@@ -113,6 +113,9 @@ namespace Arunoki.Flow
         throw new StateMachineException (
           $"Manual '{nameof(InitRoot)}' can only be called before starting state machine.) ");
 
+      if (node.Parent != null)
+        throw new StateMachineException ($"State '{node.State.GetType ().Name}' with parent cant be root.");
+
       root = node;
     }
   }
