@@ -84,11 +84,10 @@ namespace Arunoki.Flow
     public static void BuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
     {
       buffer.Clear ();
-      var cur = node;
-      while (cur != null)
+      while (node != null)
       {
-        buffer.Add (cur);
-        cur = cur.Parent!;
+        buffer.Add (node);
+        node = node.Parent;
       }
 
       // buffer сейчас leaf->root, переворачиваем в root->leaf

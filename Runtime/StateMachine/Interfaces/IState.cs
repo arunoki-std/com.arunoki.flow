@@ -1,3 +1,5 @@
+using System;
+
 namespace Arunoki.Flow
 {
   public interface IState<TEntity> where TEntity : class
@@ -10,5 +12,7 @@ namespace Arunoki.Flow
 
     bool IsDefault ();
     bool IsRoot ();
+    bool IsSubState ();
+    Type GetParentType ();
   }
 }

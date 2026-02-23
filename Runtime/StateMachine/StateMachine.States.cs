@@ -67,9 +67,9 @@ namespace Arunoki.Flow
       for (int a = pathA.Count - 1; a > lcaIndex; a--)
       {
         var node = pathA [a];
-        // перед выходом leaf-узла хорошо бы "снять" активного ребенка у родителя
         node.ExitSelf ();
 
+        // перед выходом leaf-узла хорошо бы "снять" активного ребенка у родителя
         var parent = node.Parent;
         if (parent != null && ReferenceEquals (parent.ActiveChild, node))
           parent.ClearActiveChild ();
@@ -84,6 +84,8 @@ namespace Arunoki.Flow
         parent.SetActiveChild (node);
         node.EnterSelf ();
       }
+
+      root = pathB [0];
 
       // 3) Проваливаемся по default дочерним состояниям у target
       target.EnterDefaultPath ();
