@@ -8,11 +8,14 @@ namespace Arunoki.Flow
     protected internal readonly TEntity Entity;
     protected readonly FlowHub Hub;
 
-    public StateMachine (TEntity entity, FlowHub hub)
+    public StateMachine (TEntity entity, FlowHub hub, bool autoInit = true)
     {
       TargetService = new ServiceContainer<IStateRouter<TEntity>> (Routers);
       Entity = entity;
       Hub = hub;
+
+      if (autoInit)
+        (this as IInitializable).Initialize ();
     }
 
     protected override void OnInitialized ()

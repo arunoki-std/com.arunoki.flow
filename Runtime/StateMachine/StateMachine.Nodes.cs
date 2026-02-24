@@ -12,6 +12,8 @@ namespace Arunoki.Flow
 
     protected virtual void InitStates ()
     {
+      UnityEngine.Debug.LogWarning ($"InitStates:"); //TODO: REMOVE LOGS
+
       var parents = new List<StateNode<TEntity>> (Nodes.Count);
       var children = new List<StateNode<TEntity>> (Nodes.Count);
 

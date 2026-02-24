@@ -57,12 +57,25 @@ namespace Arunoki.Flow
       }
     }
 
-    public void Change<TState> () where TState : IState<TEntity>, new ()
+    public void Change<TState> ()
     {
-      StateNode<TEntity> node;
+      StateNode<TEntity> node = null;
+      var stateType = typeof(TState);
+      if (stateType.IsInterface)
+      {
+        foreach (var pair in Nodes)
+        {
+          if (stateType.IsAssignableFrom (pair.Key))
+          {
+            node = pair.Value;
+            break;
+          }
+        }
+      }
+
       try
       {
-        node = Nodes [typeof(TState)];
+        node ??= Nodes [typeof(TState)];
       }
       catch (KeyNotFoundException)
       {
@@ -105,9 +118,8 @@ namespace Arunoki.Flow
       for (int b = lcaIndex + 1; b < pathB.Count; b++)
       {
         var node = pathB [b];
-        var parent = node.Parent!;
         // активируем ребенка на родителе
-        parent.SetActiveChild (node);
+        node.Parent?.SetActiveChild (node);
         node.EnterSelf ();
       }
 
