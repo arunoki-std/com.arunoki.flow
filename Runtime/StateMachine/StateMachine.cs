@@ -40,6 +40,7 @@ namespace Arunoki.Flow
     public virtual void Dispose ()
     {
       ClearRouters ();
+      Nodes.Clear ();
     }
   }
 }

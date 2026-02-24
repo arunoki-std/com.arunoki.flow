@@ -10,6 +10,25 @@ namespace Arunoki.Flow
     private StateNode<TEntity> root;
     private StateNode<TEntity> initialRoot;
 
+    /// Invoke before starting state machine.
+    protected void InitRoot<TState> () where TState : IState<TEntity>, new ()
+    {
+      if (!Nodes.TryGetValue (typeof(TState), out var node))
+        node = CreateNode<TState> ();
+
+      InitRoot (node);
+    }
+
+    /// Invoke before starting state machine.
+    private void InitRoot (StateNode<TEntity> node)
+    {
+      if (node.Parent != null)
+        throw new StateMachineException ($"State '{node.State.GetType ().Name}' with parent cant be root.");
+
+      root = node;
+      initialRoot = node;
+    }
+
     protected override void OnStarted ()
     {
       base.OnStarted ();
@@ -45,7 +64,7 @@ namespace Arunoki.Flow
       {
         node = Nodes [typeof(TState)];
       }
-      catch (Exception)
+      catch (KeyNotFoundException)
       {
         throw StateMachineException.StateIsNotDefined (this, typeof(TState));
       }
@@ -98,23 +117,20 @@ namespace Arunoki.Flow
       target.EnterDefaultPath ();
     }
 
-    /// Invoke before starting state machine.
-    protected void InitRoot<TState> () where TState : IState<TEntity>, new ()
+    public bool Contains<TState> ()
     {
-      if (!Nodes.TryGetValue (typeof(TState), out var node))
-        node = CreateNode<TState> ();
+      var type = typeof(TState);
 
-      InitRoot (node);
+      foreach (var key in Nodes.Keys)
+        if (ReferenceEquals (key, type) || type.IsAssignableFrom (key))
+          return true;
+
+      return false;
     }
 
-    /// Invoke before starting state machine.
-    private void InitRoot (StateNode<TEntity> node)
+    public bool IsActive<TState> ()
     {
-      if (node.Parent != null)
-        throw new StateMachineException ($"State '{node.State.GetType ().Name}' with parent cant be root.");
-
-      root = node;
-      initialRoot = node;
+      return root != null && root.IsAnyActive<TState> ();
     }
   }
 }

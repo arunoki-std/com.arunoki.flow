@@ -34,6 +34,8 @@ namespace Arunoki.Flow.Basics
       {
         OnInitialized ();
         isInitialized = true;
+
+        if (AutoReset ()) (this as IResettable).Reset ();
       }
     }
 

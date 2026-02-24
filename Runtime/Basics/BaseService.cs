@@ -33,6 +33,8 @@ namespace Arunoki.Flow.Basics
       {
         OnInitialized ();
         isInitialized = true;
+
+        if (AutoReset ()) Reset ();
       }
     }
 
