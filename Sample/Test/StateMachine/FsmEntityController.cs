@@ -5,7 +5,6 @@ namespace Arunoki.Flow.Sample
   public class FsmEntityController : MonoBehaviour
   {
     private FlowHub hub;
-    private StateMachine<FsmEntity> stateMachine;
 
     private FsmEntity entity;
 
@@ -13,8 +12,6 @@ namespace Arunoki.Flow.Sample
     {
       entity = new FsmEntity ();
       hub = new FlowHub (entity);
-      stateMachine = new StateMachine<FsmEntity> (entity, hub);
-      hub.Services.Register (stateMachine);
     }
 
     private void Start ()
@@ -24,7 +21,7 @@ namespace Arunoki.Flow.Sample
 
     private void Update ()
     {
-      stateMachine.Update ();
+      entity.Update ();
     }
   }
 }

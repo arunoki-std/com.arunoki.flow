@@ -39,13 +39,13 @@ namespace Arunoki.Flow
 
       var prevCount = Elements.Count;
 
-      foreach (var builder in target.FindProperties<IHubContainer> ())
+      foreach (var container in target.FindProperties<IHubContainer> ())
       {
-        TryInjectDependencies (builder);
-        Elements.Add (builder);
+        TryInjectDependencies (container);
+        Elements.Add (container);
       }
 
-      if (Elements.Count != prevCount) SortBuilders ();
+      if (Elements.Count != prevCount) SortContainers ();
     }
 
     protected internal virtual void TryInjectDependencies (object entity)
@@ -54,7 +54,7 @@ namespace Arunoki.Flow
       if (entity is IContextPart ctxPart && ctxPart.Get () == null) ctxPart.Set (Contexts.Root);
     }
 
-    protected void SortBuilders ()
+    protected void SortContainers ()
       => Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
 
     private static int Order (IHubContainer x) =>

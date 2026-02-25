@@ -7,34 +7,15 @@ namespace Arunoki.Flow
   {
     private readonly List<StateNode<TEntity>> pathA = new(16);
     private readonly List<StateNode<TEntity>> pathB = new(16);
-    private StateNode<TEntity> root;
-    private StateNode<TEntity> initialRoot;
 
-    /// Invoke before starting state machine.
-    protected void InitRoot<TState> () where TState : IState<TEntity>, new ()
+    protected override void OnActivated ()
     {
-      if (!Nodes.TryGetValue (typeof(TState), out var node))
-        node = CreateNode<TState> ();
+      base.OnActivated ();
 
-      InitRoot (node);
-    }
-
-    /// Invoke before starting state machine.
-    private void InitRoot (StateNode<TEntity> node)
-    {
-      if (node.Parent != null)
-        throw new StateMachineException ($"State '{node.State.GetType ().Name}' with parent cant be root.");
-
-      root = node;
-      initialRoot = node;
-    }
-
-    protected override void OnStarted ()
-    {
-      base.OnStarted ();
-
-      if (root == null)
+      if (root == null && !TryFindDefaultRoot (out root))
+      {
         throw StateMachineException.RootIsNotDefined (this);
+      }
 
       root.EnterSelf ();
       root.EnterDefaultPath ();

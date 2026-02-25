@@ -4,22 +4,19 @@ namespace Arunoki.Flow.Sample
 {
   public partial class FsmEntity
   {
-    public class Router : StateRouter<FsmEntity>, IStateInitializer<FsmEntity>
+    public class Router : IContextPart, IPipeline, IHandler, IInitializable
     {
-      public void OnInit (IStateBuilder<FsmEntity> builder)
-      {
-        builder.AddState<StateA> ();
-        builder.AddState<SubstateA> ();
-        builder.AddState<SubstateA1> ();
-        builder.InitRoot<StateA> ();
-      }
+      private bool isInitialized;
+      public FsmEntity Entity { get; private set; }
+      public StateMachine<FsmEntity> Machine => Entity.StateMachine;
 
-      protected override void OnInitialize ()
+      private void OnInitialize ()
       {
-        base.OnInitialize ();
-
         UnityEngine.Debug.LogWarning ("Router initialized"); //TODO: Remove log
-        // Machine.Change<SubstateA1> ();
+        Machine.AddState<StateA> ();
+        Machine.AddState<SubstateA> ();
+        Machine.AddState<SubstateA1> ();
+        Machine.SetRoot<StateA> ();
       }
 
       public void OnTimeout (ref TimeoutEvent evt)
@@ -42,6 +39,21 @@ namespace Arunoki.Flow.Sample
           Machine.Change<IStateA> ();
         }
       }
+
+      void IInitializable.Initialize ()
+      {
+        if (!isInitialized)
+        {
+          OnInitialize ();
+          isInitialized = true;
+        }
+      }
+
+      IContext IContextPart.Get () => Entity;
+      void IContextPart.Set (IContext context) => Entity = (FsmEntity) context;
+
+
+      bool IInitializable.IsInitialized () => isInitialized;
     }
   }
 }

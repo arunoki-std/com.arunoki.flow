@@ -115,5 +115,7 @@ namespace Arunoki.Flow
       if (State is TState) return true;
       return ActiveChild != null && ActiveChild.IsAnyActive<TState> ();
     }
+
+    public bool IsRoot () => Parent == null;
   }
 }
