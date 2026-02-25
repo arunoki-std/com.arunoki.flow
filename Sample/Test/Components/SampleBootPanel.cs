@@ -22,7 +22,7 @@ namespace Arunoki.Flow.Sample
       while (!SampleManager.Boot.IsStarted)
         yield return null;
 
-      SampleHub.Get.Build (this);
+      SampleHub.Get.Register (this);
 
       SetProgress (0);
       SetReady (false);
@@ -30,7 +30,7 @@ namespace Arunoki.Flow.Sample
 
     private void OnDestroy ()
     {
-      SampleHub.Get.Clear (this);
+      SampleHub.Get.Remove (this);
     }
 
     public void OnProgressChanged (ref BootstrapProgress e)

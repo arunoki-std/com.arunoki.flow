@@ -36,26 +36,13 @@ namespace Arunoki.Flow.Basics
       all.Remove (element);
     }
 
-    public void Clear (TElement element)
-    {
-      if (element == null) throw new ArgumentNullException (nameof(element));
-
-      if (!Set.Remove (element))
-        KeySet.Remove (element);
-    }
-
-    public virtual void ClearAll ()
-    {
-      Set.Clear ();
-      KeySet.Clear ();
-    }
-
     /// To override.
     protected virtual void OnKeyAdded (Type key) { }
 
     /// To override.
     protected virtual void OnKeyRemoved (Type key) { }
 
+    protected internal List<TElement> GetAllEntities () => all;
     public MutableEnumerator<TElement> GetEnumerator () => new(all);
     public MutableCastEnumerable<TElement, T> Cast<T> () => new(all);
 

@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Builders
 
     public void Produce<TPipeline> () where TPipeline : IPipeline, new ()
     {
-      Build (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
+      Register (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
     }
 
     public void Clear<TPipeline> () where TPipeline : IPipeline
@@ -25,7 +25,7 @@ namespace Arunoki.Flow.Builders
       {
         if (pipeline.GetType () == pipelineType)
         {
-          Clear (pipeline);
+          Remove (pipeline);
           break;
         }
       }
@@ -47,9 +47,6 @@ namespace Arunoki.Flow.Builders
     protected override void OnElementAdded (IPipeline pipeline)
     {
       base.OnElementAdded (pipeline);
-
-      if (pipeline is IContextPart part && part.Get () == null) part.Set (Context);
-      if (pipeline is IHubPart hubPart && hubPart.Get () == null) hubPart.Set (Hub);
 
       var context = pipeline as IContext ?? (pipeline is IContextPart p && p.Get () != null ? p.Get () : Context);
 

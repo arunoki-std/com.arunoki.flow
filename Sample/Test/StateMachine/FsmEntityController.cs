@@ -14,12 +14,12 @@ namespace Arunoki.Flow.Sample
       entity = new FsmEntity ();
       hub = new FlowHub (entity);
       stateMachine = new StateMachine<FsmEntity> (entity, hub);
-      hub.Build (stateMachine);
+      hub.Services.Register (stateMachine);
     }
 
     private void Start ()
     {
-      hub.Start ();
+      hub.Activate ();
     }
 
     private void Update ()

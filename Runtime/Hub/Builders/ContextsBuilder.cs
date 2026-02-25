@@ -1,6 +1,8 @@
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
 
+using System.Reflection;
+
 namespace Arunoki.Flow.Builders
 {
   public class ContextsBuilder : HubBuilder<IContext>
@@ -19,7 +21,7 @@ namespace Arunoki.Flow.Builders
     protected override void OnInitialized ()
     {
       foreach (IContext context in this)
-        Hub.Build (context);
+        Hub.Register (context);
 
       base.OnInitialized ();
     }
@@ -30,7 +32,9 @@ namespace Arunoki.Flow.Builders
 
       Hub.Events.RegisterSource (context);
 
-      var allServices = context.FindProperties<IService> ();
+      var allServices =
+        context.FindProperties<IService> (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
       if (allServices.Count > 0)
       {
         var set = Hub.Services.KeySet.GetOrCreate (context.GetType ());

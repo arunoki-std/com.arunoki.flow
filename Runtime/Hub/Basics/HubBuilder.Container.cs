@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubBuilder<TElement> : IHubBuilder
+  public abstract partial class HubBuilder<TElement> : IHubContainer
     where TElement : class
   {
     private readonly List<Type> cachedTypes = new(16);
 
-    bool IHubBuilder.Build (object entity) => Build (entity as TElement);
+    bool IHubContainer.Register (object element) => Register (element as TElement);
 
     /// <summary>
     /// 
@@ -16,7 +16,7 @@ namespace Arunoki.Flow.Basics
     /// <param name="element"></param>
     /// <exception cref="ArgumentNullException"> <see cref="element"/> is null.</exception>
     /// <exception cref="BuildOperationException"><see cref="CanBuildAfterHubInit"/>, <see cref="CanBuildAfterHubStarted"/>, <see cref="CanBuildAfterHubActivation"/></exception>
-    public virtual bool Build (TElement element)
+    public virtual bool Register (TElement element)
     {
       if (element == null) throw new ArgumentNullException (nameof(element));
 
@@ -29,12 +29,26 @@ namespace Arunoki.Flow.Basics
       if (!CanBuildAfterHubActivation () && Hub.IsActivated ())
         throw BuildOperationException.AfterHubActivated (element);
 
-      return !all.Contains (element) && Set.TryAdd (element);
+      return !GetAllEntities ().Contains (element) && Set.TryAdd (element);
     }
 
-    void IHubBuilder.Clear (object entity) => Clear (entity as TElement);
+    void IHubContainer.Remove (object element) => Remove (element as TElement);
 
-    bool IHubBuilder.IsConsumable (object entity) => IsConsumable (entity as TElement);
+    public void Remove (TElement element)
+    {
+      if (element == null) throw new ArgumentNullException (nameof(element));
+
+      if (!Set.Remove (element))
+        KeySet.Remove (element);
+    }
+
+    public virtual void RemoveAll ()
+    {
+      Set.Clear ();
+      KeySet.Clear ();
+    }
+
+    bool IHubContainer.IsConsumable (object element) => IsConsumable (element as TElement);
 
     public virtual bool IsConsumable (TElement element) => element != null && element is not IDummy;
 

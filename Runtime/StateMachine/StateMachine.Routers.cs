@@ -21,13 +21,13 @@ namespace Arunoki.Flow
     protected virtual void BuildRouters ()
     {
       for (var index = 0; index < Routers.Count; index++)
-        Hub.Build (Routers [index]);
+        Hub.Register (Routers [index]);
     }
 
     protected virtual void ClearRouters ()
     {
       for (var index = 0; index < Routers.Count; index++)
-        Hub.Clear (Routers [index]);
+        Hub.Remove (Routers [index]);
     }
 
     protected void InitRouter<TRouter> () where TRouter : IStateRouter<TEntity>, new ()

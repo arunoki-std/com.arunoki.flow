@@ -16,7 +16,7 @@ namespace Arunoki.Flow.Sample.Managers
     {
       SampleHub.Get.OnReady += () =>
       {
-        SampleHub.Get.Build (new SamplePipeline ());
+        SampleHub.Get.Register (new SamplePipeline ());
       };
     }
 

@@ -29,7 +29,7 @@ namespace Arunoki.Flow.Globals
     public static GlobalHub Init (GlobalHub hub, StaticBootstrap bootstrap)
     {
       foreach (var staticType in bootstrap)
-        hub.Managers.Build (staticType);
+        hub.Managers.Register (staticType);
 
       hub.Activate ();
       return hub;

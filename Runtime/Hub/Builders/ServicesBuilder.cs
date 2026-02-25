@@ -4,11 +4,35 @@ namespace Arunoki.Flow.Builders
 {
   public class ServicesBuilder : HubBuilder<IService>
   {
+    public ServicesBuilder ()
+    {
+      TargetService = new ServiceContainer<IService> (GetAllEntities ());
+    }
+
+    protected override void OnElementAdded (IService element)
+    {
+      base.OnElementAdded (element);
+
+      if (IsInitialized ())
+      {
+        if (element is IInitializable initializable && !initializable.IsInitialized ())
+          initializable.Initialize ();
+
+        if (element is IResettable resettable && resettable.AutoReset ())
+          resettable.Reset ();
+      }
+
+      if (IsStarted ())
+      {
+        element.Activate ();
+      }
+    }
+
     public override bool IsConsumable (IService service)
     {
       return service switch
       {
-        IHubBuilder or IContext or IPipeline or IHandler or IDummy => false,
+        IHubContainer or IContext or IDummy => false,
         _ => service is not null
       };
     }

@@ -2,7 +2,7 @@ using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract class HubPart : BaseServiceExplicit, IHubPart, IContextPart
+  public abstract class HubPart : BaseService, IHubPart, IContextPart
   {
     public FlowHub Hub { get; private set; }
 

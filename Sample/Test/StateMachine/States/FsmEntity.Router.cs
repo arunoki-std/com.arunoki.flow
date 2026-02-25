@@ -1,7 +1,5 @@
 using Arunoki.Flow.Sample.States;
 
-using UnityEngine;
-
 namespace Arunoki.Flow.Sample
 {
   public partial class FsmEntity
@@ -42,10 +40,6 @@ namespace Arunoki.Flow.Sample
         else if (Machine.IsActive<IStateC> ())
         {
           Machine.Change<IStateA> ();
-          // if (UnityEngine.Random.Range (0.0f, 2.0f) < 1.01f)
-          //   Machine.Change<IStateA> ();
-          // else
-          //   Machine.Change<SubstateA1> ();
         }
       }
     }

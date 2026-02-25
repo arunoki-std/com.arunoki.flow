@@ -5,7 +5,7 @@ using Arunoki.Flow.Events;
 
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : ServiceContainer<IHubBuilder>
+  public partial class FlowHub : ServiceContainer<IHubContainer>
   {
     internal enum BuildOrder
     {
@@ -39,7 +39,7 @@ namespace Arunoki.Flow
 
       var prevCount = Elements.Count;
 
-      foreach (var builder in target.FindProperties<IHubBuilder> ())
+      foreach (var builder in target.FindProperties<IHubContainer> ())
       {
         TryInjectDependencies (builder);
         Elements.Add (builder);
@@ -57,7 +57,7 @@ namespace Arunoki.Flow
     protected void SortBuilders ()
       => Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
 
-    private static int Order (IHubBuilder x) =>
+    private static int Order (IHubContainer x) =>
       x is BaseHubBuilder bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
   }
 }

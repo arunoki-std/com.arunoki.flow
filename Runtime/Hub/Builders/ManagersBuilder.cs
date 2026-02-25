@@ -3,6 +3,7 @@ using Arunoki.Flow.Basics;
 using Arunoki.Flow.Utilities;
 
 using System;
+using System.Reflection;
 
 namespace Arunoki.Flow.Builders
 {
@@ -37,7 +38,8 @@ namespace Arunoki.Flow.Builders
         .AddRange (staticType.FindPropertiesWithNested<IContext> ().ToArray ());
 
       Hub.Services.KeySet.GetOrCreate (staticType)
-        .AddRange (staticType.FindProperties<IService> ().ToArray ());
+        .AddRange (staticType
+          .FindProperties<IService> (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToArray ());
     }
 
     protected override void OnElementRemoved (Type staticType)

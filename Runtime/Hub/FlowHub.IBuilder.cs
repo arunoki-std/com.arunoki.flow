@@ -2,7 +2,7 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : IHubBuilder
+  public partial class FlowHub
   {
     protected override void OnReset ()
     {
@@ -11,37 +11,37 @@ namespace Arunoki.Flow
       base.OnReset ();
     }
 
-    public bool Build (object entity)
+    public bool Register (object entity)
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
       var result = false;
 
       for (var i = 0; i < Elements.Count; i++)
       {
-        var builder = Elements [i];
-        result = (builder.IsConsumable (entity) && builder.Build (entity)) || result;
+        var container = Elements [i];
+        result = (container.IsConsumable (entity) && container.Register (entity)) || result;
       }
 
       return result;
     }
 
-    public virtual void Clear (object entity)
+    public virtual void Remove (object entity)
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
 
       for (var i = 0; i < Elements.Count; i++)
       {
-        var builder = Elements [i];
-        if (builder.IsConsumable (entity)) builder.Clear (entity);
+        var container = Elements [i];
+        if (container.IsConsumable (entity)) container.Remove (entity);
       }
     }
 
-    public virtual void ClearAll ()
+    public virtual void RemoveAll ()
     {
       Events.ClearAll ();
 
       for (var i = 0; i < Elements.Count; i++)
-        Elements [i].ClearAll ();
+        Elements [i].RemoveAll ();
     }
 
     public bool IsConsumable (object entity)
