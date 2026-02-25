@@ -1,5 +1,6 @@
 using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
+using Arunoki.Flow.Utilities;
 
 using System;
 
@@ -9,17 +10,17 @@ namespace Arunoki.Flow.Builders
   {
     protected virtual HandlersContainer Handlers => Hub.Handlers;
 
-    public void Produce<TPipeline> () where TPipeline : IPipeline, new ()
+    public void Register<TPipeline> () where TPipeline : IPipeline, new ()
     {
       Register (Activator.CreateInstance (typeof(TPipeline)) as IPipeline);
     }
 
-    public void Clear<TPipeline> () where TPipeline : IPipeline
+    public void Remove<TPipeline> () where TPipeline : IPipeline
     {
-      Clear (typeof(TPipeline));
+      Remove (typeof(TPipeline));
     }
 
-    public void Clear (Type pipelineType)
+    public void Remove (Type pipelineType)
     {
       foreach (IPipeline pipeline in this)
       {
@@ -63,7 +64,37 @@ namespace Arunoki.Flow.Builders
       Handlers.KeySet.Clear (pipeline.GetType ());
     }
 
-    protected override bool IsMultiInstancesSupported () => false;
+    protected override void OnActivated ()
+    {
+      base.OnActivated ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IActivePipeline pipeline)
+          pipeline.OnActivated ();
+    }
+
+    protected override void OnDeactivated ()
+    {
+      base.OnDeactivated ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IActivePipeline pipeline)
+          pipeline.OnDeactivated ();
+    }
+
+    protected override void OnLateActivate ()
+    {
+      base.OnLateActivate ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is ILatePipeline pipeline)
+          pipeline.OnLateActivate ();
+    }
+
+    protected override bool IsMultiInstancesSupported () => !Utils.IsDebug ();
     protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Pipelines;
   }
 }

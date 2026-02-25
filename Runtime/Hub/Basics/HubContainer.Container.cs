@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubContainer<TElement> : IHubContainer
+  public abstract partial class HubContainer<TElement> : IHubContainer, ILateService
     where TElement : class
   {
     private readonly List<Type> cachedTypes = new(16);
@@ -29,7 +29,7 @@ namespace Arunoki.Flow.Basics
       if (!CanBuildAfterHubActivation () && Hub.IsActivated ())
         throw BuildOperationException.AfterHubActivated (element);
 
-      return !GetAllEntities ().Contains (element) && Set.TryAdd (element);
+      return !GetAllElements ().Contains (element) && Set.TryAdd (element);
     }
 
     void IHubContainer.Remove (object element) => Remove (element as TElement);
@@ -58,5 +58,10 @@ namespace Arunoki.Flow.Basics
     protected virtual bool CanBuildAfterHubInit () => true;
     protected virtual bool CanBuildAfterHubStarted () => true;
     protected virtual bool CanBuildAfterHubActivation () => true;
+
+    /// <summary> To override. </summary>
+    protected virtual void OnLateActivate () { }
+
+    void ILateService.OnLateActivate () => OnLateActivate ();
   }
 }

@@ -1,6 +1,5 @@
 using Arunoki.Collections;
 using Arunoki.Collections.Enumerators;
-using Arunoki.Flow.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace Arunoki.Flow.Basics
 
     protected virtual void OnElementAdded (TElement element)
     {
-      if (Utils.IsDebug () && !IsMultiInstancesSupported ())
+      if (!IsMultiInstancesSupported ())
       {
         var type = element as Type ?? element.GetType ();
         if (!cachedTypes.Contains (type)) cachedTypes.Add (type);
@@ -30,7 +29,7 @@ namespace Arunoki.Flow.Basics
 
     protected virtual void OnElementRemoved (TElement element)
     {
-      if (Utils.IsDebug () && !IsMultiInstancesSupported ())
+      if (!IsMultiInstancesSupported ())
         cachedTypes.Remove (element.GetType ());
 
       all.Remove (element);
@@ -42,7 +41,7 @@ namespace Arunoki.Flow.Basics
     /// To override.
     protected virtual void OnKeyRemoved (Type key) { }
 
-    protected internal List<TElement> GetAllEntities () => all;
+    protected internal List<TElement> GetAllElements () => all;
     public MutableEnumerator<TElement> GetEnumerator () => new(all);
     public MutableCastEnumerable<TElement, T> Cast<T> () => new(all);
 

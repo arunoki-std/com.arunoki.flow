@@ -24,11 +24,36 @@ namespace Arunoki.Flow.Builders
       Subscriber.Remove (handler);
     }
 
+    protected override void OnReset ()
+    {
+      base.OnReset ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IResettableHandler handler)
+          handler.OnReset ();
+    }
+
     protected override void OnActivated ()
     {
       base.OnActivated ();
 
       Subscriber.Activate ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IActiveHandler handler)
+          handler.OnActivated ();
+    }
+
+    protected override void OnLateActivate ()
+    {
+      base.OnLateActivate ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is ILateHandler handler)
+          handler.OnLateActivate ();
     }
 
     protected override void OnDeactivated ()
@@ -36,6 +61,11 @@ namespace Arunoki.Flow.Builders
       base.OnDeactivated ();
 
       Subscriber.Deactivate ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IActiveHandler handler)
+          handler.OnDeactivated ();
     }
 
     protected override bool IsMultiInstancesSupported () => false;

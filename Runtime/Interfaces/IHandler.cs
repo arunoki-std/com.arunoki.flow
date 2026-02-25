@@ -8,8 +8,18 @@ namespace Arunoki.Flow
   {
     bool IsHandlingEvents { get; set; }
 
-    void OnHandlerActivated ();
+    void OnActivated ();
 
-    void OnHandlerDeactivated ();
+    void OnDeactivated ();
+  }
+
+  public interface ILateHandler : IHandler
+  {
+    void OnLateActivate ();
+  }
+
+  public interface IResettableHandler : IHandler
+  {
+    void OnReset ();
   }
 }

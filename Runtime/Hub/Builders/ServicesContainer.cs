@@ -6,7 +6,17 @@ namespace Arunoki.Flow.Builders
   {
     public ServicesContainer ()
     {
-      TargetService = new ServiceContainer<IService> (GetAllEntities ());
+      TargetService = new ServiceContainer<IService> (GetAllElements ());
+    }
+
+    protected override void OnLateActivate ()
+    {
+      base.OnLateActivate();
+      
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is ILateService service)
+          service.OnLateActivate ();
     }
 
     protected override void OnElementAdded (IService element)
