@@ -53,9 +53,6 @@ namespace Arunoki.Flow
         DefaultChild = child;
       }
 
-      UnityEngine.Debug.LogWarning (
-        $" [{this.State.GetType ().Name}] -> {child.State.GetType ().Name}"); //TODO: remove log
-
       Children.Add (child);
       child.Parent = this;
     }

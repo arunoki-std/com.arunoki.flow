@@ -13,8 +13,6 @@ namespace Arunoki.Flow.Builders
       Root = root;
       (this as IContextPart).Set (root);
       (this as IHubPart).Set (hub);
-
-      Set.TryAdd (root);
     }
 
     public IContext Root { get; }
@@ -27,28 +25,36 @@ namespace Arunoki.Flow.Builders
       base.OnInitialized ();
     }
 
+    protected void InitServices ()
+    {
+      foreach (var context in this)
+      {
+        var allServices =
+          context.FindProperties<IService> (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        if (allServices.Count > 0)
+        {
+          var set = Hub.Services.KeySet.GetOrCreate (context.GetType ());
+          foreach (var service in allServices)
+          {
+            if (service is IContextPart part && part.Get () == null)
+              part.Set (context);
+
+            set.TryAdd (service);
+          }
+        }
+      }
+    }
+
     protected override void OnElementAdded (IContext context)
     {
       base.OnElementAdded (context);
 
       Hub.Events.RegisterSource (context);
 
-      var allServices =
-        context.FindProperties<IService> (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-      if (allServices.Count > 0)
-      {
-        var set = Hub.Services.KeySet.GetOrCreate (context.GetType ());
-        foreach (var service in allServices)
-        {
-          if (service is IContextPart part && part.Get () == null)
-            part.Set (context);
-
-          set.TryAdd (service);
-        }
-      }
-
       Set.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
+
+      InitServices ();
     }
 
     protected override void OnElementRemoved (IContext context)

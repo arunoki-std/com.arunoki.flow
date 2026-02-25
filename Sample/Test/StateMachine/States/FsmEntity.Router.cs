@@ -1,10 +1,13 @@
 using Arunoki.Flow.Sample.States;
 
+using UnityEngine.Scripting;
+
 namespace Arunoki.Flow.Sample
 {
   public partial class FsmEntity
   {
-    public class Router : IContextPart, IPipeline, IHandler, IInitializable
+    [Preserve]
+    public class Router : IContextPart, IHandler, IInitializable
     {
       private bool isInitialized;
       public FsmEntity Entity { get; private set; }

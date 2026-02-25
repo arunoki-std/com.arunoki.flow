@@ -17,13 +17,12 @@ namespace Arunoki.Flow
 
     protected override void OnInitialized ()
     {
-      AddStatesFrom (Entity);
-
-
-      InitStates ();
-
       // init routers
       base.OnInitialized ();
+
+      AddStatesFrom (Entity);
+
+      InitStates ();
     }
 
     protected override void OnReset ()

@@ -12,16 +12,17 @@ namespace Arunoki.Flow.Sample
     {
       entity = new FsmEntity ();
       hub = new FlowHub (entity);
+      hub.Initialize ();
     }
 
     private void Start ()
     {
-      hub.Activate ();
+      // hub.Activate ();
     }
 
     private void Update ()
     {
-      entity.Update ();
+      // entity.Update ();
     }
   }
 }

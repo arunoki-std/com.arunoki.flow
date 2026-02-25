@@ -4,6 +4,13 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub
   {
+    protected override void OnInitialized ()
+    {
+      Contexts.Set.TryAdd (Contexts.Root);
+      
+      base.OnInitialized();
+    }
+
     protected override void OnReset ()
     {
       Events.Reset ();

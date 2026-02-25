@@ -1,6 +1,6 @@
 namespace Arunoki.Flow.Sample
 {
-  public partial class FsmEntity : IContext, IInitializable
+  public partial class FsmEntity : IContext, IPipeline, IInitializable
   {
     private bool isInitialized;
     public Signal<TimeoutEvent> Timeout { get; } = new();

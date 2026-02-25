@@ -24,6 +24,16 @@ namespace Arunoki.Flow.Builders
       Subscriber.Remove (handler);
     }
 
+    protected override void OnInitialized ()
+    {
+      base.OnInitialized ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IInitializable initializable && !initializable.IsInitialized ())
+          initializable.Initialize ();
+    }
+
     protected override void OnReset ()
     {
       base.OnReset ();
