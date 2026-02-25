@@ -7,14 +7,14 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Builders
 {
-  public class ManagersBuilder : HubBuilder<Type>
+  public class ManagersContainer : HubContainer<Type>
   {
-    public ManagersBuilder (FlowHub hub)
+    public ManagersContainer (FlowHub hub)
     {
       (this as IHubPart).Set (hub);
     }
 
-    public ManagersBuilder (FlowHub hub, Type staticType)
+    public ManagersContainer (FlowHub hub, Type staticType)
       : this (hub)
     {
       Set.TryAdd (staticType);

@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Builders
 {
-  public class ContextsBuilder : HubBuilder<IContext>
+  public class ContextsContainer : HubContainer<IContext>
   {
-    public ContextsBuilder (IContext root, FlowHub hub)
+    public ContextsContainer (IContext root, FlowHub hub)
     {
       Root = root;
       (this as IContextPart).Set (root);

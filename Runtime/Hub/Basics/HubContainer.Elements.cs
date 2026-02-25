@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubBuilder<TElement>
+  public abstract partial class HubContainer<TElement>
   {
     private readonly List<TElement> all = new(32);
 
@@ -48,18 +48,18 @@ namespace Arunoki.Flow.Basics
 
     private class KeyContainer : IContainer<Type>
     {
-      private readonly HubBuilder<TElement> builder;
-      public KeyContainer (HubBuilder<TElement> builder) => this.builder = builder;
-      public void OnAdded (Type key) => builder.OnKeyAdded (key);
-      public void OnRemoved (Type key) => builder.OnKeyRemoved (key);
+      private readonly HubContainer<TElement> container;
+      public KeyContainer (HubContainer<TElement> container) => this.container = container;
+      public void OnAdded (Type key) => container.OnKeyAdded (key);
+      public void OnRemoved (Type key) => container.OnKeyRemoved (key);
     }
 
     private class Container : IContainer<TElement>
     {
-      private readonly HubBuilder<TElement> builder;
-      public Container (HubBuilder<TElement> builder) => this.builder = builder;
-      public void OnAdded (TElement element) => builder.OnElementAdded (element);
-      public void OnRemoved (TElement element) => builder.OnElementRemoved (element);
+      private readonly HubContainer<TElement> container;
+      public Container (HubContainer<TElement> container) => this.container = container;
+      public void OnAdded (TElement element) => container.OnElementAdded (element);
+      public void OnRemoved (TElement element) => container.OnElementRemoved (element);
     }
   }
 }

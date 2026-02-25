@@ -37,7 +37,7 @@ namespace Arunoki.Flow.Globals
 
     public static bool IsAssemblyInitialized => Instance != null;
 
-    public ManagersBuilder Managers { get; }
+    public ManagersContainer Managers { get; }
 
     internal static GlobalHub Instance { get; private set; }
 

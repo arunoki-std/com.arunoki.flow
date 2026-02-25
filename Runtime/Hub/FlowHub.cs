@@ -18,14 +18,14 @@ namespace Arunoki.Flow
     }
 
     public EventBus Events { get; } = new();
-    public ContextsBuilder Contexts { get; }
-    public ServicesBuilder Services { get; } = new();
-    public PipelineBuilder Pipeline { get; } = new();
-    public HandlersBuilder Handlers { get; } = new();
+    public ContextsContainer Contexts { get; }
+    public ServicesContainer Services { get; } = new();
+    public PipelineContainer Pipeline { get; } = new();
+    public HandlersContainer Handlers { get; } = new();
 
     public FlowHub (IContext context, bool autoInit = true)
     {
-      Contexts = new ContextsBuilder (context, this);
+      Contexts = new ContextsContainer (context, this);
 
       FindPartsAt (this);
       FindPartsAt (context);
@@ -58,6 +58,6 @@ namespace Arunoki.Flow
       => Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
 
     private static int Order (IHubContainer x) =>
-      x is BaseHubBuilder bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
+      x is BaseHubContainer bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
   }
 }

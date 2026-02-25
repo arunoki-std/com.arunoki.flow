@@ -2,9 +2,9 @@ using Arunoki.Flow.Basics;
 
 namespace Arunoki.Flow.Builders
 {
-  public class ServicesBuilder : HubBuilder<IService>
+  public class ServicesContainer : HubContainer<IService>
   {
-    public ServicesBuilder ()
+    public ServicesContainer ()
     {
       TargetService = new ServiceContainer<IService> (GetAllEntities ());
     }

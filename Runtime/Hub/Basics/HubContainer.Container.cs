@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubBuilder<TElement> : IHubContainer
+  public abstract partial class HubContainer<TElement> : IHubContainer
     where TElement : class
   {
     private readonly List<Type> cachedTypes = new(16);

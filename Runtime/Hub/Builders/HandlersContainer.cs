@@ -3,7 +3,7 @@ using Arunoki.Flow.Events.Core;
 
 namespace Arunoki.Flow.Builders
 {
-  public class HandlersBuilder : HubBuilder<IHandler>
+  public class HandlersContainer : HubContainer<IHandler>
   {
     private SubscriptionService subscriber;
 

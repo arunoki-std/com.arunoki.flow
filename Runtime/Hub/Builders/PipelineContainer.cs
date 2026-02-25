@@ -5,9 +5,9 @@ using System;
 
 namespace Arunoki.Flow.Builders
 {
-  public class PipelineBuilder : HubBuilder<IPipeline>
+  public class PipelineContainer : HubContainer<IPipeline>
   {
-    protected virtual HandlersBuilder Handlers => Hub.Handlers;
+    protected virtual HandlersContainer Handlers => Hub.Handlers;
 
     public void Produce<TPipeline> () where TPipeline : IPipeline, new ()
     {
