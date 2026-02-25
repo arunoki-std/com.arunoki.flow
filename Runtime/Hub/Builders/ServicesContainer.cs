@@ -16,7 +16,7 @@ namespace Arunoki.Flow.Builders
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
         if (list [index] is ILateService service)
-          service.OnLateActivate ();
+          service.LateActivate ();
     }
 
     protected override void OnElementAdded (IService element)

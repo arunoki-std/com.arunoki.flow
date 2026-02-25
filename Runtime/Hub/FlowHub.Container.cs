@@ -24,7 +24,7 @@ namespace Arunoki.Flow
 
       for (var index = 0; index < Elements.Count; index++)
         if (Elements [index] is ILateService lateService)
-          lateService.OnLateActivate ();
+          lateService.LateActivate ();
     }
 
     public bool Register (object entity)

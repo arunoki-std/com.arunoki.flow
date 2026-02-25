@@ -62,6 +62,6 @@ namespace Arunoki.Flow.Basics
     /// <summary> To override. </summary>
     protected virtual void OnLateActivate () { }
 
-    void ILateService.OnLateActivate () => OnLateActivate ();
+    void ILateService.LateActivate () => OnLateActivate ();
   }
 }
