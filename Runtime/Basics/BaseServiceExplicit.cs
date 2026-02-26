@@ -21,13 +21,13 @@ namespace Arunoki.Flow.Basics
     protected virtual void OnInitialized () => (TargetService as IInitializable)?.Initialize ();
     protected virtual void OnStarted () => (TargetService as IStartable)?.Start ();
 
-    protected virtual void OnActivated ()
+    protected virtual void OnActivate ()
     {
       if (TargetService is IService service && service is not IManualService)
         service.Activate ();
     }
 
-    protected virtual void OnDeactivated ()
+    protected virtual void OnDeactivate ()
     {
       if (TargetService is IService service && service is not IManualService)
         service.Deactivate ();
@@ -66,7 +66,7 @@ namespace Arunoki.Flow.Basics
         (this as IInitializable).Initialize ();
         (this as IStartable).Start ();
 
-        OnActivated ();
+        OnActivate ();
         isActivated = true;
       }
     }
@@ -75,7 +75,7 @@ namespace Arunoki.Flow.Basics
     {
       if (isActivated)
       {
-        OnDeactivated ();
+        OnDeactivate ();
         isActivated = false;
       }
     }

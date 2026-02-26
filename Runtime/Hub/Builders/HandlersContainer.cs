@@ -44,9 +44,9 @@ namespace Arunoki.Flow.Builders
           handler.OnReset ();
     }
 
-    protected override void OnActivated ()
+    protected override void OnActivate ()
     {
-      base.OnActivated ();
+      base.OnActivate ();
 
       Subscriber.Activate ();
 
@@ -66,9 +66,9 @@ namespace Arunoki.Flow.Builders
           handler.OnLateActivate ();
     }
 
-    protected override void OnDeactivated ()
+    protected override void OnDeactivate ()
     {
-      base.OnDeactivated ();
+      base.OnDeactivate ();
 
       Subscriber.Deactivate ();
 

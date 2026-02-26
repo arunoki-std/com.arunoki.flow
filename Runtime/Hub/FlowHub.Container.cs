@@ -18,9 +18,9 @@ namespace Arunoki.Flow
       base.OnReset ();
     }
 
-    protected override void OnActivated ()
+    protected override void OnActivate ()
     {
-      base.OnActivated ();
+      base.OnActivate ();
 
       for (var index = 0; index < Elements.Count; index++)
         if (Elements [index] is ILateService lateService)

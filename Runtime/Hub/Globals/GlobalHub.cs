@@ -41,9 +41,9 @@ namespace Arunoki.Flow.Globals
 
     internal static GlobalHub Instance { get; private set; }
 
-    protected override void OnActivated ()
+    protected override void OnActivate ()
     {
-      base.OnActivated ();
+      base.OnActivate ();
 
       if (!isReady)
       {

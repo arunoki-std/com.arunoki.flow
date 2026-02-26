@@ -10,12 +10,12 @@ namespace Arunoki.Flow.Sample.States
 
     public override void OnEnter ()
     {
-      UnityEngine.Debug.LogWarning ($"Entered:\t ({GetType ().Name})");
+      UnityEngine.Debug.Log ($"state entered:\t {GetType ().Name}");
     }
 
     public override void OnExit ()
     {
-      UnityEngine.Debug.LogWarning ($"Exit:\t ({GetType ().Name})");
+      UnityEngine.Debug.Log ($"state exit:\t {GetType ().Name}");
     }
 
     public override void OnUpdate ()

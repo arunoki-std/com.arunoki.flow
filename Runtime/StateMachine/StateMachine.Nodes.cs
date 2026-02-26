@@ -12,10 +12,12 @@ namespace Arunoki.Flow
 
     private StateNode<TEntity> root;
     private StateNode<TEntity> initialRoot;
+    private bool nodesReady;
 
-    protected virtual void InitStates ()
+    protected virtual void SetupNodes ()
     {
-      UnityEngine.Debug.LogWarning ($"InitStates:"); //TODO: REMOVE LOGS
+      if (nodesReady) return;
+      nodesReady = true;
 
       var parents = new List<StateNode<TEntity>> (Nodes.Count);
       var children = new List<StateNode<TEntity>> (Nodes.Count);
@@ -123,7 +125,7 @@ namespace Arunoki.Flow
 
     /// <summary>
     /// Invoke before starting state machine. 
-    /// <para> Set root on initialization step, after adding states. </para>
+    /// <para> Set root after adding states. </para>
     /// </summary>
     public void SetRoot<TStateOrInterface> ()
     {
@@ -140,8 +142,9 @@ namespace Arunoki.Flow
         throw new StateMachineException (
           $"State '{node.State.GetType ().Name}' cant be root. Root must not have any parent");
 
-      if (IsInitialized ())
-        throw new StateMachineException ($"Can't set root state '{node.Name}' after initialization step.");
+      if (root?.ActiveChild != null)
+        throw new StateMachineException (
+          $"Can't set root state '{node.Name}' when it is already active '{root.Name}'.");
 
       root = node;
       initialRoot = node;

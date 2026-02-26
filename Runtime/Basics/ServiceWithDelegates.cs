@@ -2,18 +2,18 @@ using System;
 
 namespace Arunoki.Flow.Basics
 {
-  public abstract class ServiceWithDelegates : IInitializable, IStartable, IService, ILateService, IResettable
+  public class ServiceWithDelegates : IInitializable, IStartable, IService, ILateService, IResettable
   {
     private bool isStarted;
     private bool isActivated;
     private bool isInitialized;
 
-    protected Action OnActivate = delegate { };
-    protected Action OnLateActivate = delegate { };
-    protected Action OnDeactivate = delegate { };
-    protected Action OnReset = delegate { };
-    protected Action OnStart = delegate { };
-    protected Action OnInit = delegate { };
+    public Action OnActivate = delegate { };
+    public Action OnLateActivate = delegate { };
+    public Action OnDeactivate = delegate { };
+    public Action OnReset = delegate { };
+    public Action OnStart = delegate { };
+    public Action OnInit = delegate { };
 
     protected internal bool IsInitialized () => isInitialized;
     protected internal bool IsActivated () => isActivated;
@@ -66,11 +66,7 @@ namespace Arunoki.Flow.Basics
 
     public void LateActivate ()
     {
-      if (!isActivated)
-      {
-        Activate ();
-        OnLateActivate?.Invoke ();
-      }
+      OnLateActivate?.Invoke ();
     }
 
     public void Reset ()

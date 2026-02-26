@@ -80,20 +80,6 @@ namespace Arunoki.Flow
       ActiveChild = null;
     }
 
-    /// Путь от root до этого узла.
-    public static void TryBuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
-    {
-      buffer.Clear ();
-      while (node != null)
-      {
-        buffer.Add (node);
-        node = node.Parent;
-      }
-
-      // buffer сейчас leaf->root, переворачиваем в root->leaf
-      buffer.Reverse ();
-    }
-
     public StateNode<TEntity> GetActiveLeaf ()
     {
       var node = this;

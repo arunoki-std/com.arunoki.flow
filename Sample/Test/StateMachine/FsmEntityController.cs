@@ -15,14 +15,22 @@ namespace Arunoki.Flow.Sample
       hub.Initialize ();
     }
 
-    private void Start ()
+    private void OnEnable ()
     {
-      // hub.Activate ();
+      UnityEngine.Debug.Log ($"\n\n");
+      UnityEngine.Debug.Log ($"\t ACTIVATE");
+      hub.Activate ();
+    }
+
+    private void OnDisable ()
+    {
+      UnityEngine.Debug.Log ($"\t DEACTIVATE");
+      hub.Deactivate ();
     }
 
     private void Update ()
     {
-      // entity.Update ();
+      entity.Update ();
     }
   }
 }

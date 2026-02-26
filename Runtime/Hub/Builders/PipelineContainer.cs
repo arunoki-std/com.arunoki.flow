@@ -64,24 +64,24 @@ namespace Arunoki.Flow.Builders
       Handlers.KeySet.Clear (pipeline.GetType ());
     }
 
-    protected override void OnActivated ()
+    protected override void OnInitialized ()
     {
-      base.OnActivated ();
+      base.OnInitialized ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IInitializable pipeline && !pipeline.IsInitialized ())
+          pipeline.Initialize ();
+    }
+
+    protected override void OnActivate ()
+    {
+      base.OnActivate ();
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
         if (list [index] is IActivePipeline pipeline)
           pipeline.OnActivated ();
-    }
-
-    protected override void OnDeactivated ()
-    {
-      base.OnDeactivated ();
-
-      var list = GetAllElements ();
-      for (var index = 0; index < list.Count; index++)
-        if (list [index] is IActivePipeline pipeline)
-          pipeline.OnDeactivated ();
     }
 
     protected override void OnLateActivate ()
@@ -92,6 +92,16 @@ namespace Arunoki.Flow.Builders
       for (var index = 0; index < list.Count; index++)
         if (list [index] is ILatePipeline pipeline)
           pipeline.OnLateActivate ();
+    }
+
+    protected override void OnDeactivate ()
+    {
+      base.OnDeactivate ();
+
+      var list = GetAllElements ();
+      for (var index = 0; index < list.Count; index++)
+        if (list [index] is IActivePipeline pipeline)
+          pipeline.OnDeactivated ();
     }
 
     protected override bool IsMultiInstancesSupported () => !Utils.IsDebug ();

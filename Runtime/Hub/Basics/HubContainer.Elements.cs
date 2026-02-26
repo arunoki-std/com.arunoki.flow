@@ -25,6 +25,9 @@ namespace Arunoki.Flow.Basics
 
       all.Add (element);
       Hub.TryInjectDependencies (element);
+
+      if (IsInitialized () && element is IInitializable initializable && !initializable.IsInitialized ())
+        initializable.Initialize ();
     }
 
     protected virtual void OnElementRemoved (TElement element)

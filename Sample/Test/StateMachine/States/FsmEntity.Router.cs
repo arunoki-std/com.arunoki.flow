@@ -1,3 +1,4 @@
+using Arunoki.Flow.Sample.Managers;
 using Arunoki.Flow.Sample.States;
 
 using UnityEngine.Scripting;
@@ -15,7 +16,6 @@ namespace Arunoki.Flow.Sample
 
       private void OnInitialize ()
       {
-        UnityEngine.Debug.LogWarning ("Router initialized"); //TODO: Remove log
         Machine.AddState<StateA> ();
         Machine.AddState<SubstateA> ();
         Machine.AddState<SubstateA1> ();
@@ -24,7 +24,7 @@ namespace Arunoki.Flow.Sample
 
       public void OnTimeout (ref TimeoutEvent evt)
       {
-        UnityEngine.Debug.LogWarning ("TIME OUT"); //TODO: Remove log
+        SampleManager.Log<Router> (evt);
 
         if (Machine.IsActive<IStateA> ())
         {

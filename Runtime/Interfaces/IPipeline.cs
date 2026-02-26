@@ -7,6 +7,7 @@ namespace Arunoki.Flow
 
   public interface IActivePipeline : IPipeline
   {
+    bool IsActivated { get; }
     void OnActivated ();
     void OnDeactivated ();
   }

@@ -5,16 +5,16 @@ using Arunoki.Flow.Events;
 
 namespace Arunoki.Flow
 {
-  public partial class FlowHub : ServiceContainer<IHubContainer>
+  public partial class FlowHub : ServiceWithElements<IHubContainer>
   {
     internal enum BuildOrder
     {
       Any = 0,
-      Managers = short.MinValue,
-      Contexts = short.MinValue + 1,
-      Services = short.MinValue + 2,
-      Pipelines = short.MinValue + 3,
-      Handlers = short.MinValue + 4
+      Handlers = short.MinValue + 1,
+      Pipelines = short.MinValue + 2,
+      Contexts = short.MinValue + 3,
+      Managers = short.MinValue + 4,
+      Services = short.MinValue + 5,
     }
 
     public EventBus Events { get; } = new();

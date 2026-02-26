@@ -8,9 +8,11 @@ namespace Arunoki.Flow
     private readonly List<StateNode<TEntity>> pathA = new(16);
     private readonly List<StateNode<TEntity>> pathB = new(16);
 
-    protected override void OnActivated ()
+    protected override void OnActivate ()
     {
-      base.OnActivated ();
+      base.OnActivate ();
+
+      SetupNodes ();
 
       if (root == null && !TryFindDefaultRoot (out root))
       {
@@ -19,6 +21,16 @@ namespace Arunoki.Flow
 
       root.EnterSelf ();
       root.EnterDefaultPath ();
+    }
+
+    protected override void OnDeactivate ()
+    {
+      base.OnDeactivate ();
+
+      TryBuildPathToRoot (root.GetActiveLeaf (), pathA);
+
+      for (var i = pathA.Count - 1; i >= 0; i--)
+        pathA [i].ExitSelf ();
     }
 
     public void Update ()
@@ -74,8 +86,8 @@ namespace Arunoki.Flow
       var previous = root?.GetActiveLeaf ();
 
       // Строим пути root->leaf и root->target
-      StateNode<TEntity>.TryBuildPathToRoot (previous, pathA);
-      StateNode<TEntity>.TryBuildPathToRoot (target, pathB);
+      TryBuildPathToRoot (previous, pathA);
+      TryBuildPathToRoot (target, pathB);
 
       // Находим LCA (общий префикс)
       int i = 0;
@@ -108,6 +120,20 @@ namespace Arunoki.Flow
 
       // 3) Проваливаемся по default дочерним состояниям у target
       target.EnterDefaultPath ();
+    }
+
+    /// Путь от root до этого узла.
+    private static void TryBuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
+    {
+      buffer.Clear ();
+      while (node != null)
+      {
+        buffer.Add (node);
+        node = node.Parent;
+      }
+
+      // buffer сейчас leaf->root, переворачиваем в root->leaf
+      buffer.Reverse ();
     }
 
     public bool Contains<TState> ()

@@ -1,38 +1,44 @@
 namespace Arunoki.Flow.Basics
 {
-  public abstract class BaseService : IInitializable, IStartable, IService, IResettable
+  public abstract class BaseService : IInitializable, IStartable, IService, IResettable, ILateService
   {
-    protected object TargetService;
+    protected object Composition;
 
     private bool isStarted;
     private bool isActivated;
     private bool isInitialized;
 
-    protected BaseService (object targetService = null)
+    protected BaseService (object composition = null)
     {
-      TargetService = targetService;
+      Composition = composition;
     }
 
     protected internal bool IsInitialized () => isInitialized;
     protected internal bool IsActivated () => isActivated;
     protected internal bool IsStarted () => isStarted;
 
-    protected virtual void OnInitialized () => (TargetService as IInitializable)?.Initialize ();
-    protected virtual void OnStarted () => (TargetService as IStartable)?.Start ();
+    protected virtual void OnInitialized () => (Composition as IInitializable)?.Initialize ();
+    protected virtual void OnStarted () => (Composition as IStartable)?.Start ();
 
-    protected virtual void OnActivated ()
+    protected virtual void OnActivate ()
     {
-      if (TargetService is IService service && service is not IManualService)
+      if (Composition is IService service && service is not IManualService)
         service.Activate ();
     }
 
-    protected virtual void OnDeactivated ()
+    protected virtual void OnLateActivate ()
     {
-      if (TargetService is IService service && service is not IManualService)
+      if (Composition is ILateService service && service is not IManualService)
+        service.LateActivate ();
+    }
+
+    protected virtual void OnDeactivate ()
+    {
+      if (Composition is IService service && service is not IManualService)
         service.Deactivate ();
     }
 
-    protected virtual void OnReset () => (TargetService as IResettable)?.Reset ();
+    protected virtual void OnReset () => (Composition as IResettable)?.Reset ();
 
     bool IInitializable.IsInitialized () => isInitialized;
     bool IService.IsActivated () => isActivated;
@@ -65,7 +71,7 @@ namespace Arunoki.Flow.Basics
         Initialize ();
         Start ();
 
-        OnActivated ();
+        OnActivate ();
         isActivated = true;
       }
     }
@@ -74,7 +80,7 @@ namespace Arunoki.Flow.Basics
     {
       if (isActivated)
       {
-        OnDeactivated ();
+        OnDeactivate ();
         isActivated = false;
       }
     }
@@ -88,5 +94,10 @@ namespace Arunoki.Flow.Basics
     }
 
     public virtual bool AutoReset () => true;
+
+    void ILateService.LateActivate ()
+    {
+      if (isActivated) OnLateActivate ();
+    }
   }
 }

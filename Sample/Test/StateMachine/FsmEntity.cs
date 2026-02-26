@@ -1,23 +1,14 @@
 namespace Arunoki.Flow.Sample
 {
-  public partial class FsmEntity : IContext, IPipeline, IInitializable
+  public partial class FsmEntity : IContext, IPipeline
   {
-    private bool isInitialized;
     public Signal<TimeoutEvent> Timeout { get; } = new();
 
     private StateMachine<FsmEntity> StateMachine { get; }
 
     public FsmEntity ()
     {
-      StateMachine = new StateMachine<FsmEntity> (this, false);
-    }
-
-    void IInitializable.Initialize ()
-    {
-      if (isInitialized) return;
-      isInitialized = true;
-
-      (StateMachine as IInitializable).Initialize ();
+      StateMachine = new StateMachine<FsmEntity> (this);
     }
 
     public void Update ()
@@ -27,7 +18,5 @@ namespace Arunoki.Flow.Sample
 
     public bool IsState<TState> () where TState : IState<FsmEntity>
       => StateMachine.IsActive<TState> ();
-
-    bool IInitializable.IsInitialized () => isInitialized;
   }
 }

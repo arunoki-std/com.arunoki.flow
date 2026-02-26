@@ -3,26 +3,15 @@ using Arunoki.Flow.Basics;
 namespace Arunoki.Flow
 {
   /// Hierarchical finite state machine.
-  public partial class StateMachine<TEntity> : BaseServiceExplicit where TEntity : class
+  public partial class StateMachine<TEntity> : BaseService where TEntity : class
   {
     protected internal readonly TEntity Entity;
 
-    public StateMachine (TEntity entity, bool autoInit = true)
+    public StateMachine (TEntity entity)
     {
       Entity = entity;
 
-      if (autoInit)
-        (this as IInitializable).Initialize ();
-    }
-
-    protected override void OnInitialized ()
-    {
-      // init routers
-      base.OnInitialized ();
-
-      AddStatesFrom (Entity);
-
-      InitStates ();
+      if (Entity is not IDummy) AddStatesFrom (Entity);
     }
 
     protected override void OnReset ()

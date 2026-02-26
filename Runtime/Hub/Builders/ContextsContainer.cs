@@ -13,6 +13,7 @@ namespace Arunoki.Flow.Builders
       Root = root;
       (this as IContextPart).Set (root);
       (this as IHubPart).Set (hub);
+      Composition = new ServiceWithElements<IContext> (GetAllElements ());
     }
 
     public IContext Root { get; }
