@@ -2,7 +2,8 @@ using UnityEngine;
 
 namespace Arunoki.Flow.Sample
 {
-  public class FsmEntityController : MonoBehaviour
+  [DisallowMultipleComponent]
+  public sealed class FsmTestController : MonoBehaviour
   {
     private FlowHub hub;
 
@@ -18,13 +19,13 @@ namespace Arunoki.Flow.Sample
     private void OnEnable ()
     {
       UnityEngine.Debug.Log ($"\n\n");
-      UnityEngine.Debug.Log ($"\t ACTIVATE");
+      UnityEngine.Debug.Log ($"\t ACTIVATE ({nameof(FsmTestController)})");
       hub.Activate ();
     }
 
     private void OnDisable ()
     {
-      UnityEngine.Debug.Log ($"\t DEACTIVATE");
+      UnityEngine.Debug.Log ($"\t DEACTIVATE ({nameof(FsmTestController)})");
       hub.Deactivate ();
     }
 
