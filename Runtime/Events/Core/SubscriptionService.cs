@@ -1,4 +1,5 @@
 using Arunoki.Collections;
+using Arunoki.Flow.Utilities;
 
 using System;
 
@@ -35,16 +36,11 @@ namespace Arunoki.Flow.Events.Core
       Events.Unsubscribe (handler);
     }
 
-    protected void Remove (Callback callback)
-    {
-      Events.Channels [callback.EventType].Remove (callback);
-    }
-
     protected override void OnElementAdded (Callback callback)
     {
       base.OnElementAdded (callback);
 
-      if (!isActivated) Remove (callback);
+      if (!isActivated) callback.Deactivate (Events);
     }
 
     public void Activate ()
@@ -52,8 +48,8 @@ namespace Arunoki.Flow.Events.Core
       if (isActivated) return;
       isActivated = true;
 
-      foreach (var callback in Callbacks)
-        Events.Channels [callback.EventType].Add (callback);
+      for (var index = 0; index < Callbacks.Count; index++)
+        Callbacks [index].Activate (Events);
     }
 
     public void Deactivate ()
@@ -61,8 +57,8 @@ namespace Arunoki.Flow.Events.Core
       if (!isActivated) return;
       isActivated = false;
 
-      foreach (var callback in Callbacks)
-        Remove (callback);
+      for (var index = 0; index < Callbacks.Count; index++)
+        Callbacks [index].Deactivate (Events);
     }
   }
 }
