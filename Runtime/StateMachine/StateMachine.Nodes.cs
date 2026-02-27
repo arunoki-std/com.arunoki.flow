@@ -8,21 +8,21 @@ namespace Arunoki.Flow
 {
   public partial class StateMachine<TEntity>
   {
-    internal Dictionary<Type, StateNode<TEntity>> Nodes = new(16);
+    internal Dictionary<Type, StateNode<TEntity>> NodesCache = new(16);
+    internal List<StateNode<TEntity>> Nodes = new(16);
 
-    private StateNode<TEntity> root;
-    private StateNode<TEntity> initialRoot;
+    private StateNode<TEntity> currentRoot;
     private bool nodesReady;
 
-    protected virtual void SetupNodes ()
+    protected virtual void TrySetupNodes ()
     {
       if (nodesReady) return;
       nodesReady = true;
 
-      var parents = new List<StateNode<TEntity>> (Nodes.Count);
-      var children = new List<StateNode<TEntity>> (Nodes.Count);
+      var parents = new List<StateNode<TEntity>> (NodesCache.Count);
+      var children = new List<StateNode<TEntity>> (NodesCache.Count);
 
-      foreach (var node in Nodes.Values)
+      foreach (var node in Nodes)
       {
         if (node.State.IsSubState ()) children.Add (node);
         else parents.Add (node);
@@ -47,7 +47,7 @@ namespace Arunoki.Flow
           throw new StateMachineException ($"Parent for state '{childNode}' not found.");
       }
 
-      foreach (var node in Nodes.Values)
+      foreach (var node in Nodes)
         if (node.State is IInitializable state && !state.IsInitialized ())
           state.Initialize ();
     }
@@ -68,9 +68,11 @@ namespace Arunoki.Flow
 
     private void CreateNode (Type stateType)
     {
-      if (Nodes.ContainsKey (stateType)) return;
+      if (NodesCache.ContainsKey (stateType)) return;
 
-      Nodes.Add (stateType, new StateNode<TEntity> (stateType.Name, CreateState (stateType)));
+      var node = new StateNode<TEntity> (stateType.Name, CreateState (stateType));
+      NodesCache.Add (stateType, node);
+      Nodes.Add (node);
     }
 
     private IState<TEntity> CreateState (Type stateType)
@@ -91,14 +93,16 @@ namespace Arunoki.Flow
     }
 
     private bool TryGetNode<TStateOrInterface> (out StateNode<TEntity> node)
+      => TryGetNode (typeof(TStateOrInterface), out node);
+
+    private bool TryGetNode (Type stateType, out StateNode<TEntity> node)
     {
-      var stateType = typeof(TStateOrInterface);
       if (!stateType.IsInterface)
       {
-        return Nodes.TryGetValue (stateType, out node);
+        return NodesCache.TryGetValue (stateType, out node);
       }
 
-      foreach (var pair in Nodes)
+      foreach (var pair in NodesCache)
       {
         if (stateType.IsAssignableFrom (pair.Key))
         {
@@ -111,64 +115,14 @@ namespace Arunoki.Flow
       return false;
     }
 
-    private bool TryFindDefaultRoot (out StateNode<TEntity> root)
+    /// First default state without parent would be defined as root state.
+    private StateNode<TEntity> GetDefaultRoot ()
     {
-      foreach (var node in Nodes.Values)
-      {
+      foreach (var node in Nodes)
         if (node.IsRoot () && node.State.IsDefault ())
-        {
-          root = node;
-          return true;
-        }
-      }
+          return node;
 
-      root = null;
-      return false;
-    }
-
-    private bool TryGetRoot<TStateOrInterface> (out StateNode<TEntity> root)
-    {
-      var targetType = typeof(TStateOrInterface);
-
-      foreach (var node in Nodes.Values)
-      {
-        if (!node.IsRoot ()) continue;
-        if (IsAssignableOrEquals (node.State.GetType (), targetType))
-        {
-          root = node;
-          return true;
-        }
-      }
-
-      root = null;
-      return false;
-    }
-
-    /// <summary>
-    /// Invoke before starting state machine. 
-    /// <para> Set root after adding states. </para>
-    /// </summary>
-    public void SetRoot<TStateOrInterface> ()
-    {
-      if (TryGetRoot<TStateOrInterface> (out var node))
-        SetRoot (node);
-
-      else throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
-    }
-
-    /// Invoke before starting state machine.
-    private void SetRoot (StateNode<TEntity> node)
-    {
-      if (node.Parent != null)
-        throw new StateMachineException (
-          $"State '{node.State.GetType ().Name}' cant be root. Root must not have any parent");
-
-      if (root?.ActiveChild != null)
-        throw new StateMachineException (
-          $"Can't set root state '{node.Name}' when it is already active '{root.Name}'.");
-
-      root = node;
-      initialRoot = node;
+      throw StateMachineException.RootIsNotDefined (this, "Default root state not found.");
     }
 
     protected bool IsAssignableOrEquals (Type stateType, Type typeOrInterface)

@@ -4,19 +4,19 @@ namespace Arunoki.Flow.Sample
   {
     public Signal<TimeoutEvent> Timeout { get; } = new();
 
-    private StateMachine<FsmEntity> StateMachine { get; }
+    private StateMachine<FsmEntity> States { get; }
 
     public FsmEntity ()
     {
-      StateMachine = new StateMachine<FsmEntity> (this);
+      States = new StateMachine<FsmEntity> (this);
     }
 
     public void Update ()
     {
-      StateMachine.Update ();
+      States.Update ();
     }
 
     public bool IsState<TState> () where TState : IState<FsmEntity>
-      => StateMachine.IsActive<TState> ();
+      => States.IsActive<TState> ();
   }
 }

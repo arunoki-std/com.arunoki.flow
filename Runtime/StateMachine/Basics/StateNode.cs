@@ -93,10 +93,10 @@ namespace Arunoki.Flow
     public StateNode<TEntity> GetRoot ()
       => Parent != null ? Parent.GetRoot () : this;
 
-    public bool IsAnyActive<TState> ()
+    public bool IsAnyActive<TStateOrInterface> ()
     {
-      if (State is TState) return true;
-      return ActiveChild != null && ActiveChild.IsAnyActive<TState> ();
+      if (State is TStateOrInterface) return true;
+      return ActiveChild != null && ActiveChild.IsAnyActive<TStateOrInterface> ();
     }
 
     public bool IsRoot () => Parent == null;

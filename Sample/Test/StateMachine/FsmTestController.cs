@@ -19,7 +19,7 @@ namespace Arunoki.Flow.Sample
     private void Start ()
     {
       UnityEngine.Debug.Log ($"\n\n");
-      UnityEngine.Debug.Log ($"\t -= START ({nameof(FsmTestController)}) =-");
+      UnityEngine.Debug.Log ($"\t START ({nameof(FsmTestController)})");
     }
 
     private void OnEnable ()

@@ -12,35 +12,34 @@ namespace Arunoki.Flow.Sample
     {
       private bool isInitialized;
       public FsmEntity Entity { get; private set; }
-      public StateMachine<FsmEntity> Machine => Entity.StateMachine;
+      public StateMachine<FsmEntity> States => Entity.States;
 
       private void OnInitialize ()
       {
-        Machine.AddState<StateA> ();
-        Machine.AddState<SubstateA> ();
-        Machine.AddState<SubstateA1> ();
-        Machine.SetRoot<StateA> ();
+        States.AddState<StateA> ();
+        States.AddState<SubstateA> ();
+        States.AddState<SubstateA1> ();
+
+        States.GoToRequest<StateB> ();
       }
 
       public void OnTimeout (ref TimeoutEvent evt)
       {
         SampleManager.Log<Router> (evt);
 
-        if (Machine.IsActive<IStateA> ())
+        if (States.IsActive<IStateA> ())
         {
-          if (Machine.IsActive<SubstateA> ())
-            Machine.GoTo<SubstateA1> ();
+          if (States.IsActive<SubstateA1> ())
+            States.GoTo<SubstateA> ();
 
-          else Machine.GoTo<IStateB> ();
+          else States.GoTo<IStateB> ();
         }
 
-        else if (Machine.IsActive<IStateB> ())
-          Machine.GoTo<IStateC> ();
+        else if (States.IsActive<IStateB> ())
+          States.GoTo<IStateC> ();
 
-        else if (Machine.IsActive<IStateC> ())
-        {
-          Machine.GoTo<IStateA> ();
-        }
+        else if (States.IsActive<IStateC> ())
+          States.GoTo<IStateA> ();
       }
 
       void IInitializable.Initialize ()

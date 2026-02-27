@@ -17,24 +17,34 @@ namespace Arunoki.Flow
     public void Start ()
     {
       IStartable service = this;
-      if ( !service.IsStarted ()) service.Start ();
+      if (!service.IsStarted ()) service.Start ();
     }
 
     public void Stop ()
     {
       (this as IService).Deactivate ();
+    }
+
+    protected override void OnDeactivate ()
+    {
+      base.OnDeactivate ();
+
       (this as IResettable).Reset ();
     }
 
     protected override void OnReset ()
     {
-      root = initialRoot;
+      TryExitActivePath ();
+
+      currentRoot = null;
+      pendingNode = null;
+
       base.OnReset ();
     }
 
     public virtual void Dispose ()
     {
-      Nodes.Clear ();
+      NodesCache.Clear ();
     }
   }
 }

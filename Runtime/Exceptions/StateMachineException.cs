@@ -6,16 +6,16 @@ namespace Arunoki.Flow
   {
     public StateMachineException (string message) : base (message) { }
 
-    internal static StateMachineException RootIsNotDefined (object stateMachine)
+    internal static StateMachineException RootIsNotDefined (object stateMachine, string message = "")
     {
       return new StateMachineException (
-        $"State machine '{stateMachine.GetType ()}' is not ready to use. Root state must be defined.");
+        $"Root state of state machine '{stateMachine.GetType ()}' is not defined. {message}");
     }
 
-    internal static StateMachineException StateIsNotDefined (object stateMachine, Type stateType)
+    internal static StateMachineException StateIsNotDefined (object stateMachine, Type stateType, string message = "")
     {
       return new StateMachineException (
-        $"State '{stateType.Name}' is not defined at '{stateMachine.GetType ().Name}'.'");
+        $"State '{stateType.Name}' is not defined at '{stateMachine.GetType ().Name}'. {message}'");
     }
 
     internal static StateMachineException RouterRegistrationOrder (object stateMachine, object router)
