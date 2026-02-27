@@ -54,9 +54,9 @@ namespace Arunoki.Flow.Basics
     {
       if (CanInit ())
       {
-        initStep++;
+        initStep = 0;
         OnInitialized ();
-        initStep++;
+        initStep = 1;
       }
     }
 
@@ -67,9 +67,9 @@ namespace Arunoki.Flow.Basics
 
       if (CanStart ())
       {
-        startStep++;
+        startStep = 0;
         OnStarted ();
-        startStep++;
+        startStep = 1;
       }
     }
 
@@ -79,9 +79,9 @@ namespace Arunoki.Flow.Basics
 
       if (CanActivate ())
       {
-        activeStep++;
+        activeStep = 0;
         OnActivate ();
-        activeStep++;
+        activeStep = 1;
       }
     }
 
@@ -89,7 +89,7 @@ namespace Arunoki.Flow.Basics
     {
       if (CanDeactivate ())
       {
-        activeStep--;
+        activeStep = 0;
         OnDeactivate ();
         activeStep = -1;
       }

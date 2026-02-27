@@ -45,7 +45,7 @@ namespace Arunoki.Flow.Basics
 
     protected virtual void OnReset ()
     {
-      if (IsActivated ()) Deactivate ();
+      if (CanDeactivate ()) Deactivate ();
       (Composition as IResettable)?.Reset ();
       startStep = -1;
     }
@@ -55,9 +55,9 @@ namespace Arunoki.Flow.Basics
     {
       if (CanInit ())
       {
-        initStep++;
+        initStep = 0;
         OnInit ();
-        initStep++;
+        initStep = 1;
       }
     }
 
@@ -66,9 +66,9 @@ namespace Arunoki.Flow.Basics
       Activate ();
       if (CanStart ())
       {
-        startStep++;
+        startStep = 0;
         OnStarted ();
-        startStep++;
+        startStep = 1;
       }
     }
 
@@ -77,9 +77,9 @@ namespace Arunoki.Flow.Basics
       Initialize ();
       if (CanActivate ())
       {
-        initStep++;
+        activeStep = 0;
         OnActivate ();
-        initStep++;
+        activeStep = 1;
       }
     }
 
@@ -87,7 +87,7 @@ namespace Arunoki.Flow.Basics
     {
       if (CanDeactivate ())
       {
-        activeStep--;
+        activeStep = 0;
         OnDeactivate ();
         activeStep = -1;
       }
