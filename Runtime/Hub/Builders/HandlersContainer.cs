@@ -24,9 +24,9 @@ namespace Arunoki.Flow.Builders
       Subscriber.Remove (handler);
     }
 
-    protected override void OnInitialized ()
+    protected override void OnInit ()
     {
-      base.OnInitialized ();
+      base.OnInit ();
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
@@ -54,16 +54,6 @@ namespace Arunoki.Flow.Builders
       for (var index = 0; index < list.Count; index++)
         if (list [index] is IActiveHandler handler)
           handler.OnActivated ();
-    }
-
-    protected override void OnLateActivate ()
-    {
-      base.OnLateActivate ();
-
-      var list = GetAllElements ();
-      for (var index = 0; index < list.Count; index++)
-        if (list [index] is ILateHandler handler)
-          handler.OnLateActivate ();
     }
 
     protected override void OnDeactivate ()

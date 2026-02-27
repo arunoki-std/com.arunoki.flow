@@ -2,21 +2,31 @@ namespace Arunoki.Flow.Basics
 {
   public abstract class BaseServiceExplicit : IInitializable, IStartable, IService, IResettable
   {
-    protected object TargetService;
+    private int initStep = -1;
+    private int startStep = -1;
+    private int activeStep = -1;
 
-    private bool isStarted;
-    private bool isActivated;
-    private bool isInitialized;
+    protected object TargetService;
 
     protected BaseServiceExplicit (object targetService = null)
     {
       TargetService = targetService;
     }
 
-    protected internal bool IsInitialized () => isInitialized;
-    protected internal bool IsActivated () => isActivated;
-    protected internal bool IsStarted () => isStarted;
-    protected virtual bool AutoReset () => true;
+    private bool CanInit () => initStep < 0;
+    private bool CanStart () => startStep < 0;
+    private bool CanActivate () => activeStep < 0;
+    private bool CanDeactivate () => activeStep > 0;
+
+    protected internal bool IsInitialized () => initStep > 0;
+    protected internal bool IsActivated () => activeStep > 0;
+    protected internal bool IsStarted () => startStep > 0;
+    protected internal virtual bool AutoReset () => true;
+
+    bool IInitializable.IsInitialized () => IsInitialized ();
+    bool IService.IsActivated () => IsActivated ();
+    bool IStartable.IsStarted () => IsStarted ();
+    bool IResettable.AutoReset () => AutoReset ();
 
     protected virtual void OnInitialized () => (TargetService as IInitializable)?.Initialize ();
     protected virtual void OnStarted () => (TargetService as IStartable)?.Start ();
@@ -33,61 +43,58 @@ namespace Arunoki.Flow.Basics
         service.Deactivate ();
     }
 
-    protected virtual void OnReset () => (TargetService as IResettable)?.Reset ();
-
-    bool IInitializable.IsInitialized () => isInitialized;
-    bool IService.IsActivated () => isActivated;
-    bool IStartable.IsStarted () => isStarted;
+    protected virtual void OnReset ()
+    {
+      (this as IService).Deactivate ();
+      (TargetService as IResettable)?.Reset ();
+      startStep = -1;
+    }
 
     void IInitializable.Initialize ()
     {
-      if (!isInitialized)
+      if (CanInit ())
       {
+        initStep++;
         OnInitialized ();
-        isInitialized = true;
+        initStep++;
       }
     }
 
     void IStartable.Start ()
     {
-      if (!isStarted)
-      {
-        (this as IInitializable).Initialize ();
+      (this as IInitializable).Initialize ();
+      (this as IService).Activate ();
 
+      if (CanStart ())
+      {
+        startStep++;
         OnStarted ();
-        isStarted = true;
+        startStep++;
       }
     }
 
     void IService.Activate ()
     {
-      if (!isActivated)
-      {
-        (this as IInitializable).Initialize ();
-        (this as IStartable).Start ();
+      (this as IInitializable).Initialize ();
 
+      if (CanActivate ())
+      {
+        activeStep++;
         OnActivate ();
-        isActivated = true;
+        activeStep++;
       }
     }
 
     void IService.Deactivate ()
     {
-      if (isActivated)
+      if (CanDeactivate ())
       {
+        activeStep--;
         OnDeactivate ();
-        isActivated = false;
+        activeStep = -1;
       }
     }
 
-    void IResettable.Reset ()
-    {
-      (this as IService).Deactivate ();
-
-      isStarted = false;
-      OnReset ();
-    }
-
-    bool IResettable.AutoReset () => AutoReset ();
+    void IResettable.Reset () => OnReset ();
   }
 }

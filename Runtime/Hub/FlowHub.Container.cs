@@ -4,11 +4,11 @@ namespace Arunoki.Flow
 {
   public partial class FlowHub
   {
-    protected override void OnInitialized ()
+    protected override void OnInit ()
     {
       Contexts.Set.TryAdd (Contexts.Root);
-      
-      base.OnInitialized();
+
+      base.OnInit ();
     }
 
     protected override void OnReset ()
@@ -16,15 +16,6 @@ namespace Arunoki.Flow
       Events.Reset ();
 
       base.OnReset ();
-    }
-
-    protected override void OnActivate ()
-    {
-      base.OnActivate ();
-
-      for (var index = 0; index < Elements.Count; index++)
-        if (Elements [index] is ILateService lateService)
-          lateService.LateActivate ();
     }
 
     public bool Register (object entity)

@@ -18,12 +18,12 @@ namespace Arunoki.Flow.Builders
 
     public IContext Root { get; }
 
-    protected override void OnInitialized ()
+    protected override void OnInit ()
     {
       foreach (IContext context in this)
         Hub.Register (context);
 
-      base.OnInitialized ();
+      base.OnInit ();
     }
 
     protected void InitServices ()
@@ -65,16 +65,6 @@ namespace Arunoki.Flow.Builders
       var contextType = context.GetType ();
       Hub.Events.UnregisterSource (context);
       Hub.Services.KeySet.Clear (contextType);
-    }
-
-    protected override void OnLateActivate ()
-    {
-      base.OnLateActivate ();
-
-      var list = GetAllElements ();
-      for (var index = 0; index < list.Count; index++)
-        if (list [index] is ILateService service)
-          service.LateActivate ();
     }
 
     protected override bool CanBuildAfterHubInit () => false;

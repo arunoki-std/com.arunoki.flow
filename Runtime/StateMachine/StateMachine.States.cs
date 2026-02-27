@@ -50,35 +50,26 @@ namespace Arunoki.Flow
       }
     }
 
-    public void Change<TState> ()
+    public bool TryGoTo<TStateOrInterface> ()
     {
-      StateNode<TEntity> node = null;
-      var stateType = typeof(TState);
-      if (stateType.IsInterface)
+      if (TryGetNode<TStateOrInterface> (out var node))
       {
-        foreach (var pair in Nodes)
-        {
-          if (stateType.IsAssignableFrom (pair.Key))
-          {
-            node = pair.Value;
-            break;
-          }
-        }
+        GoTo (node);
+        return true;
       }
 
-      try
-      {
-        node ??= Nodes [typeof(TState)];
-      }
-      catch (KeyNotFoundException)
-      {
-        throw StateMachineException.StateIsNotDefined (this, typeof(TState));
-      }
-
-      Change (node);
+      return false;
     }
 
-    internal void Change (StateNode<TEntity> target)
+    public void GoTo<TStateOrInterface> ()
+    {
+      if (TryGetNode<TStateOrInterface> (out var node))
+        GoTo (node);
+
+      else throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
+    }
+
+    internal void GoTo (StateNode<TEntity> target)
     {
       if (target == null) throw new ArgumentNullException (nameof(target));
 
@@ -136,9 +127,9 @@ namespace Arunoki.Flow
       buffer.Reverse ();
     }
 
-    public bool Contains<TState> ()
+    public bool Contains<TStateOrInterface> ()
     {
-      var type = typeof(TState);
+      var type = typeof(TStateOrInterface);
 
       foreach (var key in Nodes.Keys)
         if (ReferenceEquals (key, type) || type.IsAssignableFrom (key))

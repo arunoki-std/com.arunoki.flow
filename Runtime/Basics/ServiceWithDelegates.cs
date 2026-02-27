@@ -2,78 +2,80 @@ using System;
 
 namespace Arunoki.Flow.Basics
 {
-  public class ServiceWithDelegates : IInitializable, IStartable, IService, ILateService, IResettable
+  public class ServiceWithDelegates : IInitializable, IStartable, IService, IResettable
   {
-    private bool isStarted;
-    private bool isActivated;
-    private bool isInitialized;
+    private int initStep = -1;
+    private int startStep = -1;
+    private int activeStep = -1;
+
+    private bool CanInit () => initStep < 0;
+    private bool CanStart () => startStep < 0;
+    private bool CanActivate () => activeStep < 0;
+    private bool CanDeactivate () => activeStep > 0;
 
     public Action OnActivate = delegate { };
-    public Action OnLateActivate = delegate { };
     public Action OnDeactivate = delegate { };
     public Action OnReset = delegate { };
     public Action OnStart = delegate { };
     public Action OnInit = delegate { };
 
-    protected internal bool IsInitialized () => isInitialized;
-    protected internal bool IsActivated () => isActivated;
-    protected internal bool IsStarted () => isStarted;
+    protected internal bool IsInitialized () => initStep > 0;
+    protected internal bool IsActivated () => activeStep > 0;
+    protected internal bool IsStarted () => startStep > 0;
 
-    bool IInitializable.IsInitialized () => isInitialized;
-    bool IService.IsActivated () => isActivated;
-    bool IStartable.IsStarted () => isStarted;
+    bool IInitializable.IsInitialized () => IsInitialized ();
+    bool IService.IsActivated () => IsActivated ();
+    bool IStartable.IsStarted () => IsStarted ();
 
     public void Initialize ()
     {
-      if (!isInitialized)
+      if (CanInit ())
       {
+        initStep = 0;
         OnInit?.Invoke ();
-        isInitialized = true;
+        initStep = 1;
       }
     }
 
     public void Start ()
     {
-      if (!isStarted)
-      {
-        Initialize ();
+      Initialize ();
+      Activate ();
 
+      if (CanStart ())
+      {
+        startStep = 0;
         OnStart?.Invoke ();
-        isStarted = true;
+        startStep = 1;
       }
     }
 
     public void Activate ()
     {
-      if (!isActivated)
+      Initialize ();
+      if (CanActivate ())
       {
-        Initialize ();
-        Start ();
-
+        activeStep = 0;
         OnActivate?.Invoke ();
-        isActivated = true;
+        activeStep = 1;
       }
     }
 
     public void Deactivate ()
     {
-      if (isActivated)
+      if (CanDeactivate ())
       {
+        activeStep = 0;
         OnDeactivate?.Invoke ();
-        isActivated = false;
+        activeStep = 1;
       }
-    }
-
-    public void LateActivate ()
-    {
-      OnLateActivate?.Invoke ();
     }
 
     public void Reset ()
     {
       Deactivate ();
 
-      isStarted = false;
+      startStep = -1;
       OnReset?.Invoke ();
     }
 
@@ -84,7 +86,6 @@ namespace Arunoki.Flow.Basics
       OnInit = null;
       OnActivate = null;
       OnDeactivate = null;
-      OnLateActivate = null;
       OnReset = null;
       OnStart = null;
     }

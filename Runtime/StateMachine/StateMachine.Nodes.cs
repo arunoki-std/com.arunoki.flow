@@ -90,6 +90,27 @@ namespace Arunoki.Flow
       return state;
     }
 
+    private bool TryGetNode<TStateOrInterface> (out StateNode<TEntity> node)
+    {
+      var stateType = typeof(TStateOrInterface);
+      if (!stateType.IsInterface)
+      {
+        return Nodes.TryGetValue (stateType, out node);
+      }
+
+      foreach (var pair in Nodes)
+      {
+        if (stateType.IsAssignableFrom (pair.Key))
+        {
+          node = pair.Value;
+          return true;
+        }
+      }
+
+      node = null;
+      return false;
+    }
+
     private bool TryFindDefaultRoot (out StateNode<TEntity> root)
     {
       foreach (var node in Nodes.Values)

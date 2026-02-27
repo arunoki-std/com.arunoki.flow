@@ -13,9 +13,9 @@ namespace Arunoki.Flow.Basics
       Elements = elements;
     }
 
-    protected override void OnInitialized ()
+    protected override void OnInit ()
     {
-      base.OnInitialized ();
+      base.OnInit ();
 
       for (var i = Elements.Count - 1; i >= 0; i--)
         if (Elements [i] is IInitializable initializer && !initializer.IsInitialized ())
@@ -47,15 +47,6 @@ namespace Arunoki.Flow.Basics
       for (var i = Elements.Count - 1; i >= 0; i--)
         if (Elements [i] is IService service && !service.IsActivated () && service is not IManualService)
           service.Activate ();
-    }
-
-    protected override void OnLateActivate ()
-    {
-      base.OnLateActivate ();
-
-      for (var i = Elements.Count - 1; i >= 0; i--)
-        if (Elements [i] is ILateService service && service is not IManualService)
-          service.LateActivate ();
     }
 
     protected override void OnDeactivate ()

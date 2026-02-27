@@ -20,9 +20,9 @@ namespace Arunoki.Flow.Builders
       Set.TryAdd (staticType);
     }
 
-    protected override void OnInitialized ()
+    protected override void OnInit ()
     {
-      base.OnInitialized ();
+      base.OnInit ();
 
       foreach (Type staticType in this)
         SubscribeHandlers (staticType);

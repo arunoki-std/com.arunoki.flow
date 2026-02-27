@@ -29,17 +29,17 @@ namespace Arunoki.Flow.Sample
         if (Machine.IsActive<IStateA> ())
         {
           if (Machine.IsActive<SubstateA> ())
-            Machine.Change<SubstateA1> ();
+            Machine.GoTo<SubstateA1> ();
 
-          else Machine.Change<IStateB> ();
+          else Machine.GoTo<IStateB> ();
         }
 
         else if (Machine.IsActive<IStateB> ())
-          Machine.Change<IStateC> ();
+          Machine.GoTo<IStateC> ();
 
         else if (Machine.IsActive<IStateC> ())
         {
-          Machine.Change<IStateA> ();
+          Machine.GoTo<IStateA> ();
         }
       }
 

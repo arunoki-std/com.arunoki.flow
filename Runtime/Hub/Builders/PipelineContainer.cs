@@ -64,9 +64,9 @@ namespace Arunoki.Flow.Builders
       Handlers.KeySet.Clear (pipeline.GetType ());
     }
 
-    protected override void OnInitialized ()
+    protected override void OnInit ()
     {
-      base.OnInitialized ();
+      base.OnInit ();
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
@@ -82,16 +82,6 @@ namespace Arunoki.Flow.Builders
       for (var index = 0; index < list.Count; index++)
         if (list [index] is IActivePipeline pipeline)
           pipeline.OnActivated ();
-    }
-
-    protected override void OnLateActivate ()
-    {
-      base.OnLateActivate ();
-
-      var list = GetAllElements ();
-      for (var index = 0; index < list.Count; index++)
-        if (list [index] is ILatePipeline pipeline)
-          pipeline.OnLateActivate ();
     }
 
     protected override void OnDeactivate ()

@@ -9,11 +9,6 @@ namespace Arunoki.Flow
     void Deactivate ();
   }
 
-  public interface ILateService
-  {
-    void LateActivate ();
-  }
-
   public interface IManualService : IService
   {
   }

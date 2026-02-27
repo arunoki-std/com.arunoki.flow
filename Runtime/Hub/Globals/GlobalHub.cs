@@ -15,7 +15,7 @@ namespace Arunoki.Flow.Globals
     {
     }
 
-    public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
+    public GlobalHub (IContext context, bool autoActivate = false) : base (context)
     {
       if (Instance != null)
         throw new InvalidOperationException ($"{nameof(GlobalHub)} already created. One instance per application.");

@@ -23,14 +23,12 @@ namespace Arunoki.Flow
     public PipelineContainer Pipeline { get; } = new();
     public HandlersContainer Handlers { get; } = new();
 
-    public FlowHub (IContext context, bool autoInit = true)
+    public FlowHub (IContext context)
     {
       Contexts = new ContextsContainer (context, this);
 
       FindPartsAt (this);
       FindPartsAt (context);
-
-      if (autoInit) Initialize ();
     }
 
     protected virtual void FindPartsAt (object target)

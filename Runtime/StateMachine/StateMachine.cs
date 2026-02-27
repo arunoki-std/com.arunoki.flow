@@ -3,7 +3,7 @@ using Arunoki.Flow.Basics;
 namespace Arunoki.Flow
 {
   /// Hierarchical finite state machine.
-  public partial class StateMachine<TEntity> : BaseService where TEntity : class
+  public partial class StateMachine<TEntity> : BaseServiceExplicit where TEntity : class
   {
     protected internal readonly TEntity Entity;
 
@@ -12,6 +12,18 @@ namespace Arunoki.Flow
       Entity = entity;
 
       if (Entity is not IDummy) AddStatesFrom (Entity);
+    }
+
+    public void Start ()
+    {
+      IStartable service = this;
+      if ( !service.IsStarted ()) service.Start ();
+    }
+
+    public void Stop ()
+    {
+      (this as IService).Deactivate ();
+      (this as IResettable).Reset ();
     }
 
     protected override void OnReset ()
