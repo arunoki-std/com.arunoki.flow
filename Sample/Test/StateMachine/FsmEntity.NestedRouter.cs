@@ -20,7 +20,7 @@ namespace Arunoki.Flow.Sample
         States.AddState<SubstateA> ();
         States.AddState<SubstateA1> ();
 
-        States.GoToRequest<StateB> ();
+        States.GoTo<StateB> ();
       }
 
       public void OnTimeout (ref TimeoutEvent evt)

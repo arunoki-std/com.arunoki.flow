@@ -22,9 +22,9 @@ namespace Arunoki.Flow.Basics
           initializer.Initialize ();
     }
 
-    protected override void OnReset ()
+    public override void Reset ()
     {
-      base.OnReset ();
+      base.Reset ();
 
       for (var i = Elements.Count - 1; i >= 0; i--)
         if (Elements [i] is IResettable resettable && resettable.AutoReset ())
@@ -45,7 +45,7 @@ namespace Arunoki.Flow.Basics
       base.OnActivate ();
 
       for (var i = Elements.Count - 1; i >= 0; i--)
-        if (Elements [i] is IService service && !service.IsActivated () && service is not IManualService)
+        if (Elements [i] is IService service && !service.IsActive () && service is not IManualService)
           service.Activate ();
     }
 
@@ -54,7 +54,7 @@ namespace Arunoki.Flow.Basics
       base.OnDeactivate ();
 
       for (var i = Elements.Count - 1; i >= 0; i--)
-        if (Elements [i] is IService service && service.IsActivated () && service is not IManualService)
+        if (Elements [i] is IService service && service.IsActive () && service is not IManualService)
           service.Deactivate ();
     }
   }

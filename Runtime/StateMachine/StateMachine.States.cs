@@ -8,7 +8,7 @@ namespace Arunoki.Flow
     private readonly List<StateNode<TEntity>> pathA = new(16);
     private readonly List<StateNode<TEntity>> pathB = new(16);
 
-    private StateNode<TEntity> pendingNode;
+    private StateNode<TEntity> pendingState;
 
     protected override void OnActivate ()
     {
@@ -16,10 +16,10 @@ namespace Arunoki.Flow
 
       TrySetupNodes ();
 
-      if (pendingNode != null)
+      if (pendingState != null)
       {
-        TryBuildPathToRoot (pendingNode, pathA);
-        currentRoot = pendingNode.GetRoot ();
+        TryBuildPathToRoot (pendingState, pathA);
+        currentRoot = pendingState.GetRoot ();
         for (var i = 0; i < pathA.Count; i++)
         {
           var node = pathA [i];
@@ -27,8 +27,8 @@ namespace Arunoki.Flow
           node.EnterSelf ();
         }
 
-        pendingNode.EnterDefaultPath ();
-        pendingNode = null;
+        pendingState.EnterDefaultPath ();
+        pendingState = null;
       }
       else
       {
@@ -36,6 +36,15 @@ namespace Arunoki.Flow
         currentRoot.EnterSelf ();
         currentRoot.EnterDefaultPath ();
       }
+    }
+
+    protected override void OnDeactivate ()
+    {
+      base.OnDeactivate ();
+
+      TryExitActivePath ();
+      currentRoot = null;
+      pendingState = null;
     }
 
     public void Update ()
@@ -56,28 +65,17 @@ namespace Arunoki.Flow
       }
     }
 
-    /// Will change state before next update.
-    public void GoToRequest<TStateOrInterface> ()
+    ///  Change state on update or <see cref="immediately"/> if value is true 
+    public void GoTo<TStateOrInterface> (bool immediately = false)
     {
-      if (IsActive<TStateOrInterface> ()) return;
+      if (!TryGetNode<TStateOrInterface> (out var node))
+        throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
 
-      if (!TryGetNode<TStateOrInterface> (out this.pendingNode))
-        throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface),
-          "State change request won't work.");
+      if (immediately) Change (node);
+      else pendingState = node;
     }
 
-    /// Change state immediately. 
-    public void GoTo<TStateOrInterface> ()
-    {
-      //TODO: MAKE GOTO AS PENDING REQUEST FOR ALL STATES
-
-      if (TryGetNode<TStateOrInterface> (out var node))
-        GoTo (node);
-
-      else throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
-    }
-
-    internal void GoTo (StateNode<TEntity> target)
+    internal void Change (StateNode<TEntity> target)
     {
       if (target == null) throw new ArgumentNullException (nameof(target));
 
@@ -123,12 +121,12 @@ namespace Arunoki.Flow
 
     protected bool ApplyRequestIfAny ()
     {
-      if (pendingNode != null)
+      if (pendingState != null)
       {
-        var node = pendingNode;
-        pendingNode = null;
+        var node = pendingState;
+        pendingState = null;
 
-        GoTo (node);
+        Change (node);
         return true;
       }
 
@@ -172,6 +170,6 @@ namespace Arunoki.Flow
       => currentRoot != null && currentRoot.IsAnyActive<TStateOrInterface> ();
 
     public bool IsPending<TStateOrInterface> ()
-      => pendingNode?.State is TStateOrInterface;
+      => pendingState?.State is TStateOrInterface;
   }
 }

@@ -20,12 +20,10 @@ namespace Arunoki.Flow.Basics
     public Action OnInit = delegate { };
 
     protected internal bool IsInitialized () => initStep > 0;
-    protected internal bool IsActivated () => activeStep > 0;
-    protected internal bool IsStarted () => startStep > 0;
 
+    public bool IsActive () => activeStep > 0;
+    bool IStartable.IsStarted () => startStep > 0;
     bool IInitializable.IsInitialized () => IsInitialized ();
-    bool IService.IsActivated () => IsActivated ();
-    bool IStartable.IsStarted () => IsStarted ();
 
     public void Initialize ()
     {

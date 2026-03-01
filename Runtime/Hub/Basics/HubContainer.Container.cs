@@ -23,10 +23,10 @@ namespace Arunoki.Flow.Basics
       if (!CanBuildAfterHubInit () && Hub.IsInitialized ())
         throw BuildOperationException.AfterHubInit (element);
 
-      if (!CanBuildAfterHubStarted () && Hub.IsStarted ())
+      if (!CanBuildAfterHubStarted () && (Hub as IStartable).IsStarted ())
         throw BuildOperationException.AfterHubStarted (element);
 
-      if (!CanBuildAfterHubActivation () && Hub.IsActivated ())
+      if (!CanBuildAfterHubActivation () && Hub.IsActive ())
         throw BuildOperationException.AfterHubActivated (element);
 
       return !GetAllElements ().Contains (element) && Set.TryAdd (element);

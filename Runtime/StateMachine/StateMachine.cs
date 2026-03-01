@@ -14,37 +14,14 @@ namespace Arunoki.Flow
       if (Entity is not IDummy) AddStatesFrom (Entity);
     }
 
-    public void Start ()
-    {
-      IStartable service = this;
-      if (!service.IsStarted ()) service.Start ();
-    }
-
-    public void Stop ()
-    {
-      (this as IService).Deactivate ();
-    }
-
-    protected override void OnDeactivate ()
-    {
-      base.OnDeactivate ();
-
-      (this as IResettable).Reset ();
-    }
-
-    protected override void OnReset ()
-    {
-      TryExitActivePath ();
-
-      currentRoot = null;
-      pendingNode = null;
-
-      base.OnReset ();
-    }
+    public void Activate () => (this as IService).Activate ();
+    public void Deactivate () => (this as IService).Deactivate ();
 
     public virtual void Dispose ()
     {
+      Deactivate ();
       NodesCache.Clear ();
+      Nodes.Clear ();
     }
   }
 }

@@ -19,16 +19,14 @@ namespace Arunoki.Flow.Basics
     private bool CanDeactivate () => activeStep > 0;
 
     protected internal bool IsInitialized () => initStep > 0;
-    protected internal bool IsActivated () => activeStep > 0;
-    protected internal bool IsStarted () => startStep > 0;
     protected internal virtual bool AutoReset () => true;
 
-    bool IInitializable.IsInitialized () => IsInitialized ();
-    bool IService.IsActivated () => IsActivated ();
-    bool IStartable.IsStarted () => IsStarted ();
+    public bool IsActive () => activeStep > 0;
+    bool IStartable.IsStarted () => startStep > 0;
     bool IResettable.AutoReset () => AutoReset ();
+    bool IInitializable.IsInitialized () => IsInitialized ();
 
-    protected virtual void OnInitialized () => (TargetService as IInitializable)?.Initialize ();
+    protected virtual void OnInit () => (TargetService as IInitializable)?.Initialize ();
     protected virtual void OnStarted () => (TargetService as IStartable)?.Start ();
 
     protected virtual void OnActivate ()
@@ -43,19 +41,20 @@ namespace Arunoki.Flow.Basics
         service.Deactivate ();
     }
 
-    protected virtual void OnReset ()
+    public virtual void Reset ()
     {
-      (this as IService).Deactivate ();
       (TargetService as IResettable)?.Reset ();
-      startStep = -1;
+      ResetStartStep ();
     }
+
+    protected virtual void ResetStartStep () => startStep = -1;
 
     void IInitializable.Initialize ()
     {
       if (CanInit ())
       {
         initStep = 0;
-        OnInitialized ();
+        OnInit ();
         initStep = 1;
       }
     }
@@ -94,7 +93,5 @@ namespace Arunoki.Flow.Basics
         activeStep = -1;
       }
     }
-
-    void IResettable.Reset () => OnReset ();
   }
 }

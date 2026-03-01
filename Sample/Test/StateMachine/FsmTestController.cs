@@ -13,13 +13,6 @@ namespace Arunoki.Flow.Sample
     {
       entity = new FsmEntity ();
       hub = new FlowHub (entity);
-      hub.Initialize ();
-    }
-
-    private void Start ()
-    {
-      UnityEngine.Debug.Log ($"\n\n");
-      UnityEngine.Debug.Log ($"\t START ({nameof(FsmTestController)})");
     }
 
     private void OnEnable ()

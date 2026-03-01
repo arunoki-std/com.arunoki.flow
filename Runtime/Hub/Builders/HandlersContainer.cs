@@ -34,9 +34,9 @@ namespace Arunoki.Flow.Builders
           initializable.Initialize ();
     }
 
-    protected override void OnReset ()
+    public override void Reset ()
     {
-      base.OnReset ();
+      base.Reset ();
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)

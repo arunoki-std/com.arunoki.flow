@@ -19,7 +19,7 @@ namespace Arunoki.Flow.Events.Core
 
     protected EventBus Events { get; }
 
-    public bool IsActivated () => isActivated;
+    public bool IsActive () => isActivated;
 
     public virtual void Register (Type staticHandler)
     {

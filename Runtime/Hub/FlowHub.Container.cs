@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
@@ -11,11 +12,11 @@ namespace Arunoki.Flow
       base.OnInit ();
     }
 
-    protected override void OnReset ()
+    public override void Reset ()
     {
       Events.Reset ();
 
-      base.OnReset ();
+      base.Reset ();
     }
 
     public bool Register (object entity)
@@ -23,9 +24,9 @@ namespace Arunoki.Flow
       if (entity == null) throw new ArgumentNullException (nameof(entity));
       var result = false;
 
-      for (var i = 0; i < Elements.Count; i++)
+      for (var i = 0; i < Containers.Count; i++)
       {
-        var container = Elements [i];
+        var container = Containers [i];
         result = (container.IsConsumable (entity) && container.Register (entity)) || result;
       }
 
@@ -36,9 +37,9 @@ namespace Arunoki.Flow
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
 
-      for (var i = 0; i < Elements.Count; i++)
+      for (var i = 0; i < Containers.Count; i++)
       {
-        var container = Elements [i];
+        var container = Containers [i];
         if (container.IsConsumable (entity)) container.Remove (entity);
       }
     }
@@ -47,16 +48,16 @@ namespace Arunoki.Flow
     {
       Events.ClearAll ();
 
-      for (var i = 0; i < Elements.Count; i++)
-        Elements [i].RemoveAll ();
+      for (var i = 0; i < Containers.Count; i++)
+        Containers [i].RemoveAll ();
     }
 
     public bool IsConsumable (object entity)
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
 
-      for (var i = 0; i < Elements.Count; i++)
-        if (Elements [i].IsConsumable (entity))
+      for (var i = 0; i < Containers.Count; i++)
+        if (Containers [i].IsConsumable (entity))
           return true;
 
       return false;
