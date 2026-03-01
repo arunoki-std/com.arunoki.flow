@@ -7,5 +7,7 @@ namespace Arunoki.Flow
     void RemoveAll ();
 
     bool IsConsumable (object element);
+
+    int GetBuildOrder ();
   }
 }

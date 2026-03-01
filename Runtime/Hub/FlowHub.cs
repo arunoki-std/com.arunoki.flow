@@ -53,9 +53,6 @@ namespace Arunoki.Flow
     }
 
     protected void SortContainers ()
-      => Elements.Sort ((a, b) => Order (a).CompareTo (Order (b)));
-
-    private static int Order (IHubContainer x) =>
-      x is BaseHubContainer bb ? bb.GetBuildOrder () : (int) FlowHub.BuildOrder.Any;
+      => Elements.Sort ((a, b) => a.GetBuildOrder ().CompareTo (b.GetBuildOrder ()));
   }
 }

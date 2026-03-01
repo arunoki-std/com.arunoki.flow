@@ -18,6 +18,6 @@ namespace Arunoki.Flow.Builders
       };
     }
 
-    protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Services;
+    public override int GetBuildOrder () => (int) FlowHub.BuildOrder.Services;
   }
 }

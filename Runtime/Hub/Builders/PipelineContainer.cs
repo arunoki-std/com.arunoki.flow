@@ -95,6 +95,6 @@ namespace Arunoki.Flow.Builders
     }
 
     protected override bool IsMultiInstancesSupported () => !Utils.IsDebug ();
-    protected internal override int GetBuildOrder () => (int) FlowHub.BuildOrder.Pipelines;
+    public override int GetBuildOrder () => (int) FlowHub.BuildOrder.Pipelines;
   }
 }

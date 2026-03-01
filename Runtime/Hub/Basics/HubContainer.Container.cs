@@ -58,5 +58,7 @@ namespace Arunoki.Flow.Basics
     protected virtual bool CanBuildAfterHubInit () => true;
     protected virtual bool CanBuildAfterHubStarted () => true;
     protected virtual bool CanBuildAfterHubActivation () => true;
+
+    public virtual int GetBuildOrder () => (int) FlowHub.BuildOrder.Any;
   }
 }
