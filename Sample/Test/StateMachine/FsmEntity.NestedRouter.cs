@@ -29,8 +29,8 @@ namespace Arunoki.Flow.Sample
 
         if (States.IsActive<IStateA> ())
         {
-          if (States.IsActive<SubstateA1> ())
-            States.GoTo<SubstateA> ();
+          if (States.IsActive<SubstateA> ())
+            States.GoTo<SubstateA1> ();
 
           else States.GoTo<IStateB> ();
         }

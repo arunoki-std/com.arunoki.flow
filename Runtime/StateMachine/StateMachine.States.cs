@@ -16,25 +16,9 @@ namespace Arunoki.Flow
 
       TrySetupNodes ();
 
-      if (pendingState != null)
+      if (!ApplyRequestOnStart ())
       {
-        TryBuildPathToRoot (pendingState, pathA);
-        currentRoot = pendingState.GetRoot ();
-        for (var i = 0; i < pathA.Count; i++)
-        {
-          var node = pathA [i];
-          node.Parent?.SetActiveChild (node);
-          node.EnterSelf ();
-        }
-
-        pendingState.EnterDefaultPath ();
-        pendingState = null;
-      }
-      else
-      {
-        currentRoot = GetDefaultRoot ();
-        currentRoot.EnterSelf ();
-        currentRoot.EnterDefaultPath ();
+        EnterDefaultPathOnStart ();
       }
     }
 
@@ -65,13 +49,13 @@ namespace Arunoki.Flow
       }
     }
 
-    ///  Change state on update or <see cref="immediately"/> if value is true 
-    public void GoTo<TStateOrInterface> (bool immediately = false)
+    ///  Change state on update if <see cref="pendingRequest"/> is true. 
+    public void GoTo<TStateOrInterface> (bool pendingRequest = true)
     {
       if (!TryGetNode<TStateOrInterface> (out var node))
         throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
 
-      if (immediately) Change (node);
+      if (!pendingRequest) Change (node);
       else pendingState = node;
     }
 
@@ -133,6 +117,34 @@ namespace Arunoki.Flow
       return false;
     }
 
+    protected bool ApplyRequestOnStart ()
+    {
+      if (pendingState == null) return false;
+
+      var state = pendingState;
+      pendingState = null;
+
+      TryBuildPathToRoot (state, pathA);
+      currentRoot = state.GetRoot ();
+
+      for (var i = 0; i < pathA.Count; i++)
+      {
+        var node = pathA [i];
+        node.Parent?.SetActiveChild (node);
+        node.EnterSelf ();
+      }
+
+      state.EnterDefaultPath ();
+      return true;
+    }
+
+    protected void EnterDefaultPathOnStart ()
+    {
+      currentRoot = GetDefaultRoot ();
+      currentRoot.EnterSelf ();
+      currentRoot.EnterDefaultPath ();
+    }
+
     protected void TryExitActivePath ()
     {
       TryBuildPathToRoot (currentRoot?.GetActiveLeaf (), pathA);
@@ -169,7 +181,10 @@ namespace Arunoki.Flow
     public bool IsActive<TStateOrInterface> ()
       => currentRoot != null && currentRoot.IsAnyActive<TStateOrInterface> ();
 
-    public bool IsPending<TStateOrInterface> ()
-      => pendingState?.State is TStateOrInterface;
+    public bool IsRequest<TStateOrInterface> ()
+      => HasChangeRequest () && (pendingState.IsAnyDefault<TStateOrInterface> () ||
+                                 pendingState.IsAnyParent<TStateOrInterface> ());
+
+    public bool HasChangeRequest () => pendingState != null;
   }
 }

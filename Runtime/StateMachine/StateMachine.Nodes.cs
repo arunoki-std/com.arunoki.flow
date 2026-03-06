@@ -8,8 +8,8 @@ namespace Arunoki.Flow
 {
   public partial class StateMachine<TEntity>
   {
-    internal Dictionary<Type, StateNode<TEntity>> NodesCache = new(16);
-    internal List<StateNode<TEntity>> Nodes = new(16);
+    internal Dictionary<Type, StateNode<TEntity>> NodesCache { get; } = new(16);
+    internal List<StateNode<TEntity>> Nodes { get; } = new(16);
 
     private StateNode<TEntity> currentRoot;
     private bool nodesReady;

@@ -93,10 +93,25 @@ namespace Arunoki.Flow
     public StateNode<TEntity> GetRoot ()
       => Parent != null ? Parent.GetRoot () : this;
 
+    /// <summary>  From state to active leaf.  </summary>
     public bool IsAnyActive<TStateOrInterface> ()
     {
       if (State is TStateOrInterface) return true;
       return ActiveChild != null && ActiveChild.IsAnyActive<TStateOrInterface> ();
+    }
+
+    /// <summary>  From state to parent. </summary>
+    public bool IsAnyParent<TStateOrInterface> ()
+    {
+      if (State is TStateOrInterface) return true;
+      return Parent != null && Parent.IsAnyParent<TStateOrInterface> ();
+    }
+
+    /// <summary>  From state to any from default path. </summary>
+    public bool IsAnyDefault<TStateOrInterface> ()
+    {
+      if (State is TStateOrInterface) return true;
+      return DefaultChild != null && DefaultChild.IsAnyParent<TStateOrInterface> ();
     }
 
     public bool IsRoot () => Parent == null;
