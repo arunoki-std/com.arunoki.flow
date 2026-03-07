@@ -27,15 +27,22 @@ namespace Arunoki.Flow
     public PipelineContainer Pipeline { get; } = new();
     public HandlersContainer Handlers { get; } = new();
 
-    public FlowHub (IContext context, bool autoActivate = false)
+    public FlowHub (IContext context) : this (context, true)
+    {
+    }
+
+    protected FlowHub (IContext context, bool initParts)
     {
       TargetService = new ServiceWithElements<IHubContainer> (Containers);
       Contexts = new ContextsContainer (context, this);
 
-      FindPartsAt (this);
-      FindPartsAt (context);
+      if (initParts) InitParts ();
+    }
 
-      if (autoActivate) Activate ();
+    protected virtual void InitParts ()
+    {
+      FindPartsAt (this);
+      FindPartsAt (Contexts.Root);
     }
 
     public void Activate ()

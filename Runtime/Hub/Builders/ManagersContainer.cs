@@ -25,7 +25,9 @@ namespace Arunoki.Flow.Builders
       base.OnInit ();
 
       foreach (Type staticType in this)
+      {
         SubscribeHandlers (staticType);
+      }
     }
 
     protected override void OnElementAdded (Type staticType)

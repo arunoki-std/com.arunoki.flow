@@ -4,24 +4,30 @@ using System;
 
 namespace Arunoki.Flow.Globals
 {
-  /// Do not use singleton instance in static constructors.
+  /// Do not use singleton <see cref="Instance"/> in static constructors.
   public class GlobalHub : FlowHub
   {
     public event Action OnReady;
     private bool isReady;
+
+    public ManagersContainer Managers { get; }
+
+    public static GlobalHub Instance { get; private set; }
 
     public GlobalHub (bool autoActivate = false)
       : this (new DummyContext (), autoActivate)
     {
     }
 
-    public GlobalHub (IContext context, bool autoActivate = false) : base (context)
+    public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
     {
       if (Instance != null)
         throw new InvalidOperationException ($"{nameof(GlobalHub)} already created. One instance per application.");
 
       Instance = this;
       Managers = new(this);
+
+      InitParts ();
 
       if (autoActivate) Activate ();
     }
@@ -36,10 +42,6 @@ namespace Arunoki.Flow.Globals
     }
 
     public static bool IsAssemblyInitialized => Instance != null;
-
-    public ManagersContainer Managers { get; }
-
-    internal static GlobalHub Instance { get; private set; }
 
     protected override void OnActivate ()
     {
