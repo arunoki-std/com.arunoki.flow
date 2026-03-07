@@ -19,6 +19,7 @@ namespace Arunoki.Flow.Sample
     {
       UnityEngine.Debug.Log ($"\n\n");
       UnityEngine.Debug.Log ($"\t ACTIVATE ({nameof(FsmTestController)})");
+
       hub.Activate ();
     }
 
