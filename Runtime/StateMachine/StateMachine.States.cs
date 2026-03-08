@@ -52,6 +52,9 @@ namespace Arunoki.Flow
     ///  Change state on update if <see cref="pendingRequest"/> is true. 
     public void GoTo<TStateOrInterface> (bool pendingRequest = true)
     {
+      if (IsActiveLeaf<TStateOrInterface> ())
+        return;
+
       if (!TryGetNode<TStateOrInterface> (out var node))
         throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
 
@@ -178,8 +181,14 @@ namespace Arunoki.Flow
       return false;
     }
 
+    public IState<TEntity> GetActiveLeaf ()
+      => currentRoot?.GetActiveLeaf ().State;
+
     public bool IsActive<TStateOrInterface> ()
       => currentRoot != null && currentRoot.IsAnyActive<TStateOrInterface> ();
+
+    public bool IsActiveLeaf<TStateOrInterface> ()
+      => currentRoot?.GetActiveLeaf ().State is TStateOrInterface;
 
     public bool IsRequest<TStateOrInterface> ()
       => HasChangeRequest () && (pendingState.IsAnyDefault<TStateOrInterface> () ||

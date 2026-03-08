@@ -30,12 +30,15 @@ namespace Arunoki.Flow
 
       foreach (var childNode in children)
       {
-        var requiredType = childNode.State.GetParentType ();
+        var requiredParent = childNode.State.GetParentType ();
         bool targetFound = false;
 
         foreach (var parentNode in parents)
         {
-          if (IsAssignableOrEquals (parentNode.State.GetType (), requiredType))
+          var pureParent = parentNode.State.GetType ();
+
+          if (ReferenceEquals (pureParent, requiredParent) || requiredParent.IsSubclassOf (pureParent) ||
+              requiredParent.IsAssignableFrom (pureParent))
           {
             parentNode.AddChild (childNode, childNode.State.IsDefault ());
             targetFound = true;
@@ -57,6 +60,11 @@ namespace Arunoki.Flow
       CreateNode (typeof(TState));
     }
 
+    public void AddState (IState<TEntity> state)
+    {
+      CreateNode (state.GetType (), state);
+    }
+
     public void AddStatesFrom (object stateSource)
     {
       if (stateSource == null) throw new ArgumentNullException (nameof(stateSource));
@@ -70,7 +78,12 @@ namespace Arunoki.Flow
     {
       if (NodesCache.ContainsKey (stateType)) return;
 
-      var node = new StateNode<TEntity> (stateType.Name, CreateState (stateType));
+      CreateNode (stateType, CreateState (stateType));
+    }
+
+    private void CreateNode (Type stateType, IState<TEntity> state)
+    {
+      var node = new StateNode<TEntity> (stateType.Name, state);
       NodesCache.Add (stateType, node);
       Nodes.Add (node);
     }
