@@ -49,6 +49,12 @@ namespace Arunoki.Flow
       }
     }
 
+    public void TryGoTo<TStateOrInterface> (bool pendingRequest = true)
+    {
+      if (Contains<TStateOrInterface> ())
+        GoTo<TStateOrInterface> (pendingRequest);
+    }
+
     ///  Change state on update if <see cref="pendingRequest"/> is true. 
     public void GoTo<TStateOrInterface> (bool pendingRequest = true)
     {
