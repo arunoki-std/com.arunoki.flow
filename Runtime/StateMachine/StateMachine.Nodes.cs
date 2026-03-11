@@ -6,12 +6,16 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public partial class StateMachine<TEntity>
+  /// <summary>
+  /// </summary>
+  /// 
+  /// <typeparam name="TContext"></typeparam>
+  public partial class StateMachine<TContext>
   {
-    internal Dictionary<Type, StateNode<TEntity>> NodesCache { get; } = new(16);
-    internal List<StateNode<TEntity>> Nodes { get; } = new(16);
+    internal Dictionary<Type, StateNode<TContext>> NodesCache { get; } = new(16);
+    internal List<StateNode<TContext>> Nodes { get; } = new(16);
 
-    private StateNode<TEntity> currentRoot;
+    private StateNode<TContext> currentRoot;
     private bool nodesReady;
 
     protected virtual void TrySetupNodes ()
@@ -19,34 +23,32 @@ namespace Arunoki.Flow
       if (nodesReady) return;
       nodesReady = true;
 
-      var parents = new List<StateNode<TEntity>> (NodesCache.Count);
-      var children = new List<StateNode<TEntity>> (NodesCache.Count);
+      var parents = new List<StateNode<TContext>> (NodesCache.Count);
+      var children = new List<StateNode<TContext>> (NodesCache.Count);
 
       foreach (var node in Nodes)
       {
-        if (node.State.IsSubState ()) children.Add (node);
+        if (node.State.IsSubstate ()) children.Add (node);
         else parents.Add (node);
       }
 
       foreach (var childNode in children)
       {
-        var requiredParent = childNode.State.GetParentType ();
-        bool targetFound = false;
+        childNode.State.IsSubstateOf (out var parentType);
+
+        bool parentFound = false;
 
         foreach (var parentNode in parents)
         {
-          var pureParent = parentNode.State.GetType ();
-
-          if (ReferenceEquals (pureParent, requiredParent) || requiredParent.IsSubclassOf (pureParent) ||
-              requiredParent.IsAssignableFrom (pureParent))
+          if (parentNode.IsTypeParent (parentType))
           {
             parentNode.AddChild (childNode, childNode.State.IsDefault ());
-            targetFound = true;
+            parentFound = true;
             break;
           }
         }
 
-        if (!targetFound)
+        if (!parentFound)
           throw new StateMachineException ($"Parent for state '{childNode}' not found.");
       }
 
@@ -55,12 +57,12 @@ namespace Arunoki.Flow
           state.Initialize ();
     }
 
-    public void AddState<TState> () where TState : IState<TEntity>, new ()
+    public void AddState<TState> () where TState : IState<TContext>, new ()
     {
       CreateNode (typeof(TState));
     }
 
-    public void AddState (IState<TEntity> state)
+    public void AddState (IState<TContext> state)
     {
       CreateNode (state.GetType (), state);
     }
@@ -70,7 +72,7 @@ namespace Arunoki.Flow
       if (stateSource == null) throw new ArgumentNullException (nameof(stateSource));
       if (stateSource is IDummy) return;
 
-      foreach (Type stateType in stateSource.GetType ().GetNestedTypes<IState<TEntity>> ())
+      foreach (Type stateType in stateSource.GetType ().GetNestedTypes<IState<TContext>> ())
         CreateNode (stateType);
     }
 
@@ -81,34 +83,34 @@ namespace Arunoki.Flow
       CreateNode (stateType, CreateState (stateType));
     }
 
-    private void CreateNode (Type stateType, IState<TEntity> state)
+    private void CreateNode (Type stateType, IState<TContext> state)
     {
-      var node = new StateNode<TEntity> (stateType.Name, state);
+      var node = new StateNode<TContext> (stateType.Name, state);
       NodesCache.Add (stateType, node);
       Nodes.Add (node);
     }
 
-    private IState<TEntity> CreateState (Type stateType)
+    private IState<TContext> CreateState (Type stateType)
     {
-      IState<TEntity> state;
+      IState<TContext> state;
       try
       {
-        state = (IState<TEntity>) Activator.CreateInstance (stateType);
+        state = (IState<TContext>) Activator.CreateInstance (stateType);
       }
       catch (InvalidCastException)
       {
         throw new StateMachineException (
-          $"Can't create state '{stateType}'. Class doesn't implement '{nameof(IState<TEntity>)}'.");
+          $"Can't create state '{stateType}'. Class doesn't implement '{nameof(IState<TContext>)}'.");
       }
 
-      if (Guard.IsNull (state.Entity)) state.Entity = Entity;
+      if (Guard.IsNull (state.Context)) state.Context = Context;
       return state;
     }
 
-    private bool TryGetNode<TStateOrInterface> (out StateNode<TEntity> node)
+    private bool TryGetNode<TStateOrInterface> (out StateNode<TContext> node)
       => TryGetNode (typeof(TStateOrInterface), out node);
 
-    private bool TryGetNode (Type stateType, out StateNode<TEntity> node)
+    private bool TryGetNode (Type stateType, out StateNode<TContext> node)
     {
       if (!stateType.IsInterface)
       {
@@ -129,7 +131,7 @@ namespace Arunoki.Flow
     }
 
     /// First default state without parent would be defined as root state.
-    private StateNode<TEntity> GetDefaultRoot ()
+    private StateNode<TContext> GetDefaultRoot ()
     {
       foreach (var node in Nodes)
       {

@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace Arunoki.Flow.Sample.States
 {
-  public abstract class BaseStateTimeout : BaseState
+  public abstract class SampleStateTimeout : SampleState
   {
     protected float TimeMin = 2;
     protected float TimeMax = 4;
 
     private float timeElapsed;
 
-    protected BaseStateTimeout (bool isDefault, Type parentType)
-      : base (isDefault, parentType)
+    protected SampleStateTimeout (bool isDefault, Type parentState)
+      : base (isDefault, parentState)
     {
     }
 
@@ -30,7 +30,7 @@ namespace Arunoki.Flow.Sample.States
       timeElapsed -= Time.deltaTime;
 
       if (timeElapsed <= TimeMin)
-        Entity.Timeout.Emit ();
+        Context.Timeout.Emit ();
     }
   }
 }

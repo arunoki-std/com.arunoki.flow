@@ -2,9 +2,9 @@ using System;
 
 namespace Arunoki.Flow.Sample.States
 {
-  public class BaseState : State<FsmEntity>
+  public class SampleState : State<FsmEntity>
   {
-    protected BaseState (bool isDefault, Type parentType) : base (isDefault, parentType)
+    protected SampleState (bool isDefault, Type parentState) : base (isDefault, parentState)
     {
     }
 

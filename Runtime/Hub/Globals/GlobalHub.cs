@@ -6,18 +6,21 @@ using UnityEngine;
 
 namespace Arunoki.Flow.Globals
 {
-  /// Do not use singleton <see cref="Instance"/> in static constructors.
   public class GlobalHub : FlowHub
   {
-    public event Action OnReady;
-    private bool isReady;
+    /// Invoked once after hub activated.
+    public static event Action OnReady = delegate { };
 
+    private static bool _isReady;
+
+    public GameObject View { get; internal set; }
     public ManagersContainer Managers { get; }
 
+    /// Invoke from static constructors inside <see cref="OnReady"/> delegate.
     public static GlobalHub Instance { get; private set; }
 
     public GlobalHub (bool autoActivate = false)
-      : this (new GlobalContext (), autoActivate)
+      : this (new DummyContext (), autoActivate)
     {
     }
 
@@ -28,6 +31,9 @@ namespace Arunoki.Flow.Globals
 
       Instance = this;
       Managers = new(this);
+
+      View = new GameObject ("Main.Flow");
+      View.AddComponent<UpdateController> ();
 
       InitParts ();
 
@@ -49,23 +55,16 @@ namespace Arunoki.Flow.Globals
     {
       base.OnActivate ();
 
-      if (!isReady)
+      if (!_isReady)
       {
-        isReady = true;
+        _isReady = true;
         OnReady?.Invoke ();
         OnReady = null;
       }
     }
 
-    private sealed class GlobalContext : IContext, IDummy
+    private class DummyContext : IContext, IDummy
     {
-      public GlobalContext ()
-      {
-        var gameObject = new GameObject ("Main.Flow");
-        UnityEngine.Object.DontDestroyOnLoad (gameObject);
-        gameObject.hideFlags = HideFlags.NotEditable;
-        gameObject.AddComponent<FlowUpdateController> ();
-      }
     }
   }
 }

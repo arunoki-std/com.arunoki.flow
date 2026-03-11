@@ -7,7 +7,7 @@ namespace Arunoki.Flow.Sample
   public partial class FsmEntity
   {
     [Preserve]
-    public class StateB : BaseState, IStateB
+    public class StateB : SampleState, IStateB
     {
       public StateB () : base (false, null)
       {
@@ -15,7 +15,7 @@ namespace Arunoki.Flow.Sample
     }
 
     [Preserve]
-    public class SubstateB : BaseStateTimeout, IStateB
+    public class SubstateB : SampleStateTimeout, IStateB
     {
       public SubstateB () : base (true, typeof(IStateB))
       {
@@ -23,7 +23,7 @@ namespace Arunoki.Flow.Sample
     }
 
     [Preserve]
-    public class StateC : BaseState, IStateC
+    public class StateC : SampleState, IStateC
     {
       public StateC () : base (false, null)
       {
@@ -31,7 +31,7 @@ namespace Arunoki.Flow.Sample
     }
 
     [Preserve]
-    public class SubstateC : BaseStateTimeout, IStateC
+    public class SubstateC : SampleStateTimeout, IStateC
     {
       public SubstateC () : base (true, typeof(IStateC))
       {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public partial class StateMachine<TEntity>
+  public partial class StateMachine<TContext>
   {
-    private readonly List<StateNode<TEntity>> pathA = new(16);
-    private readonly List<StateNode<TEntity>> pathB = new(16);
+    private readonly List<StateNode<TContext>> pathA = new(16);
+    private readonly List<StateNode<TContext>> pathB = new(16);
 
-    private StateNode<TEntity> pendingState;
+    private StateNode<TContext> pendingState;
 
     protected override void OnActivate ()
     {
@@ -68,7 +68,7 @@ namespace Arunoki.Flow
       else pendingState = node;
     }
 
-    internal void Change (StateNode<TEntity> target)
+    internal void Change (StateNode<TContext> target)
     {
       if (target == null) throw new ArgumentNullException (nameof(target));
 
@@ -114,7 +114,7 @@ namespace Arunoki.Flow
 
     protected bool ApplyRequestIfAny ()
     {
-      if (pendingState != null)
+      if (pendingState != null && (currentRoot == null || !currentRoot.IsTransitionLocked ()))
       {
         var node = pendingState;
         pendingState = null;
@@ -163,7 +163,7 @@ namespace Arunoki.Flow
     }
 
     /// Путь от root до этого узла.
-    private static void TryBuildPathToRoot (StateNode<TEntity> node, List<StateNode<TEntity>> buffer)
+    private static void TryBuildPathToRoot (StateNode<TContext> node, List<StateNode<TContext>> buffer)
     {
       buffer.Clear ();
       while (node != null)
@@ -187,7 +187,7 @@ namespace Arunoki.Flow
       return false;
     }
 
-    public IState<TEntity> GetActiveLeaf ()
+    public IState<TContext> GetActiveLeaf ()
       => currentRoot?.GetActiveLeaf ().State;
 
     public bool IsActive<TStateOrInterface> ()

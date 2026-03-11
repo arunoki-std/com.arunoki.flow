@@ -2,16 +2,17 @@ using Arunoki.Flow.Basics;
 
 namespace Arunoki.Flow
 {
-  /// Hierarchical finite state machine.
-  public partial class StateMachine<TEntity> : BaseServiceExplicit where TEntity : class
+  /// <summary> Hierarchical finite state machine. </summary>
+  /// <para> Invoke <see cref="Update"/> method of the state machine manually from its <see cref="TContext"/> update loop. </para>
+  public partial class StateMachine<TContext> : BaseServiceExplicit where TContext : class
   {
-    protected internal readonly TEntity Entity;
+    protected internal readonly TContext Context;
 
-    public StateMachine (TEntity entity)
+    public StateMachine (TContext context)
     {
-      Entity = entity;
+      Context = context;
 
-      if (Entity is not IDummy) AddStatesFrom (Entity);
+      if (Context is not IDummy) AddStatesFrom (Context);
     }
 
     public void Activate () => (this as IService).Activate ();

@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace Arunoki.Flow.Globals
 {
-  public sealed class FlowUpdateController : MonoBehaviour
+  public sealed class UpdateController : MonoBehaviour
   {
     private UpdatableContainer updaters;
+
+    private void Awake ()
+    {
+      UnityEngine.Object.DontDestroyOnLoad (gameObject);
+      gameObject.hideFlags = HideFlags.NotEditable;
+    }
 
     private void Start ()
     {

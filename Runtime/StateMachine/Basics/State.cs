@@ -6,23 +6,36 @@ namespace Arunoki.Flow
 {
   public abstract class State<TEntity> : IState<TEntity> where TEntity : class
   {
-    protected readonly Type ParentType;
-    protected readonly bool IsDefault;
-    private TEntity entity;
+    protected readonly Type ParentState;
+    private readonly bool isDefault;
 
-    protected State (bool isDefault, Type parentType)
+    private TEntity context;
+
+    protected State () { }
+
+    protected State (bool isDefault)
     {
-      IsDefault = isDefault;
-      ParentType = parentType;
+      this.isDefault = isDefault;
     }
 
-    protected TEntity Entity
+    protected State (Type parentState)
     {
-      get => entity;
+      ParentState = parentState;
+    }
+
+    protected State (bool isDefault, Type parentState)
+    {
+      this.isDefault = isDefault;
+      ParentState = parentState;
+    }
+
+    public TEntity Context
+    {
+      get => context;
       private set
       {
-        Guard.ThrowIfRewrite (entity, value);
-        entity = value;
+        Guard.ThrowIfRewrite (context, value);
+        context = value;
       }
     }
 
@@ -30,9 +43,20 @@ namespace Arunoki.Flow
     public abstract void OnExit ();
     public abstract void OnUpdate ();
 
-    TEntity IState<TEntity>.Entity { get => Entity; set => Entity = value; }
-    bool IState<TEntity>.IsDefault () => IsDefault;
-    bool IState<TEntity>.IsSubState () => ParentType != null;
-    Type IState<TEntity>.GetParentType () => ParentType;
+    TEntity IState<TEntity>.Context { get => Context; set => Context = value; }
+    public bool IsDefault () => isDefault;
+    public bool IsSubstate () => ParentState != null;
+
+    public bool IsSubstateOf (out Type parentType)
+    {
+      parentType = ParentState;
+      return parentType != null;
+    }
+
+    /// <summary> Transition is locked.  </summary>
+    public virtual bool IsLocked () => false;
+
+    /// <summary> Transition is not locked.  </summary>
+    public bool IsNotLocked () => !IsLocked ();
   }
 }

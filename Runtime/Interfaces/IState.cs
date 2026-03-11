@@ -2,16 +2,19 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public interface IState<TEntity> where TEntity : class
+  public interface IState<TContext> where TContext : class
   {
-    TEntity Entity { get; set; }
+    TContext Context { get; set; }
 
     void OnEnter ();
     void OnExit ();
     void OnUpdate ();
 
     bool IsDefault ();
-    bool IsSubState ();
-    Type GetParentType ();
+    bool IsSubstate ();
+    bool IsSubstateOf (out Type parentType);
+
+    /// <summary>  Define whether is transition locked. </summary>
+    bool IsLocked ();
   }
 }

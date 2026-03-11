@@ -1,3 +1,4 @@
+using Arunoki.Flow.Globals;
 using Arunoki.Flow.Sample.Events;
 
 using JetBrains.Annotations;
@@ -14,7 +15,7 @@ namespace Arunoki.Flow.Sample.Managers
 
     static SampleManager ()
     {
-      SampleHub.Get.OnReady += () =>
+      GlobalHub.OnReady += () =>
       {
         SampleHub.Get.Register (new SamplePipeline ());
       };
