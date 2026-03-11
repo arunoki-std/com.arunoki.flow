@@ -55,6 +55,9 @@ namespace Arunoki.Flow.Builders
       Set.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
 
       InitServices ();
+
+      if (context is IUpdatable updatable && updatable != Root)
+        Hub.Updater.Set.TryAdd (updatable);
     }
 
     protected override void OnElementRemoved (IContext context)
@@ -64,6 +67,9 @@ namespace Arunoki.Flow.Builders
       var contextType = context.GetType ();
       Hub.Events.UnregisterSource (context);
       Hub.Services.KeySet.Clear (contextType);
+
+      if (context is IUpdatable updatable && updatable != Root)
+        Hub.Updater.Set.Remove (updatable);
     }
 
     protected override bool CanBuildAfterHubInit () => false;

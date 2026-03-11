@@ -26,6 +26,7 @@ namespace Arunoki.Flow
     public ServicesContainer Services { get; } = new();
     public PipelineContainer Pipeline { get; } = new();
     public HandlersContainer Handlers { get; } = new();
+    public UpdatableContainer Updater { get; } = new();
 
     public FlowHub (IContext context) : this (context, true)
     {

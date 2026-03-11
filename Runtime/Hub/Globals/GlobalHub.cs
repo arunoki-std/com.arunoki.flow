@@ -2,6 +2,8 @@ using Arunoki.Flow.Builders;
 
 using System;
 
+using UnityEngine;
+
 namespace Arunoki.Flow.Globals
 {
   /// Do not use singleton <see cref="Instance"/> in static constructors.
@@ -15,7 +17,7 @@ namespace Arunoki.Flow.Globals
     public static GlobalHub Instance { get; private set; }
 
     public GlobalHub (bool autoActivate = false)
-      : this (new DummyContext (), autoActivate)
+      : this (new GlobalContext (), autoActivate)
     {
     }
 
@@ -52,6 +54,17 @@ namespace Arunoki.Flow.Globals
         isReady = true;
         OnReady?.Invoke ();
         OnReady = null;
+      }
+    }
+
+    private sealed class GlobalContext : IContext, IDummy
+    {
+      public GlobalContext ()
+      {
+        var gameObject = new GameObject ("Main.Flow");
+        UnityEngine.Object.DontDestroyOnLoad (gameObject);
+        gameObject.hideFlags = HideFlags.NotEditable;
+        gameObject.AddComponent<FlowUpdateController> ();
       }
     }
   }

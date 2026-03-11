@@ -51,6 +51,21 @@ namespace Arunoki.Flow
         Containers [i].RemoveAll ();
     }
 
+    public bool TryFind<T> (out T container) where T : IHubContainer
+    {
+      for (var i = 0; i < Containers.Count; i++)
+      {
+        if (Containers [i] is T element)
+        {
+          container = element;
+          return true;
+        }
+      }
+
+      container = default;
+      return false;
+    }
+
     public bool IsConsumable (object entity)
     {
       if (entity == null) throw new ArgumentNullException (nameof(entity));
