@@ -132,8 +132,10 @@ namespace Arunoki.Flow
     private StateNode<TEntity> GetDefaultRoot ()
     {
       foreach (var node in Nodes)
+      {
         if (node.IsRoot () && node.State.IsDefault ())
           return node;
+      }
 
       throw StateMachineException.RootIsNotDefined (this, "Default root state not found.");
     }
