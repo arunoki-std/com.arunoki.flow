@@ -1,3 +1,4 @@
+using Arunoki.Flow.Basics;
 using Arunoki.Flow.Builders;
 
 using System;
@@ -13,7 +14,8 @@ namespace Arunoki.Flow.Globals
 
     private static bool _isReady;
 
-    public GameObject View { get; internal set; }
+    private RoutineHelper routine;
+
     public ManagersContainer Managers { get; }
 
     /// Invoke from static constructors inside <see cref="OnReady"/> delegate.
@@ -24,7 +26,8 @@ namespace Arunoki.Flow.Globals
     {
     }
 
-    public GlobalHub (IContext context, bool autoActivate = false) : base (context, false)
+    public GlobalHub (IContext context, bool autoActivate = false)
+      : base (context, false)
     {
       if (Instance != null)
         throw new InvalidOperationException ($"{nameof(GlobalHub)} already created. One instance per application.");
@@ -32,12 +35,21 @@ namespace Arunoki.Flow.Globals
       Instance = this;
       Managers = new(this);
 
-      View = new GameObject ("Main.Flow");
-      View.AddComponent<UpdateController> ();
-
       InitParts ();
+      InitRoutine ();
 
       if (autoActivate) Activate ();
+    }
+
+    private void InitRoutine ()
+    {
+      var gameObj = new GameObject ("Main.Flow") { hideFlags = HideFlags.NotEditable };
+      UnityEngine.Object.DontDestroyOnLoad (gameObj);
+
+      routine = gameObj.AddComponent<RoutineHelper> ();
+      routine.OnFrameUpdate += Updater.Update;
+      routine.OnLateUpdate += Updater.LateUpdate;
+      routine.OnFixedUpdate += Updater.FixedUpdate;
     }
 
     public static GlobalHub Init (GlobalHub hub, StaticBootstrap bootstrap)
@@ -48,8 +60,6 @@ namespace Arunoki.Flow.Globals
       hub.Activate ();
       return hub;
     }
-
-    public static bool IsAssemblyInitialized => Instance != null;
 
     protected override void OnActivate ()
     {
@@ -62,6 +72,10 @@ namespace Arunoki.Flow.Globals
         OnReady = null;
       }
     }
+
+    public RoutineHelper GetRoutine () => routine;
+
+    public static bool IsAssemblyInitialized => Instance != null;
 
     private class DummyContext : IContext, IDummy
     {
