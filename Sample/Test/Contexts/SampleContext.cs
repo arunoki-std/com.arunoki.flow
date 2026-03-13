@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Sample
 
     public void OnBootReady (ref BootstrapReady e)
     {
-      IsFired.Set ();
+      IsFired.Fire ();
     }
   }
 }

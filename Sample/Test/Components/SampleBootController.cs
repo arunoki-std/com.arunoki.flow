@@ -21,7 +21,7 @@ namespace Arunoki.Flow.Sample.Controllers
     {
       var boot = SampleManager.Boot;
 
-      boot.IsStarted.Set ();
+      boot.IsStarted.Fire ();
       yield return null;
 
       var t = 0.0f;
@@ -32,10 +32,10 @@ namespace Arunoki.Flow.Sample.Controllers
         yield return null;
       }
 
-      boot.IsCompleted.Set ();
+      boot.IsCompleted.Fire ();
       yield return new WaitForSeconds (1.0f);
 
-      boot.IsReady.Set ();
+      boot.IsReady.Fire ();
     }
   }
 }
