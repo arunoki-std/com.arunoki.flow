@@ -23,12 +23,14 @@ namespace Arunoki.Flow
       }
     }
 
-    public bool AutoReset () => autoReset;
+    void IResettable.Reset () => Reload ();
 
-    public void Reset ()
+    public void Reload ()
     {
       IsTriggered = false;
     }
+
+    public bool AutoReset () => autoReset;
 
     public static implicit operator bool (Trigger<TEvent> a) => a.IsTriggered;
   }
