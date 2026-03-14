@@ -6,7 +6,7 @@ namespace Arunoki.Flow
   {
     private readonly bool autoReset;
 
-    public Trigger (bool autoReset = true)
+    public Trigger (bool autoReset = false)
     {
       this.autoReset = autoReset;
     }
