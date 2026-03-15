@@ -35,7 +35,7 @@ namespace Arunoki.Flow.Utilities
         {
           callbacks.Add (channel.Subscribe (receiver, methods));
         }
-        else if (Utils.IsWarningsEnabled ())
+        else if (Utils.IsTraceable ())
         {
           UnityEngine.Debug.LogWarning (
             $"Event hub does not contain any channel capable of handling '{eventType}'.\n" +

@@ -13,16 +13,16 @@ namespace Arunoki.Flow.Utilities
 
     public static bool IsDebug ()
     {
-#if DEBUG || UNITY_EDITOR
+#if DEVELOPMENT_BUILD || (UNITY_EDITOR && DEBUG)
       return true;
 #else
       return false;
 #endif
     }
 
-    public static bool IsWarningsEnabled ()
+    public static bool IsTraceable ()
     {
-#if ARUNOKI_WARNINGS
+#if ARUNOKI_TRACE
       return true;
 #else
       return false;

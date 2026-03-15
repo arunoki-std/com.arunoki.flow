@@ -2,8 +2,8 @@
 # Scripting Define Symbols
 
 ## Common Symbols:
-- DEBUG || UNITY_EDITOR - provides additional condition check, thows exceptions if needed. 
+- DEVELOPMENT_BUILD || (UNITY_EDITOR && DEBUG) - provides additional condition check, thows exceptions if needed. 
 
 ## Unique symbols:
 
-- ARUNOKI_WARNINGS - indicates that the code should emit warning logs to the Editor console;
+- ARUNOKI_TRACE - indicates that the code should emit warning logs to the Editor console;
