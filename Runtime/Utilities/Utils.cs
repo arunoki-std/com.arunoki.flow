@@ -2,6 +2,15 @@ namespace Arunoki.Flow.Utilities
 {
   public static partial class Utils
   {
+    public static bool IsEditor ()
+    {
+#if UNITY_EDITOR
+      return true;
+#else
+      return false;
+#endif
+    }
+
     public static bool IsDebug ()
     {
 #if DEBUG || UNITY_EDITOR

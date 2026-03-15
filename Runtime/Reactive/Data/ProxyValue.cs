@@ -9,14 +9,18 @@ namespace Arunoki.Flow
     private readonly bool hasInitialData;
     private readonly TData initialData;
 
-    public ProxyValue (bool autoReset = true)
+    public ProxyValue () : this (false)
+    {
+    }
+
+    public ProxyValue (bool autoReset)
     {
       initialData = default;
       hasInitialData = false;
       this.autoReset = autoReset;
     }
 
-    public ProxyValue (TData data, bool autoReset = true)
+    public ProxyValue (TData data, bool autoReset)
     {
       initialData = data;
       hasInitialData = true;
