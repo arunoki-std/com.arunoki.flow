@@ -11,6 +11,15 @@ namespace Arunoki.Flow.Utilities
 #endif
     }
 
+    public static bool IsDebugBuild ()
+    {
+#if DEVELOPMENT_BUILD && !UNITY_EDITOR
+      return true;
+#else
+      return false;
+#endif
+    }
+
     public static bool IsDebug ()
     {
 #if DEVELOPMENT_BUILD || (UNITY_EDITOR && DEBUG)

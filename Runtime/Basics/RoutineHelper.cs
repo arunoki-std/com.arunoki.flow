@@ -47,7 +47,7 @@ namespace Arunoki.Flow.Basics
       => StartCoroutine (TrackedCoroutine (routine, operationName, operations ?? GetOperations ()));
 
     private static IEnumerator TrackedCoroutine
-      (IEnumerator outer, string operationName, ActiveOperations operations)
+      (IEnumerator routine, string operationName, ActiveOperations operations)
     {
       if (string.IsNullOrEmpty (operationName))
         throw new ArgumentNullException (nameof(operationName));
@@ -56,8 +56,8 @@ namespace Arunoki.Flow.Basics
 
       try
       {
-        while (outer.MoveNext ())
-          yield return outer.Current;
+        while (routine.MoveNext ())
+          yield return routine.Current;
       }
       finally
       {

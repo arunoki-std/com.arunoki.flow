@@ -8,7 +8,8 @@ namespace Arunoki.Flow.Basics
 {
   public sealed class ActiveOperations
   {
-    private readonly Action<string, float> onUntrack;
+    private readonly Action<string, string, float> onUntrack;
+    private readonly string category;
     private readonly string name;
     private readonly Dictionary<uint, OperationInfo> operations;
 
@@ -16,16 +17,17 @@ namespace Arunoki.Flow.Basics
 
     //TODO: add callback to active operations
 
-    public ActiveOperations (string name, Action<string, float> onUntrack, int capacity = 128)
+    public ActiveOperations (string category, Action<string, string, float> onUntrack, int capacity = 128)
     {
       this.onUntrack = onUntrack;
-      this.name = $"{nameof(ActiveOperations)}({name})";
+      this.category = category;
+      this.name = $"{nameof(ActiveOperations)}({category})";
       operations = new Dictionary<uint, OperationInfo> (capacity);
     }
 
     public ActiveOperations (string name, int capacity = 128)
     {
-      this.name = $"{nameof(ActiveOperations)}({name})";
+      this.category = $"{nameof(ActiveOperations)}({name})";
       operations = new Dictionary<uint, OperationInfo> (capacity);
     }
 
@@ -46,7 +48,7 @@ namespace Arunoki.Flow.Basics
         if (operations.TryGetValue (id, out var operation))
         {
           float duration = Time.realtimeSinceStartup - operation.StartedAt;
-          onUntrack (operation.Name, duration);
+          onUntrack (category, operation.Name, duration);
           operations.Remove (id);
           return true;
         }
@@ -62,6 +64,7 @@ namespace Arunoki.Flow.Basics
       if (operations.TryGetValue (id, out var operation))
       {
         duration = Time.realtimeSinceStartup - operation.StartedAt;
+        onUntrack?.Invoke (category, operation.Name, duration);
         operations.Remove (id);
         return true;
       }
@@ -109,7 +112,7 @@ namespace Arunoki.Flow.Basics
       float now = Time.realtimeSinceStartup;
       var builder = new StringBuilder (128);
 
-      builder.Append (name);
+      builder.Append (category);
       builder.Append (" [");
 
       bool isFirst = true;
