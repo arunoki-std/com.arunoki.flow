@@ -10,7 +10,7 @@ namespace Arunoki.Flow
     private readonly TValue defaultValue;
     private readonly bool autoReset;
 
-    public ValueProperty (bool autoReset = true)
+    public ValueProperty (bool autoReset = false)
       : this (default, autoReset)
     {
     }
@@ -75,7 +75,7 @@ namespace Arunoki.Flow
 
     protected override TEvent GetEventInstance ()
     {
-      return new TEvent { Context = this.Context, Value = this.Value, Previous = this.Previous };
+      return new TEvent { Context = this.Context, Current = this.Value, Previous = this.Previous };
     }
   }
 }

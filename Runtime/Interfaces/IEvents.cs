@@ -11,7 +11,7 @@ namespace Arunoki.Flow
 
   public interface IValueEvent<T> : IEvent
   {
-    T Value { get; set; }
+    T Current { get; set; }
 
     T Previous { get; set; }
   }

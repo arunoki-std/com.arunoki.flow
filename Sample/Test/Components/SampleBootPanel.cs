@@ -35,7 +35,7 @@ namespace Arunoki.Flow.Sample
 
     public void OnProgressChanged (ref BootstrapProgress e)
     {
-      SetProgress (e.Value);
+      SetProgress (e.Current);
     }
 
     public void OnBootstrapReady (ref BootstrapReady e)

@@ -4,7 +4,7 @@ namespace Arunoki.Flow
 {
   public class ProgressProperty<TEvent> : FloatProperty<TEvent> where TEvent : struct, IValueEvent<float>
   {
-    public ProgressProperty (bool autoReset = true) : base (autoReset)
+    public ProgressProperty (bool autoReset = false) : base (autoReset)
     {
     }
 
