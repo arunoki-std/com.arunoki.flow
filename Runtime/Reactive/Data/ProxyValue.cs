@@ -33,7 +33,7 @@ namespace Arunoki.Flow
 
     public bool IsNotEmpty { get; private set; }
 
-    public override void Publish (ref TData data)
+    public void Publish (TData data)
     {
       SetDataValue (ref data);
       base.Publish (ref data);

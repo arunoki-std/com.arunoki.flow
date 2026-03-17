@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Events
   public class Channel<TEvent, TData> : Channel<TEvent>
     where TEvent : struct, IDataEvent<TData>
   {
-    public virtual void Publish (ref TData data)
+    protected virtual void Publish (ref TData data)
     {
       var evt = GetEventInstance ();
       evt.Data = data;

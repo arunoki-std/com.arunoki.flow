@@ -8,14 +8,14 @@ namespace Arunoki.Flow.Basics
 {
   public sealed class ActiveOperations
   {
+    private const uint FirstID = 1111;
+
     private readonly Action<string, string, float> onUntrack;
     private readonly string category;
     private readonly string name;
     private readonly Dictionary<uint, OperationInfo> operations;
 
-    private uint nextId;
-
-    //TODO: add callback to active operations
+    private uint nextId = FirstID;
 
     public ActiveOperations (string category, Action<string, string, float> onUntrack, int capacity = 128)
     {
@@ -36,7 +36,7 @@ namespace Arunoki.Flow.Basics
 
     public uint Track (string operationName)
     {
-      var id = operations.Count == 0 ? (nextId = 0) : ++nextId;
+      var id = operations.Count == 0 ? (nextId = FirstID) : ++nextId;
       operations [id] = new OperationInfo (operationName, Time.realtimeSinceStartup);
       return id;
     }
