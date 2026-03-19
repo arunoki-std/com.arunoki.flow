@@ -61,7 +61,7 @@ namespace Arunoki.Flow.Basics
       }
       finally
       {
-        operations.Untrack (operationId);
+        operations.TryUntrack (ref operationId);
       }
     }
 

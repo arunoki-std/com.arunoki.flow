@@ -41,34 +41,21 @@ namespace Arunoki.Flow.Basics
       return id;
     }
 
-    public bool Untrack (uint id)
-    {
-      if (onUntrack != null)
-      {
-        if (operations.TryGetValue (id, out var operation))
-        {
-          float duration = Time.realtimeSinceStartup - operation.StartedAt;
-          onUntrack (category, operation.Name, duration);
-          operations.Remove (id);
-          return true;
-        }
+    public bool TryUntrack (ref uint id)
+      => TryUntrack (ref id, out _);
 
-        return false;
-      }
-
-      return operations.Remove (id);
-    }
-
-    public bool TryUntrack (uint id, out float duration)
+    public bool TryUntrack (ref uint id, out float duration)
     {
       if (operations.TryGetValue (id, out var operation))
       {
         duration = Time.realtimeSinceStartup - operation.StartedAt;
         onUntrack?.Invoke (category, operation.Name, duration);
         operations.Remove (id);
+        id = 0;
         return true;
       }
 
+      id = 0;
       duration = 0f;
       return false;
     }

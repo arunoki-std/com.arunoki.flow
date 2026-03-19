@@ -65,7 +65,11 @@ namespace Arunoki.Flow
         throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
 
       if (!pendingRequest) Change (node);
-      else pendingState = node;
+      else
+      {
+        pendingState = node;
+        UnityEngine.Debug.LogWarning ($"Pending: {pendingState.State.GetType ().Name} \t {Context.GetType ().Name}");
+      }
     }
 
     internal void Change (StateNode<TContext> target)
