@@ -8,7 +8,7 @@ namespace Arunoki.Flow
     private readonly List<StateNode<TContext>> pathA = new(16);
     private readonly List<StateNode<TContext>> pathB = new(16);
 
-    private StateNode<TContext> pendingState;
+    private Type pendingState;
 
     protected override void OnActivate ()
     {
@@ -58,18 +58,14 @@ namespace Arunoki.Flow
     ///  Change state on update if <see cref="pendingRequest"/> is true. 
     public void GoTo<TStateOrInterface> (bool pendingRequest = true)
     {
+      pendingState = null;
+
       if (IsActiveLeaf<TStateOrInterface> ())
         return;
 
-      if (!TryGetNode<TStateOrInterface> (out var node))
-        throw StateMachineException.StateIsNotDefined (this, typeof(TStateOrInterface));
+      pendingState = typeof(TStateOrInterface);
 
-      if (!pendingRequest) Change (node);
-      else
-      {
-        pendingState = node;
-        UnityEngine.Debug.LogWarning ($"Pending: {pendingState.State.GetType ().Name} \t {Context.GetType ().Name}");
-      }
+      if (!pendingRequest) ApplyRequestIfAny ();
     }
 
     internal void Change (StateNode<TContext> target)
@@ -120,10 +116,12 @@ namespace Arunoki.Flow
     {
       if (pendingState != null && (currentRoot == null || !currentRoot.IsTransitionLocked ()))
       {
-        var node = pendingState;
-        pendingState = null;
+        if (!TryGetNode (pendingState, out var node))
+          throw StateMachineException.StateIsNotDefined ($"StateMachine<{typeof(TContext).Name}>", pendingState);
 
+        pendingState = null;
         Change (node);
+
         return true;
       }
 
@@ -134,7 +132,9 @@ namespace Arunoki.Flow
     {
       if (pendingState == null) return false;
 
-      var state = pendingState;
+      if (!TryGetNode (pendingState, out var state))
+        throw StateMachineException.StateIsNotDefined ($"StateMachine<{typeof(TContext).Name}>", pendingState);
+
       pendingState = null;
 
       TryBuildPathToRoot (state, pathA);
@@ -199,10 +199,6 @@ namespace Arunoki.Flow
 
     public bool IsActiveLeaf<TStateOrInterface> ()
       => currentRoot?.GetActiveLeaf ().State is TStateOrInterface;
-
-    public bool IsRequest<TStateOrInterface> ()
-      => HasChangeRequest () && (pendingState.IsAnyDefault<TStateOrInterface> () ||
-                                 pendingState.IsAnyParent<TStateOrInterface> ());
 
     public bool HasChangeRequest () => pendingState != null;
   }

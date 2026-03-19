@@ -12,6 +12,7 @@ namespace Arunoki.Flow
   /// <typeparam name="TContext"></typeparam>
   public partial class StateMachine<TContext>
   {
+    internal List<List<StateNode<TContext>>> Ancestors { get; } = new(8);
     internal Dictionary<Type, StateNode<TContext>> NodesCache { get; } = new(16);
     internal List<StateNode<TContext>> Nodes { get; } = new(16);
 
@@ -50,6 +51,12 @@ namespace Arunoki.Flow
 
         if (!parentFound)
           throw new StateMachineException ($"Parent for state '{childNode}' not found.");
+      }
+
+      foreach (var node in parents)
+      {
+        if (node.IsRoot ())
+          node.SetSiblings (0, Ancestors);
       }
 
       foreach (var node in Nodes)
@@ -107,22 +114,17 @@ namespace Arunoki.Flow
       return state;
     }
 
-    private bool TryGetNode<TStateOrInterface> (out StateNode<TContext> node)
-      => TryGetNode (typeof(TStateOrInterface), out node);
-
     private bool TryGetNode (Type stateType, out StateNode<TContext> node)
     {
-      if (!stateType.IsInterface)
+      for (var siblingIndex = 0; siblingIndex < Ancestors.Count; siblingIndex++)
       {
-        return NodesCache.TryGetValue (stateType, out node);
-      }
-
-      foreach (var pair in NodesCache)
-      {
-        if (stateType.IsAssignableFrom (pair.Key))
+        var list = Ancestors [siblingIndex];
+        for (var i = 0; i < list.Count; i++)
         {
-          node = pair.Value;
-          return true;
+          node = list [i];
+
+          if (IsAssignableOrEquals (node.State.GetType (), stateType))
+            return true;
         }
       }
 
@@ -142,9 +144,7 @@ namespace Arunoki.Flow
       throw StateMachineException.RootIsNotDefined (this, "Default root state not found.");
     }
 
-    protected bool IsAssignableOrEquals (Type stateType, Type typeOrInterface)
-    {
-      return ReferenceEquals (stateType, typeOrInterface) || typeOrInterface.IsAssignableFrom (stateType);
-    }
+    protected static bool IsAssignableOrEquals (Type stateType, Type typeOrInterface)
+      => ReferenceEquals (stateType, typeOrInterface) || typeOrInterface.IsAssignableFrom (stateType);
   }
 }

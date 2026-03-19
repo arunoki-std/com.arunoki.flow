@@ -12,10 +12,10 @@ namespace Arunoki.Flow
         $"Root state of state machine '{stateMachine.GetType ()}' is not defined. {message}");
     }
 
-    internal static StateMachineException StateIsNotDefined (object stateMachine, Type stateType, string message = "")
+    internal static StateMachineException StateIsNotDefined (string category, Type stateType, string message = "")
     {
       return new StateMachineException (
-        $"State '{stateType.Name}' is not defined at '{stateMachine.GetType ().Name}'. {message}'");
+        $"State '{stateType.Name}' is not defined at '{category}'. {message}'");
     }
 
     internal static StateMachineException RouterRegistrationOrder (object stateMachine, object router)

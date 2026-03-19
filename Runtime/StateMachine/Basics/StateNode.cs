@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  internal sealed class StateNode<TEntity> where TEntity : class
+  internal sealed class StateNode<TContext> where TContext : class
   {
     public readonly string Name;
-    internal readonly IState<TEntity> State;
+    internal readonly IState<TContext> State;
 
-    public StateNode<TEntity> Parent { get; private set; }
-    public StateNode<TEntity> DefaultChild { get; private set; }
-    public StateNode<TEntity> ActiveChild { get; private set; }
+    public StateNode<TContext> Parent { get; private set; }
+    public StateNode<TContext> DefaultChild { get; private set; }
+    public StateNode<TContext> ActiveChild { get; private set; }
 
-    public List<StateNode<TEntity>> Children = new(8);
+    public List<StateNode<TContext>> Children = new(8);
 
-    public StateNode (string name, IState<TEntity> state)
+    public StateNode (string name, IState<TContext> state)
     {
       Name = name;
       State = state;
@@ -37,7 +37,7 @@ namespace Arunoki.Flow
       State.OnUpdate ();
     }
 
-    public void AddChild (StateNode<TEntity> child, bool isDefault)
+    public void AddChild (StateNode<TContext> child, bool isDefault)
     {
       if (child == null) throw new ArgumentNullException (nameof(child));
 
@@ -67,7 +67,7 @@ namespace Arunoki.Flow
       DefaultChild.EnterDefaultPath ();
     }
 
-    public void SetActiveChild (StateNode<TEntity> child)
+    public void SetActiveChild (StateNode<TContext> child)
     {
       if (child.Parent != this)
         throw new InvalidOperationException ($"State '{child.Name}' is not a child of '{Name}'.");
@@ -80,7 +80,7 @@ namespace Arunoki.Flow
       ActiveChild = null;
     }
 
-    public StateNode<TEntity> GetActiveLeaf ()
+    public StateNode<TContext> GetActiveLeaf ()
     {
       var node = this;
 
@@ -90,7 +90,7 @@ namespace Arunoki.Flow
       return node;
     }
 
-    public StateNode<TEntity> GetRoot ()
+    public StateNode<TContext> GetRoot ()
       => Parent != null ? Parent.GetRoot () : this;
 
     /// <summary>  From state to active leaf.  </summary>
@@ -126,6 +126,17 @@ namespace Arunoki.Flow
     {
       var state = State.GetType ();
       return ReferenceEquals (state, other) || other.IsSubclassOf (state) || other.IsAssignableFrom (state);
+    }
+
+    public void SetSiblings (int index, List<List<StateNode<TContext>>> depthList)
+    {
+      if (depthList.Count == index)
+        depthList.Add (new List<StateNode<TContext>> (8));
+
+      depthList [index].Add (this);
+
+      for (var i = 0; i < Children.Count; i++)
+        Children [i].SetSiblings (index + 1, depthList);
     }
   }
 }
