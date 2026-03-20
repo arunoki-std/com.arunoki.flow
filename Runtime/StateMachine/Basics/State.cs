@@ -53,7 +53,6 @@ namespace Arunoki.Flow
       return parentType != null;
     }
 
-    /// <summary> Transition is locked.  </summary>
-    public virtual bool IsProcessing () => false;
+    public virtual bool IsReadyGoNext () => true;
   }
 }
