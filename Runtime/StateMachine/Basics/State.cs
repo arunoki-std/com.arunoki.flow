@@ -54,6 +54,6 @@ namespace Arunoki.Flow
     }
 
     /// <summary> Transition is locked.  </summary>
-    public virtual bool IsLocked () => false;
+    public virtual bool IsProcessing () => false;
   }
 }

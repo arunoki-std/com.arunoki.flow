@@ -15,6 +15,6 @@ namespace Arunoki.Flow
     bool IsSubstateOf (out Type parentType);
 
     /// <summary>  Define whether is transition locked. </summary>
-    bool IsLocked ();
+    bool IsProcessing ();
   }
 }

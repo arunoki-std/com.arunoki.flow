@@ -116,12 +116,6 @@ namespace Arunoki.Flow
 
     public bool IsRoot () => Parent == null;
 
-    public bool IsTransitionLocked ()
-    {
-      if (State.IsLocked ()) return true;
-      return ActiveChild?.IsTransitionLocked () ?? false;
-    }
-
     public bool IsTypeParent (Type other)
     {
       var state = State.GetType ();
