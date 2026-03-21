@@ -124,7 +124,7 @@ namespace Arunoki.Flow.Basics
         builder.Append (pair.Value.Name);
         builder.Append (" (");
         builder.Append (duration.ToString ("0.000"));
-        builder.Append ("s)");
+        builder.Append (" seconds)");
       }
 
       builder.Append (']');

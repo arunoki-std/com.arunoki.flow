@@ -4,12 +4,15 @@ using System;
 
 namespace Arunoki.Flow
 {
-  public abstract class State<TEntity> : IState<TEntity> where TEntity : class
+  public abstract class State<TContext> : IState<TContext> where TContext : class
   {
     protected readonly Type ParentState;
     private readonly bool isDefault;
 
-    private TEntity context;
+    private bool isStarted;
+    protected bool IsFirstUpdatePassed { get; private set; }
+
+    private TContext context;
 
     protected State () { }
 
@@ -29,7 +32,7 @@ namespace Arunoki.Flow
       ParentState = parentState;
     }
 
-    public TEntity Context
+    public TContext Context
     {
       get => context;
       private set
@@ -39,11 +42,30 @@ namespace Arunoki.Flow
       }
     }
 
-    public abstract void OnEnter ();
-    public abstract void OnExit ();
-    public abstract void OnUpdate ();
+    public virtual void OnEnter () { }
 
-    TEntity IState<TEntity>.Context { get => Context; set => Context = value; }
+    public virtual void OnExit ()
+    {
+      IsFirstUpdatePassed = false;
+      isStarted = false;
+    }
+
+    public virtual void OnUpdate ()
+    {
+      if (isStarted && !IsFirstUpdatePassed) IsFirstUpdatePassed = true;
+      if (!isStarted)
+      {
+        isStarted = true;
+        OnStart ();
+      }
+    }
+
+    /// First update of the <see cref="OnUpdate"/> loop. 
+    protected virtual void OnStart ()
+    {
+    }
+
+    TContext IState<TContext>.Context { get => Context; set => Context = value; }
     public bool IsDefault () => isDefault;
     public bool IsSubstate () => ParentState != null;
 
