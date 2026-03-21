@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using UnityEngine;
@@ -40,6 +41,9 @@ namespace Arunoki.Flow.Basics
       operations [id] = new OperationInfo (operationName, Time.realtimeSinceStartup);
       return id;
     }
+
+    public bool TryUntrack (uint id)
+      => TryUntrack (ref id, out _);
 
     public bool TryUntrack (ref uint id)
       => TryUntrack (ref id, out _);
@@ -87,8 +91,13 @@ namespace Arunoki.Flow.Basics
 
     public void Clear ()
     {
-      operations.Clear ();
-      nextId = 0;
+      if (operations.Count != 0)
+      {
+        foreach (var id in operations.Keys.ToArray ())
+          TryUntrack (id);
+      }
+
+      nextId = FirstID;
     }
 
     public override string ToString ()
