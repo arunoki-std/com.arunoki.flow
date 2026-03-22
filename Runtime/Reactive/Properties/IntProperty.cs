@@ -4,13 +4,15 @@ namespace Arunoki.Flow
 {
   public class IntProperty<TEvent> : ValueProperty<int, TEvent> where TEvent : struct, IValueEvent<int>
   {
-    public IntProperty (int defaultValue = 0, bool autoReset = false)
-      : base (defaultValue, autoReset)
+    public IntProperty (int defaultValue, bool autoReset = false) : base (defaultValue, autoReset)
     {
     }
 
-    public IntProperty (bool autoReset = false)
-      : base (0, autoReset)
+    public IntProperty (bool autoReset) : base (0, autoReset)
+    {
+    }
+
+    public IntProperty () : base (0, false)
     {
     }
 

@@ -20,7 +20,7 @@ namespace Arunoki.Flow
       this.autoReset = autoReset;
     }
 
-    public ProxyValue (TData data, bool autoReset)
+    public ProxyValue (TData data, bool autoReset = false)
     {
       initialData = data;
       hasInitialData = true;

@@ -7,7 +7,7 @@ namespace Arunoki.Flow
     {
     }
 
-    public BoolProperty (bool defaultValue, bool autoReset)
+    public BoolProperty (bool defaultValue, bool autoReset = false)
       : base (defaultValue, autoReset)
     {
     }

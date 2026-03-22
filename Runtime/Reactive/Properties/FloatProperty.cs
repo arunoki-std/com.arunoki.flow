@@ -4,13 +4,17 @@ namespace Arunoki.Flow
 {
   public class FloatProperty<TEvent> : ValueProperty<float, TEvent> where TEvent : struct, IValueEvent<float>
   {
-    public FloatProperty (bool autoReset = false)
+    public FloatProperty (bool autoReset)
       : base (0.0f, autoReset)
     {
     }
 
-    public FloatProperty (float defaultValue = 0.0f, bool autoReset = false)
+    public FloatProperty (float defaultValue, bool autoReset = false)
       : base (defaultValue, autoReset)
+    {
+    }
+
+    public FloatProperty () : base (0.0f, false)
     {
     }
 

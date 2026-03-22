@@ -10,12 +10,15 @@ namespace Arunoki.Flow
     private readonly TValue defaultValue;
     private readonly bool autoReset;
 
-    public ValueProperty (bool autoReset = false)
-      : this (default, autoReset)
+    public ValueProperty (bool autoReset) : this (default, autoReset)
     {
     }
 
-    public ValueProperty (TValue defaultValue, bool autoReset = true)
+    public ValueProperty () : this (default, false)
+    {
+    }
+
+    public ValueProperty (TValue defaultValue, bool autoReset = false)
     {
       this.defaultValue = defaultValue;
       this.autoReset = autoReset;
