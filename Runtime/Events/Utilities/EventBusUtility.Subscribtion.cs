@@ -21,7 +21,7 @@ namespace Arunoki.Flow.Utilities
       else
       {
         receiverType = receiver.GetType ();
-        bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+        bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
       }
 
       var groups = GetMethodsGroup (receiverType, bindingFlags);
