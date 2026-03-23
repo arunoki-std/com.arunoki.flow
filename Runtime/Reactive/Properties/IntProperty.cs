@@ -12,7 +12,7 @@ namespace Arunoki.Flow
     {
     }
 
-    public IntProperty () : base (0, false)
+    public IntProperty () : base (0)
     {
     }
 

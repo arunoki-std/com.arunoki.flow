@@ -5,7 +5,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace Arunoki.Flow.Basics
+namespace Arunoki.Flow
 {
   public sealed class ActiveOperations
   {

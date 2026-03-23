@@ -1,11 +1,12 @@
 using Arunoki.Flow.Basics;
 using Arunoki.Flow.Builders;
+using Arunoki.Flow.Globals;
 
 using System;
 
 using UnityEngine;
 
-namespace Arunoki.Flow.Globals
+namespace Arunoki.Flow
 {
   public class GlobalHub : FlowHub
   {
