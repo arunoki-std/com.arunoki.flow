@@ -1,14 +1,24 @@
 using Arunoki.Flow.Events;
 
+using System;
 using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public class ValueProperty<TValue, TEvent> : Channel<TEvent>, IValueProperty<TValue, TEvent>, IResettable
+  public class ValueProperty<TValue, TEvent> : Channel<TEvent>, IValueProperty<TValue, TEvent>,
+    IObservableEventChannel<TValue>, IResettable
     where TEvent : struct, IValueEvent<TValue>
   {
     private readonly TValue defaultValue;
     private readonly bool autoReset;
+
+    private Action<Channel, TValue> onUpdatedCallback;
+
+    event Action<Channel, TValue> IObservableEventChannel<TValue>.OnUpdated
+    {
+      add => onUpdatedCallback += value;
+      remove => onUpdatedCallback -= value;
+    }
 
     public ValueProperty (bool autoReset) : this (default, autoReset)
     {
@@ -22,6 +32,11 @@ namespace Arunoki.Flow
     {
       this.defaultValue = defaultValue;
       this.autoReset = autoReset;
+
+      OnEvent += (ref TEvent evt) =>
+      {
+        onUpdatedCallback?.Invoke (this, evt.Current);
+      };
     }
 
     public TValue Value { get; private set; }
@@ -58,6 +73,8 @@ namespace Arunoki.Flow
       return value;
     }
 
+    void IValueProperty<TValue>.Reset (TValue value) => TryChange (ref value);
+
     /// Set values to default.
     public virtual void Reset ()
     {
@@ -71,6 +88,8 @@ namespace Arunoki.Flow
       base.Clear ();
 
       Reset ();
+
+      onUpdatedCallback = null;
     }
 
     protected virtual bool Equals (ref TValue a, ref TValue b)
