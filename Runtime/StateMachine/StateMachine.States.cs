@@ -49,10 +49,28 @@ namespace Arunoki.Flow
       }
     }
 
-    public void TryGoTo<TStateOrInterface> (bool pendingRequest = true)
+    ///  Change state on update if <see cref="pendingRequest"/> is true.
+    public bool TryGoTo<TStateOrInterface> (bool pendingRequest = true)
     {
       if (Contains<TStateOrInterface> ())
+      {
         GoTo<TStateOrInterface> (pendingRequest);
+        return true;
+      }
+
+      return false;
+    }
+
+    ///  Change state on update if <see cref="pendingRequest"/> is true.
+    public bool TryGoTo (Type typeofStateOrInterface, bool pendingRequest = true)
+    {
+      if (Contains (typeofStateOrInterface))
+      {
+        GoTo (typeofStateOrInterface, pendingRequest);
+        return true;
+      }
+
+      return false;
     }
 
     ///  Change state on update if <see cref="pendingRequest"/> is true. 
@@ -63,10 +81,16 @@ namespace Arunoki.Flow
       if (IsActiveLeaf<TStateOrInterface> ())
         return false;
 
-      pendingState = typeof(TStateOrInterface);
+      GoTo (typeof(TStateOrInterface), pendingRequest);
+      return true;
+    }
+
+    ///  Change state on update if <see cref="pendingRequest"/> is true.
+    public void GoTo (Type typeofStateOrInterface, bool pendingRequest = true)
+    {
+      pendingState = typeofStateOrInterface;
 
       if (!pendingRequest) ApplyRequestIfAny ();
-      return true;
     }
 
     internal void Change (StateNode<TContext> target)
@@ -180,11 +204,12 @@ namespace Arunoki.Flow
     }
 
     public bool Contains<TStateOrInterface> ()
-    {
-      var type = typeof(TStateOrInterface);
+      => Contains (typeof(TStateOrInterface));
 
+    public bool Contains (Type typeofStateOrInterface)
+    {
       foreach (var key in NodesCache.Keys)
-        if (ReferenceEquals (key, type) || type.IsAssignableFrom (key))
+        if (ReferenceEquals (key, typeofStateOrInterface) || typeofStateOrInterface.IsAssignableFrom (key))
           return true;
 
       return false;
