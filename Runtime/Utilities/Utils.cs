@@ -11,6 +11,24 @@ namespace Arunoki.Flow.Utilities
 #endif
     }
 
+    public static bool IsEditorOrStandalone ()
+    {
+#if UNITY_EDITOR || UNITY_STANDALONE
+      return true;
+#else
+      return false;
+#endif
+    }
+
+    public static bool IsStandalone ()
+    {
+#if UNITY_STANDALONE
+      return true;
+#else
+      return false;
+#endif
+    }
+
     public static bool IsDebugBuild ()
     {
 #if DEVELOPMENT_BUILD && !UNITY_EDITOR
