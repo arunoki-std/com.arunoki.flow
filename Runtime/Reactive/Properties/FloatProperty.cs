@@ -2,7 +2,7 @@ using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow
 {
-  public class FloatProperty<TEvent> : ValueProperty<float, TEvent> where TEvent : struct, IValueEvent<float>
+  public class FloatProperty<TEvent> : ValueProperty<TEvent, float> where TEvent : struct, IValueEvent<float>
   {
     public FloatProperty (bool autoReset)
       : base (0.0f, autoReset)

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Arunoki.Flow
 {
-  public class ValueProperty<TValue, TEvent> : Channel<TEvent>, IValueProperty<TValue, TEvent>,
+  public class ValueProperty<TEvent, TValue> : Channel<TEvent>, IValueProperty<TValue, TEvent>,
     IObservableEventChannel<TValue>, IResettable
     where TEvent : struct, IValueEvent<TValue>
   {

@@ -2,7 +2,7 @@ using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow
 {
-  public class UintProperty<TEvent> : ValueProperty<uint, TEvent> where TEvent : struct, IValueEvent<uint>
+  public class UintProperty<TEvent> : ValueProperty<TEvent, uint> where TEvent : struct, IValueEvent<uint>
   {
     public UintProperty (uint defaultValue, bool autoReset = false) : base (defaultValue, autoReset)
     {

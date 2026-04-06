@@ -1,6 +1,6 @@
 namespace Arunoki.Flow
 {
-  public class BoolProperty<TEvent> : ValueProperty<bool, TEvent> where TEvent : struct, IValueEvent<bool>
+  public class BoolProperty<TEvent> : ValueProperty<TEvent, bool> where TEvent : struct, IValueEvent<bool>
   {
     public BoolProperty (bool autoReset)
       : base (false, autoReset)
