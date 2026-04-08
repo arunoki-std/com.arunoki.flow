@@ -8,10 +8,13 @@ namespace Arunoki.Flow
   {
   }
 
-  public interface IActiveHandler : IHandler
+  public interface IConditionHandler : IHandler
   {
-    bool IsHandlingEvents { get; set; }
+    bool IsHandlingEvents { get; }
+  }
 
+  public interface IServiceHandler : IConditionHandler
+  {
     void OnActivated ();
 
     void OnDeactivated ();

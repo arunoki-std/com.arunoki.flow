@@ -52,7 +52,7 @@ namespace Arunoki.Flow.Builders
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
-        if (list [index] is IActiveHandler handler)
+        if (list [index] is IServiceHandler handler)
           handler.OnActivated ();
     }
 
@@ -64,7 +64,7 @@ namespace Arunoki.Flow.Builders
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
-        if (list [index] is IActiveHandler handler)
+        if (list [index] is IServiceHandler handler)
           handler.OnDeactivated ();
     }
 

@@ -26,7 +26,7 @@ namespace Arunoki.Flow.Events.Core
 
     public virtual bool CanReceiveEvents ()
     {
-      return GetTargetInstance () is not IActiveHandler handler || handler.IsHandlingEvents;
+      return GetTargetInstance () is not IConditionHandler handler || handler.IsHandlingEvents;
     }
   }
 }
