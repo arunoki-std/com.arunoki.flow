@@ -22,7 +22,7 @@ namespace Arunoki.Flow.Basics
     protected internal virtual bool AutoReset () => true;
 
     public bool IsActive () => activeStep > 0;
-    bool IStartable.IsStarted () => startStep > 0;
+    public bool IsStarted () => startStep > 0;
     bool IInitializable.IsInitialized () => IsInitialized ();
     bool IResettable.AutoReset () => AutoReset ();
 

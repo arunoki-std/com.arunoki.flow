@@ -28,6 +28,9 @@ namespace Arunoki.Flow.Basics
 
       if (IsInitialized () && element is IInitializable initializable && !initializable.IsInitialized ())
         initializable.Initialize ();
+
+      if (IsStarted () && element is IStartable startable && !startable.IsStarted () && element is not IManualService)
+        startable.Start ();
     }
 
     protected virtual void OnElementRemoved (TElement element)
