@@ -9,7 +9,7 @@ namespace Arunoki.Flow.Events
 {
   public partial class EventBus
   {
-    public List<Callback> Subscribe (IHandler handler)
+    public List<Callback> Subscribe (IFlowHandler handler)
     {
       return EventBusUtility.Subscribe (this, handler);
     }
@@ -21,7 +21,7 @@ namespace Arunoki.Flow.Events
 
     public void Unsubscribe (Type staticHandler) => Unsubscribe (staticHandler as object);
 
-    public void Unsubscribe (IHandler handler) => Unsubscribe (handler as object);
+    public void Unsubscribe (IFlowHandler handler) => Unsubscribe (handler as object);
 
     protected virtual void Unsubscribe (object handler)
     {

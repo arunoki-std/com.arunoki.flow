@@ -26,12 +26,12 @@ namespace Arunoki.Flow.Events.Core
       Callbacks.AddRange (Events.Subscribe (staticHandler).ToArray ());
     }
 
-    public virtual void Register (IHandler handler)
+    public virtual void Register (IFlowHandler handler)
     {
       Callbacks.AddRange (Events.Subscribe (handler).ToArray ());
     }
 
-    public virtual void Remove (IHandler handler)
+    public virtual void Remove (IFlowHandler handler)
     {
       Events.Unsubscribe (handler);
     }

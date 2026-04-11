@@ -34,7 +34,7 @@ namespace Arunoki.Flow.Events
     }
 
     /// Publish event.
-    /// Methods from <see cref="IHandler"/> will be invoked first and after them <see cref="OnEvent"/> delegates.
+    /// Methods from <see cref="IFlowHandler"/> will be invoked first and after them <see cref="OnEvent"/> delegates.
     protected internal virtual void Publish ()
     {
       var evt = GetEventInstance ();
@@ -43,7 +43,7 @@ namespace Arunoki.Flow.Events
     }
 
     /// Publish event.
-    /// Methods from <see cref="IHandler"/> will be invoked first and after them <see cref="OnEvent"/> delegates.
+    /// Methods from <see cref="IFlowHandler"/> will be invoked first and after them <see cref="OnEvent"/> delegates.
     protected virtual void Publish (ref TEvent evt)
     {
       for (var index = Callbacks.Count - 1; index >= 0; index--)

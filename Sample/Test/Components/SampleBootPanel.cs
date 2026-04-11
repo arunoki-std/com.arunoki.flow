@@ -11,7 +11,7 @@ namespace Arunoki.Flow.Sample
 {
   [Preserve]
   [DisallowMultipleComponent]
-  public sealed class SampleBootPanel : MonoBehaviour, IHandler
+  public sealed class SampleBootPanel : MonoBehaviour, IFlowHandler
   {
     [SerializeField] private Text percents;
     [SerializeField] private Text completed;

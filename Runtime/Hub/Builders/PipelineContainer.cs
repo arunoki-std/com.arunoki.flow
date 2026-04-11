@@ -35,11 +35,11 @@ namespace Arunoki.Flow.Builders
     protected virtual void CreateHandlers (Type pipelineType, IContext context)
     {
       var set = Handlers.KeySet.GetOrCreate (pipelineType);
-      var handlerTypes = pipelineType.GetNestedTypes<IHandler> ();
+      var handlerTypes = pipelineType.GetNestedTypes<IFlowHandler> ();
 
       for (var i = 0; i < handlerTypes.Count; i++)
       {
-        var handler = (IHandler) Activator.CreateInstance (handlerTypes [i]);
+        var handler = (IFlowHandler) Activator.CreateInstance (handlerTypes [i]);
         if (handler is IContextPart part && part.Get () == null) part.Set (context);
         set.TryAdd (handler);
       }

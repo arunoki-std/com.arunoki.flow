@@ -3,21 +3,21 @@ using Arunoki.Flow.Events.Core;
 
 namespace Arunoki.Flow.Builders
 {
-  public class HandlersContainer : HubContainer<IHandler>
+  public class HandlersContainer : HubContainer<IFlowHandler>
   {
     private SubscriptionService subscriber;
 
     /// Encapsulates Events (Subscribe / Unsubscribe) without Handlers allocation when Hub (Activated / Deactivated).
     internal SubscriptionService Subscriber => (subscriber ??= new SubscriptionService (Hub.Events));
 
-    protected override void OnElementAdded (IHandler handler)
+    protected override void OnElementAdded (IFlowHandler handler)
     {
       base.OnElementAdded (handler);
 
       Subscriber.Register (handler);
     }
 
-    protected override void OnElementRemoved (IHandler handler)
+    protected override void OnElementRemoved (IFlowHandler handler)
     {
       base.OnElementRemoved (handler);
 
@@ -40,7 +40,7 @@ namespace Arunoki.Flow.Builders
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
-        if (list [index] is IResettableHandler handler)
+        if (list [index] is IFlowResettableHandler handler)
           handler.OnReset ();
     }
 
@@ -52,7 +52,7 @@ namespace Arunoki.Flow.Builders
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
-        if (list [index] is IServiceHandler handler)
+        if (list [index] is IFlowServiceHandler handler)
           handler.OnActivated ();
     }
 
@@ -64,7 +64,7 @@ namespace Arunoki.Flow.Builders
 
       var list = GetAllElements ();
       for (var index = 0; index < list.Count; index++)
-        if (list [index] is IServiceHandler handler)
+        if (list [index] is IFlowServiceHandler handler)
           handler.OnDeactivated ();
     }
 

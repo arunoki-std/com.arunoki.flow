@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Sample
   public partial class FsmEntity
   {
     [Preserve]
-    public class Router : IContextPart, IHandler, IInitializable
+    public class Router : IContextPart, IFlowHandler, IInitializable
     {
       private bool isInitialized;
       public FsmEntity Entity { get; private set; }
