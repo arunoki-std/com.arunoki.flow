@@ -2,7 +2,7 @@ using System;
 
 namespace Arunoki.Flow.Events.Core
 {
-  internal readonly struct StaticContextWrapper : IContext
+  internal readonly struct StaticContextWrapper : IFlowContext
   {
     public readonly Type StaticType;
 

@@ -51,8 +51,8 @@ namespace Arunoki.Flow.Sample
         }
       }
 
-      IContext IContextPart.Get () => Entity;
-      void IContextPart.Set (IContext context) => Entity = (FsmEntity) context;
+      IFlowContext IContextPart.Get () => Entity;
+      void IContextPart.Set (IFlowContext context) => Entity = (FsmEntity) context;
 
 
       bool IInitializable.IsInitialized () => isInitialized;

@@ -1,20 +1,16 @@
-using Arunoki.Flow.Globals;
-
 using System;
 
 namespace Arunoki.Flow.Sample
 {
   public class SampleHub : GlobalHub
   {
-    private static SampleHub _instance;
-
-    public static SampleHub Get => _instance;
+    public static SampleHub Get { get; private set; }
 
     public SampleHub ()
     {
-      if (_instance != null) throw new InvalidOperationException ($"'{nameof(SampleHub)}' already exists.");
+      if (Get != null) throw new InvalidOperationException ($"'{nameof(SampleHub)}' already exists.");
 
-      _instance = this;
+      Get = this;
     }
   }
 }

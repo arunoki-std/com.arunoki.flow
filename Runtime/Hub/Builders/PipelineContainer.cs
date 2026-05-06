@@ -32,7 +32,7 @@ namespace Arunoki.Flow.Builders
       }
     }
 
-    protected virtual void CreateHandlers (Type pipelineType, IContext context)
+    protected virtual void CreateHandlers (Type pipelineType, IFlowContext context)
     {
       var set = Handlers.KeySet.GetOrCreate (pipelineType);
       var handlerTypes = pipelineType.GetNestedTypes<IFlowHandler> ();
@@ -49,7 +49,7 @@ namespace Arunoki.Flow.Builders
     {
       base.OnElementAdded (pipeline);
 
-      var context = pipeline as IContext ?? (pipeline is IContextPart p && p.Get () != null ? p.Get () : Context);
+      var context = pipeline as IFlowContext ?? (pipeline is IContextPart p && p.Get () != null ? p.Get () : Context);
 
       CreateHandlers (pipeline.GetType (), context);
     }

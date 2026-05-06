@@ -4,8 +4,8 @@ namespace Arunoki.Flow.Sample
   {
     public SampleContext Context { get; private set; }
 
-    IContext IContextPart.Get () => Context;
+    IFlowContext IContextPart.Get () => Context;
 
-    void IContextPart.Set (IContext context) => Context = (SampleContext) context;
+    void IContextPart.Set (IFlowContext context) => Context = (SampleContext) context;
   }
 }

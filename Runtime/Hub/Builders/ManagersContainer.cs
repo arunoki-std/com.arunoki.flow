@@ -37,7 +37,7 @@ namespace Arunoki.Flow.Builders
       Hub.Events.RegisterSource (staticType);
 
       Hub.Contexts.KeySet.GetOrCreate (staticType)
-        .AddRange (staticType.FindPropertiesWithNested<IContext> ().ToArray ());
+        .AddRange (staticType.FindPropertiesWithNested<IFlowContext> ().ToArray ());
 
       Hub.Services.KeySet.GetOrCreate (staticType)
         .AddRange (staticType

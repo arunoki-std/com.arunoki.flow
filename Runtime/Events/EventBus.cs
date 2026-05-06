@@ -18,7 +18,7 @@ namespace Arunoki.Flow.Events
     protected internal Set<Type, Channel> Channels { get; }
 
     /// Register reactive properties.
-    public void RegisterSource (IContext context)
+    public void RegisterSource (IFlowContext context)
     {
       this.GetEventChannels (context);
     }
@@ -36,7 +36,7 @@ namespace Arunoki.Flow.Events
           Channels.RemoveAt (index);
     }
 
-    public void UnregisterSource (IContext context)
+    public void UnregisterSource (IFlowContext context)
     {
       foreach ((int index, _, Channel channel) in Channels.WithIndex ())
         if (context.Equals (channel.Context))

@@ -28,11 +28,11 @@ namespace Arunoki.Flow
     public HandlersContainer Handlers { get; } = new();
     public UpdatableContainer Updater { get; } = new();
 
-    public FlowHub (IContext context) : this (context, true)
+    public FlowHub (IFlowContext context) : this (context, true)
     {
     }
 
-    protected FlowHub (IContext context, bool initParts)
+    protected FlowHub (IFlowContext context, bool initParts)
     {
       TargetService = new ServiceWithElements<IHubContainer> (Containers);
       Contexts = new ContextsContainer (context, this);

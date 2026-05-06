@@ -6,7 +6,7 @@ namespace Arunoki.Flow.Basics
   {
     public FlowHub Hub { get; private set; }
 
-    public IContext Context { get; private set; }
+    public IFlowContext Context { get; private set; }
 
     protected override void OnInit ()
     {
@@ -19,9 +19,9 @@ namespace Arunoki.Flow.Basics
       base.OnInit ();
     }
 
-    IContext IContextPart.Get () => Context;
+    IFlowContext IContextPart.Get () => Context;
 
-    void IContextPart.Set (IContext value)
+    void IContextPart.Set (IFlowContext value)
     {
       Guard.ThrowIfRewrite (Context, value);
 

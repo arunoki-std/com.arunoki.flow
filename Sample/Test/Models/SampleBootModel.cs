@@ -2,7 +2,7 @@ using Arunoki.Flow.Sample.Events;
 
 namespace Arunoki.Flow.Sample
 {
-  public class SampleBootModel : IContext
+  public class SampleBootModel : IFlowContext
   {
     public Trigger<BootstrapStarted> IsStarted { get; } = new(false);
     public Trigger<BootstrapCompleted> IsCompleted { get; } = new(false);

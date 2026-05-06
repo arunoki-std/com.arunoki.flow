@@ -29,7 +29,7 @@ namespace Arunoki.Flow.Builders
     {
       return service switch
       {
-        IHubContainer or IContext or IDummy => false,
+        IHubContainer or IFlowContext or IDummy => false,
         _ => service is not null
       };
     }

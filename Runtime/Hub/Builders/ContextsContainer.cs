@@ -5,21 +5,21 @@ using System.Reflection;
 
 namespace Arunoki.Flow.Builders
 {
-  public class ContextsContainer : HubContainer<IContext>
+  public class ContextsContainer : HubContainer<IFlowContext>
   {
-    public ContextsContainer (IContext root, FlowHub hub)
+    public ContextsContainer (IFlowContext root, FlowHub hub)
     {
       Root = root;
       (this as IContextPart).Set (root);
       (this as IHubPart).Set (hub);
-      Composition = new ServiceWithElements<IContext> (GetAllElements ());
+      Composition = new ServiceWithElements<IFlowContext> (GetAllElements ());
     }
 
-    public IContext Root { get; }
+    public IFlowContext Root { get; }
 
     protected override void OnInit ()
     {
-      foreach (IContext context in this)
+      foreach (IFlowContext context in this)
         Hub.Register (context);
 
       base.OnInit ();
@@ -46,13 +46,13 @@ namespace Arunoki.Flow.Builders
       }
     }
 
-    protected override void OnElementAdded (IContext context)
+    protected override void OnElementAdded (IFlowContext context)
     {
       base.OnElementAdded (context);
 
       Hub.Events.RegisterSource (context);
 
-      Set.AddRange (context.FindPropertiesWithNested<IContext> ().ToArray ());
+      Set.AddRange (context.FindPropertiesWithNested<IFlowContext> ().ToArray ());
 
       InitServices ();
 
@@ -60,7 +60,7 @@ namespace Arunoki.Flow.Builders
         Hub.Updater.Set.TryAdd (updatable);
     }
 
-    protected override void OnElementRemoved (IContext context)
+    protected override void OnElementRemoved (IFlowContext context)
     {
       base.OnElementRemoved (context);
 

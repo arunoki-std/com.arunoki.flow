@@ -14,7 +14,7 @@ namespace Arunoki.Flow.Events
 
     protected internal List<Callback> Callbacks { get; } = new(16);
 
-    public IContext Context { get; private set; }
+    public IFlowContext Context { get; private set; }
 
     protected Channel (Type eventType)
     {
@@ -51,9 +51,9 @@ namespace Arunoki.Flow.Events
 
     public Type GetEventType () => eventType;
 
-    IContext IContextPart.Get () => Context;
+    IFlowContext IContextPart.Get () => Context;
 
-    void IContextPart.Set (IContext context)
+    void IContextPart.Set (IFlowContext context)
     {
       if (Utils.IsDebug ())
       {

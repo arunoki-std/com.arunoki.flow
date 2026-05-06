@@ -8,10 +8,10 @@ namespace Arunoki.Flow.Utilities
 {
   internal static partial class EventBusUtility
   {
-    public static void GetEventChannels (this EventBus events, IContext context)
+    public static void GetEventChannels (this EventBus events, IFlowContext context)
       => events.GetEventChannels (context, context);
 
-    public static void GetEventChannels (this EventBus events, IContext context, object sourceObject)
+    public static void GetEventChannels (this EventBus events, IFlowContext context, object sourceObject)
     {
       const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
 
@@ -29,7 +29,7 @@ namespace Arunoki.Flow.Utilities
     }
 
     /// properties from static class won't be cached.
-    private static void GetEventChannels (EventBus events, IContext context, Type sourceType,
+    private static void GetEventChannels (EventBus events, IFlowContext context, Type sourceType,
       object sourceObject, BindingFlags bindingFlags)
     {
       var saveEntry = sourceObject != null;
@@ -52,7 +52,7 @@ namespace Arunoki.Flow.Utilities
       }
     }
 
-    private static void FromProps (PropertyInfo [] props, IContext context, object sourceObject, EventBus events)
+    private static void FromProps (PropertyInfo [] props, IFlowContext context, object sourceObject, EventBus events)
     {
       // fallback (универсально: static игнорирует object)
       for (int i = 0; i < props.Length; i++)
@@ -65,7 +65,7 @@ namespace Arunoki.Flow.Utilities
       }
     }
 
-    private static void FromGetters (ChannelAccessors entry, IContext context, object sourceObject, EventBus events)
+    private static void FromGetters (ChannelAccessors entry, IFlowContext context, object sourceObject, EventBus events)
     {
       var getters = entry.Getters;
       for (int i = 0; i < getters.Length; i++)

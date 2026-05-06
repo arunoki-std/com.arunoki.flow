@@ -27,7 +27,7 @@ namespace Arunoki.Flow
     {
     }
 
-    public GlobalHub (IContext context, bool autoActivate = false)
+    public GlobalHub (IFlowContext context, bool autoActivate = false)
       : base (context, false)
     {
       if (Instance != null)
@@ -78,7 +78,7 @@ namespace Arunoki.Flow
 
     public static bool IsAssemblyInitialized => Instance != null;
 
-    private class DummyContext : IContext, IDummy
+    private class DummyContext : IFlowContext, IDummy
     {
     }
   }
