@@ -20,8 +20,10 @@ in code with `// TODO [RF-008]`:
 ## Goal
 
 - Audit which `Arunoki.Collections` types are dead weight inside flow (RF-007 usage data:
-  only `Set<>`, `IContainer<>`, `Container<>`, `SetsTypeCollection<>`, `Utils`, and the
-  Mutable* enumerators are consumed) — delete the rest.
+  only `Set<>`, `IContainer<>`, `Container<>`, `SetsTypeCollection<>`, `ReflectionUtils`,
+  and the Mutable* enumerators are consumed) — delete the rest.
+  Done during merge: internal `Utilities/Utils` deleted — it was a strict subset of
+  `Arunoki.Flow.Utilities.Utils` and collided with it once both landed in one assembly.
 - Replace remaining types with BCL collections where behavior allows; keep a custom type
   only with a written justification (e.g. mutate-during-iteration semantics).
 - For types that survive: either document "single-thread only (Unity main thread)" as a
