@@ -1,24 +1,23 @@
 using Arunoki.Flow.Sample.Events;
 using Arunoki.Flow.Sample.Managers;
-
 using UnityEngine.Scripting;
 
 namespace Arunoki.Flow.Sample
 {
-  public partial class SamplePipeline
-  {
-    [Preserve]
-    public class Boot : IFlowHandler
+    public partial class SamplePipeline
     {
-      public void OnStarted (ref BootstrapStarted e)
-      {
-        SampleManager.Log<Boot> (e);
-      }
+        [Preserve]
+        public class Boot : IFlowHandler
+        {
+            public void OnStarted(ref BootstrapStarted e)
+            {
+                SampleManager.Log<Boot>(e);
+            }
 
-      public void OnCompleted (ref BootstrapCompleted e)
-      {
-        SampleManager.Log<Boot> (e);
-      }
+            public void OnCompleted(ref BootstrapCompleted e)
+            {
+                SampleManager.Log<Boot>(e);
+            }
+        }
     }
-  }
 }

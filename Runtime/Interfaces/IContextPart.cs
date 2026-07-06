@@ -1,9 +1,9 @@
 namespace Arunoki.Flow
 {
-  public interface IContextPart
-  {
-    IFlowContext Get ();
+    public interface IContextPart
+    {
+        IFlowContext Get();
 
-    void Set (IFlowContext context);
-  }
+        void Set(IFlowContext context);
+    }
 }

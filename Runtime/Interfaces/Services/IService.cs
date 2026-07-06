@@ -1,15 +1,13 @@
 namespace Arunoki.Flow
 {
-  public interface IService
-  {
-    bool IsActive ();
+    public interface IService
+    {
+        bool IsActive();
 
-    void Activate ();
+        void Activate();
 
-    void Deactivate ();
-  }
+        void Deactivate();
+    }
 
-  public interface IManualService : IService
-  {
-  }
+    public interface IManualService : IService { }
 }

@@ -1,12 +1,12 @@
 namespace Arunoki.Flow.Basics
 {
-  public abstract partial class HubContainer<TElement> : HubPart
-    where TElement : class
-  {
-    protected HubContainer ()
+    public abstract partial class HubContainer<TElement> : HubPart
+        where TElement : class
     {
-      Set = new(new Container (this), IsConsumable);
-      KeySet = new(new Container (this), new KeyContainer (this), IsConsumable);
+        protected HubContainer()
+        {
+            Set = new(new Container(this), IsConsumable);
+            KeySet = new(new Container(this), new KeyContainer(this), IsConsumable);
+        }
     }
-  }
 }

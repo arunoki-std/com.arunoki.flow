@@ -2,31 +2,32 @@ using System;
 
 namespace Arunoki.Flow.Events.Core
 {
-  public abstract class Callback
-  {
-    public Type EventType { get; }
-    protected readonly bool IsTargetStatic;
-    protected readonly object EventTarget;
-
-    protected Callback (object eventTarget, Type eventType)
+    public abstract class Callback
     {
-      EventType = eventType;
-      EventTarget = eventTarget;
-      IsTargetStatic = eventTarget is Type;
-    }
+        public Type EventType { get; }
+        protected readonly bool IsTargetStatic;
+        protected readonly object EventTarget;
 
-    /// Define whether is eventTarget is methods source. 
-    public virtual bool IsConsumable (object eventTarget)
-    {
-      return EventTarget == eventTarget;
-    }
+        protected Callback(object eventTarget, Type eventType)
+        {
+            EventType = eventType;
+            EventTarget = eventTarget;
+            IsTargetStatic = eventTarget is Type;
+        }
 
-    /// Subscriber instance (null if subscriber is static manager).
-    public virtual object GetTargetInstance () => IsTargetStatic ? null : EventTarget;
+        /// Define whether is eventTarget is methods source.
+        public virtual bool IsConsumable(object eventTarget)
+        {
+            return EventTarget == eventTarget;
+        }
 
-    public virtual bool CanReceiveEvents ()
-    {
-      return GetTargetInstance () is not IFlowConditionHandler handler || handler.IsHandlingEvents;
+        /// Subscriber instance (null if subscriber is static manager).
+        public virtual object GetTargetInstance() => IsTargetStatic ? null : EventTarget;
+
+        public virtual bool CanReceiveEvents()
+        {
+            return GetTargetInstance() is not IFlowConditionHandler handler
+                || handler.IsHandlingEvents;
+        }
     }
-  }
 }

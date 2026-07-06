@@ -1,6 +1,4 @@
 namespace Arunoki.Flow.Sample
 {
-  public interface ISampleModel : IFlowContext
-  {
-  }
+    public interface ISampleModel : IFlowContext { }
 }

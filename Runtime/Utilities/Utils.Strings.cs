@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Arunoki.Flow.Utilities
 {
-  public static partial class Utils
-  {
-    public static string JoinAsList (IEnumerable<object> items)
+    public static partial class Utils
     {
-      return $"[{string.Join (", ", items.Select<object, object> (e => e?.ToString ()))}]";
+        public static string JoinAsList(IEnumerable<object> items)
+        {
+            return $"[{string.Join(", ", items.Select<object, object>(e => e?.ToString()))}]";
+        }
     }
-  }
 }

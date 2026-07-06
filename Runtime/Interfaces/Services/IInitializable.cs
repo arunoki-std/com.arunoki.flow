@@ -1,9 +1,9 @@
 namespace Arunoki.Flow
 {
-  public interface IInitializable
-  {
-    void Initialize ();
+    public interface IInitializable
+    {
+        void Initialize();
 
-    bool IsInitialized ();
-  }
+        bool IsInitialized();
+    }
 }

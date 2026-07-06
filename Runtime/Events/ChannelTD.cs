@@ -4,19 +4,19 @@ using System;
 
 namespace Arunoki.Flow.Events
 {
-  /// One type of event per new data.
-  public class Channel<TEvent, TData> : Channel<TEvent>
-    where TEvent : struct, IDataEvent<TData>
-  {
-    protected virtual void Publish (ref TData data)
+    /// One type of event per new data.
+    public class Channel<TEvent, TData> : Channel<TEvent>
+        where TEvent : struct, IDataEvent<TData>
     {
-      var evt = GetEventInstance ();
-      evt.Data = data;
+        protected virtual void Publish(ref TData data)
+        {
+            var evt = GetEventInstance();
+            evt.Data = data;
 
-      Publish (ref evt);
+            Publish(ref evt);
+        }
+
+        [Obsolete("Use Publish (ref TData) instead.")]
+        protected internal sealed override void Publish() => base.Publish();
     }
-
-    [Obsolete ("Use Publish (ref TData) instead.")]
-    protected internal sealed override void Publish () => base.Publish ();
-  }
 }

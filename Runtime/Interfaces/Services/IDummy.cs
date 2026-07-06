@@ -1,6 +1,4 @@
 namespace Arunoki.Flow
 {
-  public interface IDummy
-  {
-  }
+    public interface IDummy { }
 }

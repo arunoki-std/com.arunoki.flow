@@ -1,22 +1,22 @@
 namespace Arunoki.Flow.Sample
 {
-  public partial class FsmEntity : IFlowContext, IPipeline
-  {
-    public Signal<TimeoutEvent> Timeout { get; } = new();
-
-    private StateMachine<FsmEntity> States { get; }
-
-    public FsmEntity ()
+    public partial class FsmEntity : IFlowContext, IPipeline
     {
-      States = new StateMachine<FsmEntity> (this);
-    }
+        public Signal<TimeoutEvent> Timeout { get; } = new();
 
-    public void Update ()
-    {
-      States.Update ();
-    }
+        private StateMachine<FsmEntity> States { get; }
 
-    public bool IsState<TState> () where TState : IState<FsmEntity>
-      => States.IsActive<TState> ();
-  }
+        public FsmEntity()
+        {
+            States = new StateMachine<FsmEntity>(this);
+        }
+
+        public void Update()
+        {
+            States.Update();
+        }
+
+        public bool IsState<TState>()
+            where TState : IState<FsmEntity> => States.IsActive<TState>();
+    }
 }

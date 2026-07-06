@@ -1,9 +1,9 @@
 namespace Arunoki.Flow
 {
-  public interface IResettable
-  {
-    void Reset ();
+    public interface IResettable
+    {
+        void Reset();
 
-    bool AutoReset ();
-  }
+        bool AutoReset();
+    }
 }

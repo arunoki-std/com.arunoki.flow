@@ -1,59 +1,59 @@
 namespace Arunoki.Flow.Utilities
 {
-  public static partial class Utils
-  {
-    public static bool IsEditor ()
+    public static partial class Utils
     {
+        public static bool IsEditor()
+        {
 #if UNITY_EDITOR
-      return true;
+            return true;
 #else
-      return false;
+            return false;
 #endif
-    }
+        }
 
-    public static bool IsEditorOrStandalone ()
-    {
+        public static bool IsEditorOrStandalone()
+        {
 #if UNITY_EDITOR || UNITY_STANDALONE
-      return true;
+            return true;
 #else
-      return false;
+            return false;
 #endif
-    }
+        }
 
-    public static bool IsStandalone ()
-    {
+        public static bool IsStandalone()
+        {
 #if UNITY_STANDALONE
-      return true;
+            return true;
 #else
-      return false;
+            return false;
 #endif
-    }
+        }
 
-    public static bool IsDebugBuild ()
-    {
+        public static bool IsDebugBuild()
+        {
 #if DEVELOPMENT_BUILD && !UNITY_EDITOR
-      return true;
+            return true;
 #else
-      return false;
+            return false;
 #endif
-    }
+        }
 
-    public static bool IsDebug ()
-    {
+        public static bool IsDebug()
+        {
 #if DEVELOPMENT_BUILD || (UNITY_EDITOR && DEBUG)
-      return true;
+            return true;
 #else
-      return false;
+            return false;
 #endif
-    }
+        }
 
-    public static bool IsTraceable ()
-    {
+        public static bool IsTraceable()
+        {
 #if ARUNOKI_TRACE
-      return true;
+            return true;
 #else
-      return false;
+            return false;
 #endif
+        }
     }
-  }
 }
