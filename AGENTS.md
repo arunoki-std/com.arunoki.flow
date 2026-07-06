@@ -19,6 +19,7 @@ Events, signals, reactive properties, state machine, hub (DI-like composition). 
 - Public API changes are breaking for core and the game: additive preferred; removals/renames need a spec and a version bump.
 - Never edit or delete `.meta` files by hand; never invent GUIDs.
 - Code style: standard Microsoft C# per `.editorconfig`; run formatter on changed files.
+- No LINQ on runtime hot paths (GC pressure; mobile); one-time init and debug/trace branches are acceptable for readability. Check on touch: `Basics/ActiveOperations.cs`, `Collections/SetsTypeCollection.cs` (host RF-006 / RF-008); `Utils.Strings.cs` and `EventBusUtility.Expressions.cs` are trace/subscription-time — fine.
 - Specs for this package live in `Specs~/`. Cross-cutting roadmap lives in the host project (`docs/MIGRATION_PLAN.md`).
 - Shared skills are available via symlinks in `.agents/skills/` (targets live in the host repo; they dangle in a standalone clone — harmless). Module-specific skills get real folders here, named with the package prefix.
 - `Sample/Test/` is misplaced (host RF-003 will move it to `Samples~/`) — don't build on it.

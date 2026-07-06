@@ -26,6 +26,9 @@ in code with `// TODO [RF-008]`:
   `Arunoki.Flow.Utilities.Utils` and collided with it once both landed in one assembly.
 - Replace remaining types with BCL collections where behavior allows; keep a custom type
   only with a written justification (e.g. mutate-during-iteration semantics).
+- Constraint: NO LINQ in runtime replacements (project convention, editor-only) — plain
+  loops and preallocated buffers. `SetsTypeCollection.cs` currently violates this
+  (`Keys.ToArray()`, `using System.Linq`) — fix as part of this spec.
 - For types that survive: either document "single-thread only (Unity main thread)" as a
   contract, or add synchronization / concurrent variants where multithreaded use is planned.
 - Resolve the `ISet<T>` name collision with `System.Collections.Generic.ISet<T>` (rename).
