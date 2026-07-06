@@ -4,16 +4,17 @@ Standalone UPM package (own git repo), embedded as a submodule in the Hillybombs
 
 ## Package
 
-Events, signals, reactive properties, state machine, hub (DI-like composition). Depends only on `com.arunoki.collections`.
+Events, signals, reactive properties, state machine, hub (DI-like composition). No dependencies (leaf package since RF-007).
 
-- Code: `Runtime/` (asmdef `Arunoki.Flow` → `Arunoki.Collections`)
-- Areas: `Events/` (EventBus), `Reactive/` (Signals, `ValueProperty`), `StateMachine/`, `Hub/` (`FlowHub`, `GlobalHub`), `Basics/` (services, `ActiveOperations`)
+- Code: `Runtime/` (asmdef `Arunoki.Flow`, no references)
+- Areas: `Events/` (EventBus), `Reactive/` (Signals, `ValueProperty`), `StateMachine/`, `Hub/` (`FlowHub`, `GlobalHub`), `Basics/` (services, `ActiveOperations`), `Collections/` (ex `com.arunoki.collections`, merged per host RF-007; namespace `Arunoki.Collections` kept — see `Specs~/RF-008-collections-standardization.md`)
 - Extra docs: `Docs~/Index.md`, `Docs~/ScriptingDefineSymbols.md`
 - Consumers (in host project): com.arunoki.core, game code
 
 ## Rules
 
-- Allowed references: `Arunoki.Collections` only. Never reference core, poolables, or game code.
+- Allowed references: none (leaf package). Never reference core, poolables, or game code.
+- `Runtime/Collections/` carries `// TODO [RF-008]` markers: planned migration to BCL/Unity collections and missing thread-safety. Don't build new code on these types without checking RF-008.
 - `GlobalHub.Instance` is known debt (host RF-005): do not add NEW static/singleton access paths; prefer `IFlowContext` injection.
 - Public API changes are breaking for core and the game: additive preferred; removals/renames need a spec and a version bump.
 - Never edit or delete `.meta` files by hand; never invent GUIDs.

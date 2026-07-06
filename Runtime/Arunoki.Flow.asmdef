@@ -1,9 +1,7 @@
 {
     "name": "Arunoki.Flow",
     "rootNamespace": "Arunoki.Flow",
-    "references": [
-        "GUID:d48e9fc57811c4ec6bf5b657e01d94d8"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

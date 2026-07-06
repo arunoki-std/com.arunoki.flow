@@ -100,7 +100,7 @@ namespace Arunoki.Flow.Builders
                     pipeline.OnDeactivated();
         }
 
-        protected override bool IsMultiInstancesSupported() => !Utils.IsDebug();
+        protected override bool IsMultiInstancesSupported() => !Flow.Utilities.Utils.IsDebug();
 
         public override int GetBuildOrder() => (int)FlowHub.BuildOrder.Pipelines;
     }
