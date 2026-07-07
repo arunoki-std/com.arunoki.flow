@@ -1,21 +1,21 @@
 namespace Arunoki.Flow
 {
     /// This node tells <see cref="FlowHub"/> that its nested classes contains <see cref="IFlowHandler"/> implementation.
-    public interface IPipeline { }
+    public interface IFlowPipeline { }
 
-    public interface IActivePipeline : IPipeline
+    public interface IActiveFlowPipeline : IFlowPipeline
     {
         bool IsActivated { get; }
         void OnActivated();
         void OnDeactivated();
     }
 
-    public interface ILatePipeline : IPipeline
+    public interface ILateFlowPipeline : IFlowPipeline
     {
         void OnLateActivate();
     }
 
-    public interface IResettablePipeline : IPipeline
+    public interface IResettableFlowPipeline : IFlowPipeline
     {
         void OnReset();
     }

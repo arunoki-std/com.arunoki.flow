@@ -5,25 +5,25 @@ using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow.Builders
 {
-    public class PipelineContainer : HubContainer<IPipeline>
+    public class PipelineContainer : HubContainer<IFlowPipeline>
     {
         protected virtual HandlersContainer Handlers => Hub.Handlers;
 
         public void Register<TPipeline>()
-            where TPipeline : IPipeline, new()
+            where TPipeline : IFlowPipeline, new()
         {
-            Register(Activator.CreateInstance(typeof(TPipeline)) as IPipeline);
+            Register(Activator.CreateInstance(typeof(TPipeline)) as IFlowPipeline);
         }
 
         public void Remove<TPipeline>()
-            where TPipeline : IPipeline
+            where TPipeline : IFlowPipeline
         {
             Remove(typeof(TPipeline));
         }
 
         public void Remove(Type pipelineType)
         {
-            foreach (IPipeline pipeline in this)
+            foreach (IFlowPipeline pipeline in this)
             {
                 if (pipeline.GetType() == pipelineType)
                 {
@@ -47,7 +47,7 @@ namespace Arunoki.Flow.Builders
             }
         }
 
-        protected override void OnElementAdded(IPipeline pipeline)
+        protected override void OnElementAdded(IFlowPipeline pipeline)
         {
             base.OnElementAdded(pipeline);
 
@@ -58,7 +58,7 @@ namespace Arunoki.Flow.Builders
             CreateHandlers(pipeline.GetType(), context);
         }
 
-        protected override void OnElementRemoved(IPipeline pipeline)
+        protected override void OnElementRemoved(IFlowPipeline pipeline)
         {
             base.OnElementRemoved(pipeline);
 
@@ -86,7 +86,7 @@ namespace Arunoki.Flow.Builders
 
             var list = GetAllElements();
             for (var index = 0; index < list.Count; index++)
-                if (list[index] is IActivePipeline pipeline)
+                if (list[index] is IActiveFlowPipeline pipeline)
                     pipeline.OnActivated();
         }
 
@@ -96,7 +96,7 @@ namespace Arunoki.Flow.Builders
 
             var list = GetAllElements();
             for (var index = 0; index < list.Count; index++)
-                if (list[index] is IActivePipeline pipeline)
+                if (list[index] is IActiveFlowPipeline pipeline)
                     pipeline.OnDeactivated();
         }
 

@@ -4,7 +4,7 @@ using UnityEngine.Scripting;
 
 namespace Arunoki.Flow.Sample
 {
-    public partial class SamplePipeline
+    public partial class SampleFlowPipeline
     {
         [Preserve]
         public class Fire : IFlowHandler

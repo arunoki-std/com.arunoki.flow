@@ -1,6 +1,6 @@
 namespace Arunoki.Flow.Sample
 {
-    public partial class FsmEntity : IFlowContext, IPipeline
+    public partial class FsmEntity : IFlowContext, IFlowPipeline
     {
         public Signal<TimeoutEvent> Timeout { get; } = new();
 
