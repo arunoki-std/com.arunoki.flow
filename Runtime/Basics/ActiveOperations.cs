@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -14,6 +13,7 @@ namespace Arunoki.Flow
         private readonly string category;
         private readonly string name;
         private readonly Dictionary<uint, OperationInfo> operations;
+        private readonly List<uint> clearBuffer = new();
 
         private uint nextId = FirstID;
 
@@ -94,8 +94,15 @@ namespace Arunoki.Flow
         {
             if (operations.Count != 0)
             {
-                foreach (var id in operations.Keys.ToArray())
-                    TryUntrack(id);
+                // Snapshot keys into a reused buffer so TryUntrack can mutate the
+                // dictionary (remove + onUntrack) while we iterate — without the
+                // per-call allocation the old Keys.ToArray() incurred.
+                clearBuffer.Clear();
+                foreach (var id in operations.Keys)
+                    clearBuffer.Add(id);
+
+                for (int i = 0; i < clearBuffer.Count; i++)
+                    TryUntrack(clearBuffer[i]);
             }
 
             nextId = FirstID;
