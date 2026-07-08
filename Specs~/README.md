@@ -5,3 +5,8 @@ Cross-cutting work (touching several packages or the game) is specced in the hos
 project: `Hillybombs/specs/` + roadmap in `Hillybombs/docs/MIGRATION_PLAN.md`.
 
 The `~` suffix keeps Unity from importing this folder (no .meta noise).
+
+## Status
+
+- RF-003 (naming and hygiene, flow slice) — done: `package.json` description/version (0.2.0),
+  `Sample` → `Samples~`. Canonical spec: `Hillybombs/specs/refactoring/RF-003-naming-and-hygiene.md`.

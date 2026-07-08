@@ -1,8 +1,8 @@
 {
   "name": "com.arunoki.flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "displayName": "Arunoki Flow",
-  "description": "Reusable package",
+  "description": "Events, signals, reactive properties, state machine, and a DI-like hub, plus merged general-purpose collections (Runtime/Collections).",
   "documentationUrl": "https://github.com/arunoki-std/com.arunoki.flow",
   "unity": "2021.3",
   "author": {
