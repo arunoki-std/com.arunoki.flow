@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Arunoki.Flow.Events;
 using Arunoki.Flow.Utilities;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Arunoki.Flow.Tests
 {
@@ -101,6 +104,30 @@ namespace Arunoki.Flow.Tests
             Assert.That(callbacks.Count, Is.EqualTo(1));
             Assert.That(handler.DomainPublicCount, Is.EqualTo(1));
             Assert.That(handler.DomainPrivateCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Subscribe_WhenEventChannelIsMissingSkipsHandlerMethod()
+        {
+            var bus = new TestableEventBus();
+            var context = new TestFlowContext();
+            var handler = new MissingEventHandler();
+            bus.RegisterSource(context);
+
+            if (Utils.IsTraceable())
+            {
+                LogAssert.Expect(
+                    LogType.Warning,
+                    new Regex(
+                        "Event hub does not contain any channel capable of handling "
+                            + "'Arunoki.Flow.Tests.MissingDomainEvent'"
+                    )
+                );
+            }
+
+            var callbacks = bus.Subscribe(handler);
+
+            Assert.That(callbacks.Count, Is.Zero);
             Assert.That(handler.MissingCount, Is.Zero);
         }
 

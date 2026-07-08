@@ -168,7 +168,6 @@ namespace Arunoki.Flow.Tests
         public IFlowContext LastContext { get; private set; }
         public int DomainPublicCount { get; private set; }
         public int DomainPrivateCount { get; private set; }
-        public int MissingCount { get; private set; }
 
         public void On(ref TestDomainEvent evt)
         {
@@ -182,6 +181,11 @@ namespace Arunoki.Flow.Tests
             DomainPrivateCount++;
             LastContext = evt.Context;
         }
+    }
+
+    internal sealed class MissingEventHandler : IFlowHandler
+    {
+        public int MissingCount { get; private set; }
 
         private void OnMissing(ref MissingDomainEvent evt)
         {

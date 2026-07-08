@@ -1,6 +1,6 @@
 # RF-004 (flow): Characterization tests for EventBus, StateMachine, Reactive, Collections
 
-- Status: in-progress
+- Status: done
 - Scope: this package only — populate `Tests/` + fix its asmdef; no `Runtime/` changes unless a test is blocked (document each case)
 - Risk: low
 - Host spec: `Hillybombs/specs/refactoring/RF-004-test-infrastructure.md` (flow is step 2, after poolables)
