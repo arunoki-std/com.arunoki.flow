@@ -1,8 +1,9 @@
 # RF-008: Collections standardization (post-RF-007 follow-up)
 
-- Status: draft
+- Status: approved (2026-07-08) — unblocked: RF-004 tests done (35 EditMode, incl. Collections coverage)
 - Scope: `Runtime/Collections/` (ex `com.arunoki.collections`, merged per host RF-007)
 - Risk: medium (touches flow internals: Hub, Events, StateMachine)
+- Execution: single session inside `com.arunoki.flow`. Prompt: `Specs~/RF-008-PROMPT.md`.
 
 ## Problem
 
