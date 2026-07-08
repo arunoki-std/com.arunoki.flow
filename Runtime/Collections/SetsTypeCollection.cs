@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Arunoki.Collections.Enumerators;
 
 namespace Arunoki.Collections
 {
-    // TODO [RF-008] NOT thread-safe: SetsCache/SetsList mutated without synchronization.
-    //   If multithreaded access is needed, guard with a lock or move to ConcurrentDictionary.
-    public class SetsTypeCollection<TElement> : Container<TElement>, ISet<TElement>
+    // Contract: single-thread only (Unity main thread). SetsCache/SetsList are mutated without
+    //   synchronization; flow's consumers (Hub) are main-thread. Guard with a lock or move to
+    //   ConcurrentDictionary only if off-thread access is ever introduced.
+    public class SetsTypeCollection<TElement> : Container<TElement>, IFlowSet<TElement>
     {
         private readonly Func<TElement, bool> consumablePredicate;
 
@@ -170,8 +170,13 @@ namespace Arunoki.Collections
 
         public virtual void Clear()
         {
-            foreach (var key in SetsCache.Keys.ToArray())
-                Clear(key);
+            // Snapshot keys before iterating: Clear(key) mutates SetsCache. Plain CopyTo (BCL,
+            // not System.Linq) replaces the former Keys.ToArray() per the no-LINQ convention.
+            var keys = new Type[SetsCache.Count];
+            SetsCache.Keys.CopyTo(keys, 0);
+
+            for (var i = 0; i < keys.Length; i++)
+                Clear(keys[i]);
         }
 
         public bool Contains(TElement item)

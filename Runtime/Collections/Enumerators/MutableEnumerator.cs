@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace Arunoki.Collections.Enumerators
 {
     /// Enumerator is reversed
-    // TODO [RF-008] This (and the other Mutable* enumerators) exists to allow removing the
-    //   current element mid-iteration — the reason BCL enumerators were not used. Re-evaluate:
-    //   reverse for-loops at call sites may make the whole Enumerators/ folder unnecessary.
-    // TODO [RF-008] NOT thread-safe and unversioned: concurrent mutation of the underlying
-    //   list corrupts iteration silently.
+    // Reverse iteration is intentional (RF-008 audit): it lets callers remove the current element
+    //   mid-iteration — relied upon by EventBus.UnregisterSource, Channel dispatch/Clear and
+    //   HubContainer — which BCL enumerators forbid. This is why the Mutable* enumerators exist.
+    // Contract: single-thread only (Unity main thread). Unversioned: concurrent mutation of the
+    //   underlying list corrupts iteration silently, so all mutation must stay on the main thread.
     public struct MutableEnumerator<T> : IEnumerator<T>
     {
         private readonly List<T> list;

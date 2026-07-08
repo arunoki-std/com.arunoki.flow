@@ -1,6 +1,6 @@
 # RF-008: Collections standardization (post-RF-007 follow-up)
 
-- Status: approved (2026-07-08) — unblocked: RF-004 tests done (35 EditMode, incl. Collections coverage)
+- Status: done (2026-07-08) — RF-004 tests were the safety net (35 EditMode, incl. Collections coverage)
 - Scope: `Runtime/Collections/` (ex `com.arunoki.collections`, merged per host RF-007)
 - Risk: medium (touches flow internals: Hub, Events, StateMachine)
 - Execution: single session inside `com.arunoki.flow`. Prompt: `Specs~/RF-008-PROMPT.md`.
@@ -46,6 +46,23 @@ in code with `// TODO [RF-008]`:
 
 Flow tests green; project compiles; grep shows no remaining `// TODO [RF-008]` markers
 (each one either resolved or converted into a documented contract).
+
+## Outcome (2026-07-08)
+
+- Deleted dead types `SetsCollection<>` (3 partials) and `CustomSet<>` — audit confirmed zero
+  references outside their own files in Runtime/Tests.
+- Kept `Set<>`, `Set<,>`, `SetsTypeCollection<>` and the `Mutable*` enumerators with in-file
+  justification: callers rely on safe removal of the current element during reverse iteration
+  (EventBus, Channel, HubContainer) and on `Container<>` root-propagation callbacks — neither
+  offered by `HashSet<T>`/`Dictionary<,>`.
+- Removed the only real LINQ (`using System.Linq` + `SetsCache.Keys.ToArray()` in
+  `SetsTypeCollection.cs`); replaced with a preallocated `CopyTo` snapshot loop.
+- Documented `// Contract: single-thread only (Unity main thread)` on every surviving mutable type;
+  no synchronization added (flow consumers are main-thread). `ReflectionUtils.PropsCache` left as-is
+  (already `ConcurrentDictionary`).
+- Renamed custom `ISet<T>` → `IFlowSet<T>` (`Interfaces/IFlowSet.cs`) to resolve the collision with
+  `System.Collections.Generic.ISet<T>`; two implementers updated, no external call sites existed.
+- All 11 `// TODO [RF-008]` markers resolved; `grep` clean.
 
 ## Notes
 

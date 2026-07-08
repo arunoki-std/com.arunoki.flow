@@ -2,9 +2,10 @@ using System;
 
 namespace Arunoki.Collections
 {
-    // TODO [RF-008] Name collides with System.Collections.Generic.ISet<T>; rename when the
-    //   std-collections migration lands (renames are out of scope for RF-007).
-    public interface ISet<TElement>
+    /// Query/iterate/mutate view over an ordered element set (implemented by <see cref="Set{TElement}"/>
+    /// and <see cref="SetsTypeCollection{TElement}"/>). Named to avoid colliding with
+    /// <see cref="System.Collections.Generic.ISet{T}"/> (renamed from the former <c>ISet</c> in RF-008).
+    public interface IFlowSet<TElement>
     {
         int Count { get; }
 

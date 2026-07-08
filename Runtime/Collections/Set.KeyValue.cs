@@ -2,10 +2,12 @@ using System.Collections.Generic;
 
 namespace Arunoki.Collections
 {
-    // TODO [RF-008] Duplicates Dictionary<TKey, TValue> + insertion order. Evaluate replacing
-    //   with plain Dictionary<,> (or Unity.Collections native containers in job/Burst contexts).
-    // TODO [RF-008] NOT thread-safe: List + Dictionary mutated without synchronization.
-    //   Consider ConcurrentDictionary<,> if multithreaded access is ever needed.
+    // Kept over plain Dictionary<TKey, TValue> (RF-008 audit): the paired List preserves insertion
+    //   order and enables safe removal of the current element while reverse-iterating (see the
+    //   Mutable* enumerators / EventBus.Channels), plus Container<> root-propagation callbacks —
+    //   a bare Dictionary offers none of these.
+    // Contract: single-thread only (Unity main thread). List + Dictionary are mutated without
+    //   synchronization; add a concurrent variant only if off-thread access is ever introduced.
     public partial class Set<TKey, TElement> : Container<TElement>
     {
         /// Reversed list.

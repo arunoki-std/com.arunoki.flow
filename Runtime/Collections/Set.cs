@@ -6,12 +6,12 @@ namespace Arunoki.Collections
     /// Ordered unique collection.
     /// Iteration order: insertion order (oldest to newest).
     /// Internal storage may differ to allow removing current element during iteration.
-    // TODO [RF-008] Custom collection duplicating BCL functionality. Evaluate replacing with
-    //   HashSet<T> / List<T> combo (note: List-backed Contains is O(n) here). The one feature
-    //   BCL lacks is safe removal of the current element during iteration — keep only if that
-    //   capability is proven necessary.
-    // TODO [RF-008] NOT thread-safe: unsynchronized List<T> state. Add synchronization or a
-    //   concurrent variant before any multithreaded use.
+    // Kept over HashSet<T>/List<T> (RF-008 audit): callers rely on safe removal of the current
+    //   element while reverse-iterating (EventBus.UnregisterSource, Channel dispatch/Clear,
+    //   HubContainer) AND on the Container<> root-propagation callbacks (OnElementAdded/Removed) —
+    //   neither is offered by the BCL. Insertion order + indexed access are also part of the contract.
+    // Contract: single-thread only (Unity main thread). Elements is mutated without synchronization;
+    //   add a lock or concurrent variant only if off-thread access is ever introduced.
     public partial class Set<TElement> : Container<TElement>
     {
         private readonly Func<TElement, bool> consumablePredicate;

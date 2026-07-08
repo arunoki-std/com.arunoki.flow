@@ -2,7 +2,7 @@ using System;
 
 namespace Arunoki.Collections
 {
-    public partial class Set<TElement> : ISet<TElement>
+    public partial class Set<TElement> : IFlowSet<TElement>
     {
         public bool Any(Func<TElement, bool> condition)
         {
