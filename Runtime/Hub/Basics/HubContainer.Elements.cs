@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Arunoki.Collections;
-using Arunoki.Collections.Enumerators;
+using Arunoki.Flow.Collections;
+using Arunoki.Flow.Collections.Enumerators;
 
 namespace Arunoki.Flow.Basics
 {
@@ -9,9 +9,9 @@ namespace Arunoki.Flow.Basics
     {
         private readonly List<TElement> all = new(32);
 
-        protected internal Set<TElement> Set { get; }
+        protected internal FlowSet<TElement> Set { get; }
 
-        protected internal SetsTypeCollection<TElement> KeySet { get; }
+        protected internal FlowSetsCollection<TElement> KeySet { get; }
 
         protected virtual void OnElementAdded(TElement element)
         {

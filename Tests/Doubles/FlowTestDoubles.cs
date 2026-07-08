@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Arunoki.Collections;
+using Arunoki.Flow.Collections;
 using Arunoki.Flow.Events;
 
 namespace Arunoki.Flow.Tests

@@ -64,6 +64,19 @@ Flow tests green; project compiles; grep shows no remaining `// TODO [RF-008]` m
   `System.Collections.Generic.ISet<T>`; two implementers updated, no external call sites existed.
 - All 11 `// TODO [RF-008]` markers resolved; `grep` clean.
 
+### Naming standardization (follow-up, same branch)
+
+Reverses the "keep `Arunoki.Collections`" decision from RF-007 now that the folder lives in flow:
+
+- Namespace `Arunoki.Collections[.Enumerators|.Utilities]` → `Arunoki.Flow.Collections[...]`
+  (aligns with asmdef `Arunoki.Flow`).
+- `Set<TElement>` / `Set<TKey, TElement>` → `FlowSet<>` (files `Set.*.cs` → `FlowSet.*.cs`).
+- `SetsTypeCollection<>` → `FlowSetsCollection<>` (file renamed; test double + fixture renamed).
+- Other types (`Container`, `IContainer`, `Pair`, `Mutable*` enumerators, `SetListEnumerator`,
+  `ReflectionUtils`, `DuplicateElementException`) keep their names.
+- Blast radius is flow-internal only (verified: core / game / poolables / projectiles reference
+  none of these). Nominal public-API change, zero downstream consumers.
+
 ## Notes
 
 Created 2026-07-06 during RF-007 execution. Blocked by RF-004 (tests).

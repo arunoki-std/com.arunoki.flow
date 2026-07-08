@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Arunoki.Collections.Utilities;
+using Arunoki.Flow.Collections.Utilities;
 using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow

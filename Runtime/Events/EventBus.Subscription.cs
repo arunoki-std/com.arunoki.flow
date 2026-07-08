@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Arunoki.Collections;
+using Arunoki.Flow.Collections;
 using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 

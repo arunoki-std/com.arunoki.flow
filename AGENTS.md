@@ -7,14 +7,14 @@ Standalone UPM package (own git repo), embedded as a submodule in the Hillybombs
 Events, signals, reactive properties, state machine, hub (DI-like composition). No dependencies (leaf package since RF-007).
 
 - Code: `Runtime/` (asmdef `Arunoki.Flow`, no references)
-- Areas: `Events/` (EventBus), `Reactive/` (Signals, `ValueProperty`), `StateMachine/`, `Hub/` (`FlowHub`, `GlobalHub`), `Basics/` (services, `ActiveOperations`), `Collections/` (ex `com.arunoki.collections`, merged per host RF-007; namespace `Arunoki.Collections` kept — see `Specs~/RF-008-collections-standardization.md`)
+- Areas: `Events/` (EventBus), `Reactive/` (Signals, `ValueProperty`), `StateMachine/`, `Hub/` (`FlowHub`, `GlobalHub`), `Basics/` (services, `ActiveOperations`), `Collections/` (ex `com.arunoki.collections`, merged per host RF-007; namespace `Arunoki.Flow.Collections` since RF-008 — see `Specs~/RF-008-collections-standardization.md`)
 - Extra docs: `Docs~/Index.md`, `Docs~/ScriptingDefineSymbols.md`
 - Consumers (in host project): com.arunoki.core, game code
 
 ## Rules
 
 - Allowed references: none (leaf package). Never reference core, poolables, or game code.
-- `Runtime/Collections/` was standardized in RF-008 (done): dead types removed, custom `ISet<T>` renamed to `IFlowSet<T>`, and every surviving mutable type (`Set<>`, `Set<,>`, `SetsTypeCollection<>`, `Mutable*` enumerators) carries a `// Contract: single-thread only (Unity main thread)` note — respect it; don't assume thread-safety.
+- `Runtime/Collections/` was standardized in RF-008 (done): namespace moved to `Arunoki.Flow.Collections`; `Set<>`→`FlowSet<>`, `SetsTypeCollection<>`→`FlowSetsCollection<>`, custom `ISet<T>`→`IFlowSet<T>`; dead types removed. Every surviving mutable type (`FlowSet<>`, `FlowSet<,>`, `FlowSetsCollection<>`, `Mutable*` enumerators) carries a `// Contract: single-thread only (Unity main thread)` note — respect it; don't assume thread-safety.
 - `GlobalHub.Instance` is known debt (host RF-005): do not add NEW static/singleton access paths; prefer `IFlowContext` injection.
 - Public API changes are breaking for core and the game: additive preferred; removals/renames need a spec and a version bump.
 - Never edit or delete `.meta` files by hand; never invent GUIDs.

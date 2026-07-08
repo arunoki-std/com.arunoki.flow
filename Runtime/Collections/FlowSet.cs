@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
     /// Ordered unique collection.
     /// Iteration order: insertion order (oldest to newest).
@@ -12,20 +12,20 @@ namespace Arunoki.Collections
     //   neither is offered by the BCL. Insertion order + indexed access are also part of the contract.
     // Contract: single-thread only (Unity main thread). Elements is mutated without synchronization;
     //   add a lock or concurrent variant only if off-thread access is ever introduced.
-    public partial class Set<TElement> : Container<TElement>
+    public partial class FlowSet<TElement> : Container<TElement>
     {
         private readonly Func<TElement, bool> consumablePredicate;
 
         /// Iteration order: insertion order (oldest to newest)
         protected readonly List<TElement> Elements = new(16);
 
-        public Set(Func<TElement, bool> consumablePredicate = null)
+        public FlowSet(Func<TElement, bool> consumablePredicate = null)
             : base(null)
         {
             this.consumablePredicate = consumablePredicate;
         }
 
-        public Set(
+        public FlowSet(
             IContainer<TElement> rootContainer,
             Func<TElement, bool> consumablePredicate = null
         )

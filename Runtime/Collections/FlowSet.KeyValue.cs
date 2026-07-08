@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
     // Kept over plain Dictionary<TKey, TValue> (RF-008 audit): the paired List preserves insertion
     //   order and enables safe removal of the current element while reverse-iterating (see the
@@ -8,17 +8,17 @@ namespace Arunoki.Collections
     //   a bare Dictionary offers none of these.
     // Contract: single-thread only (Unity main thread). List + Dictionary are mutated without
     //   synchronization; add a concurrent variant only if off-thread access is ever introduced.
-    public partial class Set<TKey, TElement> : Container<TElement>
+    public partial class FlowSet<TKey, TElement> : Container<TElement>
     {
         /// Reversed list.
         protected List<Pair<TKey, TElement>> Elements = new();
 
         protected Dictionary<TKey, TElement> ElementsByKey = new();
 
-        public Set()
+        public FlowSet()
             : base(null) { }
 
-        public Set(IContainer<TElement> rootContainer)
+        public FlowSet(IContainer<TElement> rootContainer)
             : base(rootContainer) { }
 
         public TElement this[TKey key] => ElementsByKey[key];

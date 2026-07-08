@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Arunoki.Collections;
+using Arunoki.Flow.Collections;
 using NUnit.Framework;
 
 namespace Arunoki.Flow.Tests
 {
-    public class SetsTypeCollectionTests
+    public class FlowSetsCollectionTests
     {
         [Test]
         public void GetOrCreate_CachesByTypeAndMissingGetThrows()
         {
-            var collection = new InspectableSetsTypeCollection<object>();
+            var collection = new InspectableFlowSetsCollection<object>();
 
             var first = collection.GetOrCreate<FooKey>();
             var second = collection.GetOrCreate<FooKey>();
@@ -25,7 +25,7 @@ namespace Arunoki.Flow.Tests
         {
             var elementRoot = new RecordingContainer<object>();
             var keyRoot = new RecordingContainer<Type>();
-            var collection = new InspectableSetsTypeCollection<object>(elementRoot, keyRoot);
+            var collection = new InspectableFlowSetsCollection<object>(elementRoot, keyRoot);
             var foo = new FooItem();
             var bar = new BarItem();
 
@@ -52,7 +52,7 @@ namespace Arunoki.Flow.Tests
         [Test]
         public void ClearKey_LeavesStaleEmptySetInSetList()
         {
-            var collection = new InspectableSetsTypeCollection<object>();
+            var collection = new InspectableFlowSetsCollection<object>();
             var firstSet = collection.GetOrCreate<FooKey>();
             collection.TryAdd(typeof(FooKey), new FooItem());
 
@@ -66,11 +66,11 @@ namespace Arunoki.Flow.Tests
             Assert.That(collection.Count, Is.EqualTo(1));
         }
 
-        private sealed class InspectableSetsTypeCollection<T> : SetsTypeCollection<T>
+        private sealed class InspectableFlowSetsCollection<T> : FlowSetsCollection<T>
         {
-            public InspectableSetsTypeCollection() { }
+            public InspectableFlowSetsCollection() { }
 
-            public InspectableSetsTypeCollection(
+            public InspectableFlowSetsCollection(
                 IContainer<T> elementRoot,
                 IContainer<Type> keyRoot
             )

@@ -1,4 +1,4 @@
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
     public abstract class Container<TElement> : IContainer<TElement>
     {

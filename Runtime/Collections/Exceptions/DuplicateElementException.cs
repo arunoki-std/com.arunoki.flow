@@ -1,6 +1,6 @@
 using System;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
     public class DuplicateElementException : InvalidOperationException
     {

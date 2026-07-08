@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Arunoki.Collections.Enumerators
+namespace Arunoki.Flow.Collections.Enumerators
 {
     /// Reversed enumerator
     public struct MutablePairValueEnumerator<TKey, TValue> : IEnumerator<TValue>

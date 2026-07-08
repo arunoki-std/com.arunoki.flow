@@ -1,8 +1,8 @@
 using System;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
-    public partial class Set<TElement> : IFlowSet<TElement>
+    public partial class FlowSet<TElement> : IFlowSet<TElement>
     {
         public bool Any(Func<TElement, bool> condition)
         {

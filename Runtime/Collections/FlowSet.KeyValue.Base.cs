@@ -1,8 +1,8 @@
 using System;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
-    public partial class Set<TKey, TElement>
+    public partial class FlowSet<TKey, TElement>
     {
         public void RemoveWhere(Func<TElement, bool> condition)
         {

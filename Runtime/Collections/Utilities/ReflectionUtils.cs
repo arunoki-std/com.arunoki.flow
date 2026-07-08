@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Arunoki.Collections.Utilities
+namespace Arunoki.Flow.Collections.Utilities
 {
     // Thread-safety: PropsCache uses ConcurrentDictionary and the public methods are stateless,
     // so lookups are safe; results (List<T>) are per-call and not shared.

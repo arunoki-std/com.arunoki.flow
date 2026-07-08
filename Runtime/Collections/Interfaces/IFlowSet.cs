@@ -1,9 +1,9 @@
 using System;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
-    /// Query/iterate/mutate view over an ordered element set (implemented by <see cref="Set{TElement}"/>
-    /// and <see cref="SetsTypeCollection{TElement}"/>). Named to avoid colliding with
+    /// Query/iterate/mutate view over an ordered element set (implemented by <see cref="FlowSet{TElement}"/>
+    /// and <see cref="FlowSetsCollection{TElement}"/>). Named to avoid colliding with
     /// <see cref="System.Collections.Generic.ISet{T}"/> (renamed from the former <c>ISet</c> in RF-008).
     public interface IFlowSet<TElement>
     {

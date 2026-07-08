@@ -1,8 +1,8 @@
-using Arunoki.Collections.Enumerators;
+using Arunoki.Flow.Collections.Enumerators;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
-    public partial class Set<TKey, TElement>
+    public partial class FlowSet<TKey, TElement>
     {
         /// var (index, key, element)
         public MutablePairWithIndex<TKey, TElement> WithIndex() => new(Elements);

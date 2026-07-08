@@ -1,4 +1,4 @@
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
     public class Pair<TKey, TValue>
     {

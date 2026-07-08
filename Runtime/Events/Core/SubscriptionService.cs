@@ -1,5 +1,5 @@
 using System;
-using Arunoki.Collections;
+using Arunoki.Flow.Collections;
 using Arunoki.Flow.Utilities;
 
 namespace Arunoki.Flow.Events.Core
@@ -8,7 +8,7 @@ namespace Arunoki.Flow.Events.Core
     {
         private bool isActivated;
 
-        internal readonly Set<Callback> Callbacks;
+        internal readonly FlowSet<Callback> Callbacks;
 
         public SubscriptionService(EventBus events)
             : base(null)

@@ -1,16 +1,16 @@
 using System.Collections.Generic;
-using Arunoki.Collections;
+using Arunoki.Flow.Collections;
 using NUnit.Framework;
 
 namespace Arunoki.Flow.Tests
 {
-    public class SetTests
+    public class FlowSetTests
     {
         [Test]
         public void TryAdd_RejectsDuplicatesNullsAndReportsContainerCallbacks()
         {
             var root = new RecordingContainer<string>();
-            var set = new Set<string>(root);
+            var set = new FlowSet<string>(root);
 
             Assert.That(set.TryAdd("first"), Is.True);
             Assert.That(set.TryAdd("first"), Is.False);
@@ -22,7 +22,7 @@ namespace Arunoki.Flow.Tests
             Assert.That(set.Remove("first"), Is.True);
             Assert.That(root.Removed, Is.EqualTo(new[] { "first" }));
 
-            var positives = new Set<int>(value => value > 0);
+            var positives = new FlowSet<int>(value => value > 0);
             Assert.That(positives.TryAdd(-1), Is.False);
             Assert.That(positives.TryAdd(1), Is.True);
         }
@@ -30,7 +30,7 @@ namespace Arunoki.Flow.Tests
         [Test]
         public void Ordering_UsesOldestFirstIndexerAndForEachButRawListIsNewestFirst()
         {
-            var set = new Set<string>();
+            var set = new FlowSet<string>();
             set.AddRange("oldest", "middle", "newest");
 
             var forEachOrder = new List<string>();
@@ -46,7 +46,7 @@ namespace Arunoki.Flow.Tests
         [Test]
         public void ForEach_ToleratesRemovingTheCurrentElement()
         {
-            var set = new Set<string>();
+            var set = new FlowSet<string>();
             set.AddRange("oldest", "middle", "newest");
             var seen = new List<string>();
 
@@ -66,7 +66,7 @@ namespace Arunoki.Flow.Tests
         public void RemoveOperationsAndClear_ReportRemovedElements()
         {
             var root = new RecordingContainer<string>();
-            var set = new Set<string>(root);
+            var set = new FlowSet<string>(root);
             set.AddRange("one", "two", "three", "four");
 
             set.RemoveWhere(value => value.Length == 3);

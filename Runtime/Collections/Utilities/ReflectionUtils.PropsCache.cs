@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Arunoki.Collections.Utilities
+namespace Arunoki.Flow.Collections.Utilities
 {
     public static partial class ReflectionUtils
     {

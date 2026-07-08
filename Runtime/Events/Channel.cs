@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Arunoki.Collections.Enumerators;
+using Arunoki.Flow.Collections.Enumerators;
 using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 

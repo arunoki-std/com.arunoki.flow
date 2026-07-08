@@ -1,31 +1,31 @@
 using System;
 using System.Collections.Generic;
-using Arunoki.Collections.Enumerators;
+using Arunoki.Flow.Collections.Enumerators;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
     // Contract: single-thread only (Unity main thread). SetsCache/SetsList are mutated without
     //   synchronization; flow's consumers (Hub) are main-thread. Guard with a lock or move to
     //   ConcurrentDictionary only if off-thread access is ever introduced.
-    public class SetsTypeCollection<TElement> : Container<TElement>, IFlowSet<TElement>
+    public class FlowSetsCollection<TElement> : Container<TElement>, IFlowSet<TElement>
     {
         private readonly Func<TElement, bool> consumablePredicate;
 
-        protected readonly Dictionary<Type, Set<TElement>> SetsCache = new(16);
-        protected readonly List<Set<TElement>> SetsList = new(16);
+        protected readonly Dictionary<Type, FlowSet<TElement>> SetsCache = new(16);
+        protected readonly List<FlowSet<TElement>> SetsList = new(16);
 
         private readonly IContainer<Type> rootKeyContainer;
 
-        public SetsTypeCollection(Func<TElement, bool> consumablePredicate = null)
+        public FlowSetsCollection(Func<TElement, bool> consumablePredicate = null)
             : this(null, null, consumablePredicate) { }
 
-        public SetsTypeCollection(
+        public FlowSetsCollection(
             IContainer<Type> rootKeyContainer,
             Func<TElement, bool> consumablePredicate = null
         )
             : this(null, rootKeyContainer, consumablePredicate) { }
 
-        public SetsTypeCollection(
+        public FlowSetsCollection(
             IContainer<TElement> rootElementsContainer,
             IContainer<Type> rootKeyContainer = null,
             Func<TElement, bool> consumablePredicate = null
@@ -159,7 +159,7 @@ namespace Arunoki.Collections
 
         public virtual void Clear(Type keyType)
         {
-            if (SetsCache.TryGetValue(keyType, out Set<TElement> set))
+            if (SetsCache.TryGetValue(keyType, out FlowSet<TElement> set))
             {
                 set.Clear();
 
@@ -188,13 +188,13 @@ namespace Arunoki.Collections
             return false;
         }
 
-        public Set<TElement> GetOrCreate<TType>() => GetOrCreate(typeof(TType));
+        public FlowSet<TElement> GetOrCreate<TType>() => GetOrCreate(typeof(TType));
 
-        public Set<TElement> GetOrCreate(Type type)
+        public FlowSet<TElement> GetOrCreate(Type type)
         {
-            if (!SetsCache.TryGetValue(type, out Set<TElement> set))
+            if (!SetsCache.TryGetValue(type, out FlowSet<TElement> set))
             {
-                set = new Set<TElement>(this, consumablePredicate);
+                set = new FlowSet<TElement>(this, consumablePredicate);
                 SetsList.Add(set);
                 SetsCache.Add(type, set);
                 OnKeyAdded(type);
@@ -203,9 +203,9 @@ namespace Arunoki.Collections
             return set;
         }
 
-        public Set<TElement> Get<TType>() => SetsCache[typeof(TType)];
+        public FlowSet<TElement> Get<TType>() => SetsCache[typeof(TType)];
 
-        public bool TryGet<TType>(out Set<TElement> set) =>
+        public bool TryGet<TType>(out FlowSet<TElement> set) =>
             SetsCache.TryGetValue(typeof(TType), out set);
 
         public SetListEnumerator<TElement> GetEnumerator() => new(SetsList);

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Arunoki.Collections.Enumerators
+namespace Arunoki.Flow.Collections.Enumerators
 {
     /// Returns reversed enumerator
     public readonly struct MutableIndexedEnumerable<T>

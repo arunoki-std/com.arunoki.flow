@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Arunoki.Collections.Enumerators
+namespace Arunoki.Flow.Collections.Enumerators
 {
     /// Enumerator is reversed
     // Reverse iteration is intentional (RF-008 audit): it lets callers remove the current element

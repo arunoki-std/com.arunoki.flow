@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Arunoki.Collections.Enumerators
+namespace Arunoki.Flow.Collections.Enumerators
 {
     public struct SetListEnumerator<T> : IEnumerator<T>
     {
-        private List<Set<T>> setsList;
+        private List<FlowSet<T>> setsList;
         private int setIndex;
         private int itemIndex;
 
-        public SetListEnumerator(List<Set<T>> setsList)
+        public SetListEnumerator(List<FlowSet<T>> setsList)
         {
             this.setsList = setsList;
 

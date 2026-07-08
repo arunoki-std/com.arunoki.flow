@@ -1,6 +1,6 @@
 using System;
-using Arunoki.Collections;
-using Arunoki.Collections.Enumerators;
+using Arunoki.Flow.Collections;
+using Arunoki.Flow.Collections.Enumerators;
 using Arunoki.Flow.Events.Core;
 using Arunoki.Flow.Utilities;
 
@@ -14,7 +14,7 @@ namespace Arunoki.Flow.Events
             Channels = new(new Container(this));
         }
 
-        protected internal Set<Type, Channel> Channels { get; }
+        protected internal FlowSet<Type, Channel> Channels { get; }
 
         /// Register reactive properties.
         public void RegisterSource(IFlowContext context)

@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Arunoki.Collections.Enumerators;
+using Arunoki.Flow.Collections.Enumerators;
 
-namespace Arunoki.Collections
+namespace Arunoki.Flow.Collections
 {
-    public partial class Set<TElement> : IEnumerable<TElement>
+    public partial class FlowSet<TElement> : IEnumerable<TElement>
     {
         public MutableCastEnumerable<TElement, T> Cast<T>() => new(Elements);
 

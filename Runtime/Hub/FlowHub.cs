@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Arunoki.Collections.Utilities;
 using Arunoki.Flow.Basics;
 using Arunoki.Flow.Builders;
+using Arunoki.Flow.Collections.Utilities;
 using Arunoki.Flow.Events;
 
 namespace Arunoki.Flow
